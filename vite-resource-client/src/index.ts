@@ -1,15 +1,19 @@
+// Export all schemas and types
 export * from "./schemas";
 
-export {
-  PostgresResourceClient,
-  CustomApiResourceClient,
-  HubSpotResourceClient,
-  S3ResourceClient,
-  type BaseClientConfig,
-} from "./client";
+// Export base client and config
+export { BaseResourceClient, type BaseClientConfig } from "./base";
 
+// Export errors
 export { ResourceInvokeError } from "./errors";
 
+// Export individual clients
+export { PostgresResourceClient } from "./clients/postgres";
+export { CustomApiResourceClient } from "./clients/api-custom";
+export { HubSpotResourceClient } from "./clients/hubspot";
+export { S3ResourceClient } from "./clients/s3";
+
+// Re-export common response types for convenience
 export type {
   DatabaseInvokeResponse,
   ApiInvokeResponse,

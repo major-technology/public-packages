@@ -1,53 +1,55 @@
 {
-  "name": "@major/resource-client",
-  "version": "0.1.0",
+  "name": "@major-tech/resource-client",
+  "version": "0.1.1",
   "description": "TypeScript client library for invoking Major resources (PostgreSQL, Custom APIs, HubSpot, S3)",
   "type": "module",
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "sideEffects": false,
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
     }
   },
-  "files": [
-    "dist",
-    "src",
-    "README.md",
-    "LICENSE"
-  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch",
+    "clean": "rm -rf dist",
+    "build": "pnpm clean && tsc && node scripts/build.mjs",
     "typecheck": "tsc --noEmit",
-    "prepublishOnly": "pnpm run build"
+    "prepublishOnly": "pnpm run typecheck && pnpm run build"
   },
   "keywords": [
     "major",
     "resource",
-    "client",
-    "postgresql",
-    "hubspot",
-    "s3",
-    "api"
+    "client"
   ],
-  "author": "",
+  "author": "Major Technology",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/major-technology/public-packages.git"
+    "url": "https://github.com/major-technology/public-packages.git",
+    "directory": "vite-resource-client"
   },
-  "engines": {
-    "node": ">=18.0.0"
+  "homepage": "https://github.com/major-technology/public-packages/tree/main/vite-resource-client#readme",
+  "bugs": {
+    "url": "https://github.com/major-technology/public-packages/issues"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "devDependencies": {
-    "tsup": "^8.3.5",
+    "esbuild": "^0.24.0",
     "typescript": "^5.9.3"
-  },
-  "peerDependencies": {},
-  "dependencies": {}
+  }
 }
-

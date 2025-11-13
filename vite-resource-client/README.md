@@ -1,10 +1,10 @@
-# @major/resource-client
+# @major-tech/resource-client
 
 TypeScript client for Major resources (PostgreSQL, Custom APIs, HubSpot, S3). Type-safe, zero dependencies, universal (Node/browser/edge), ESM & CJS.
 
 ## Install
 ```bash
-npm install @major/resource-client
+pnpm install @major-tech/resource-client
 ```
 
 ## Usage
@@ -18,7 +18,7 @@ npm install @major/resource-client
 
 **PostgreSQL:**
 ```typescript
-import { PostgresResourceClient } from '@major/resource-client';
+import { PostgresResourceClient } from '@major-tech/resource-client';
 const client = new PostgresResourceClient({ baseUrl, applicationId, resourceId, majorJwtToken? });
 const res = await client.invoke('SELECT * FROM users WHERE id = $1', [123], 'fetch-user-by-id');
 // res.ok ? res.result.rows / res.result.rowsAffected : res.error.message
@@ -26,7 +26,7 @@ const res = await client.invoke('SELECT * FROM users WHERE id = $1', [123], 'fet
 
 **Custom API:**
 ```typescript
-import { CustomApiResourceClient } from '@major/resource-client';
+import { CustomApiResourceClient } from '@major-tech/resource-client';
 const client = new CustomApiResourceClient({ baseUrl, applicationId, resourceId });
 const res = await client.invoke('POST', '/v1/payments', 'create-payment', {
   query: { currency: 'USD' }, headers: { 'X-Custom': 'value' },
@@ -37,7 +37,7 @@ const res = await client.invoke('POST', '/v1/payments', 'create-payment', {
 
 **HubSpot:**
 ```typescript
-import { HubSpotResourceClient } from '@major/resource-client';
+import { HubSpotResourceClient } from '@major-tech/resource-client';
 const client = new HubSpotResourceClient({ baseUrl, applicationId, resourceId });
 const res = await client.invoke('GET', '/crm/v3/objects/contacts', 'fetch-contacts', { query: { limit: '10' } });
 // res.ok && res.result.body.kind === 'json' ? res.result.body.value : res.error
@@ -45,7 +45,7 @@ const res = await client.invoke('GET', '/crm/v3/objects/contacts', 'fetch-contac
 
 **S3:**
 ```typescript
-import { S3ResourceClient } from '@major/resource-client';
+import { S3ResourceClient } from '@major-tech/resource-client';
 const client = new S3ResourceClient({ baseUrl, applicationId, resourceId });
 const res = await client.invoke('ListObjectsV2', { Bucket: 'my-bucket', Prefix: 'uploads/' }, 'list-uploads');
 // res.ok ? res.result.data : res.error
@@ -55,7 +55,7 @@ const url = await client.invoke('GeneratePresignedUrl', { Bucket: 'my-bucket', K
 
 **Error Handling:**
 ```typescript
-import { ResourceInvokeError } from '@major/resource-client';
+import { ResourceInvokeError } from '@major-tech/resource-client';
 try { await client.invoke(...); }
 catch (e) { if (e instanceof ResourceInvokeError) { e.message, e.httpStatus, e.requestId } }
 ```

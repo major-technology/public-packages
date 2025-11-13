@@ -1,8 +1,29 @@
-src
-tsconfig.json
-tsup.config.ts
-*.log
-.DS_Store
-node_modules
-*.tsbuildinfo
+# Source files (only ship dist/)
+src/
+*.test.ts
+*.spec.ts
 
+# Development files
+tsconfig.json
+scripts/
+.gitignore
+.npmignore
+
+# Build artifacts
+*.tsbuildinfo
+node_modules/
+.pnpm-store/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
