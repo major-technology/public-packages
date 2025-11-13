@@ -86,8 +86,8 @@ Regenerates all client files from `resources.json`. Useful after updating the pa
 ```typescript
 import { PostgresResourceClient } from '@major-tech/resource-client';
 
-const BASE_URL = import.meta.env.VITE_MAJOR_API_BASE_URL || 'https://api.major.tech';
-const MAJOR_JWT_TOKEN = import.meta.env.VITE_MAJOR_JWT_TOKEN;
+const BASE_URL = import.meta.env.MAJOR_API_BASE_URL || 'https://api.major.tech';
+const MAJOR_JWT_TOKEN = import.meta.env.MAJOR_JWT_TOKEN;
 
 class OrdersDbClientSingleton {
   private static instance: PostgresResourceClient | null = null;
@@ -135,8 +135,8 @@ if (result.ok) {
 Set these in your `.env` file:
 
 ```bash
-VITE_MAJOR_API_BASE_URL=https://api.major.tech
-VITE_MAJOR_JWT_TOKEN=your-jwt-token
+MAJOR_API_BASE_URL=https://api.major.tech
+MAJOR_JWT_TOKEN=your-jwt-token
 ```
 
 ## Package Scripts
