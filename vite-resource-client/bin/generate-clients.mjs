@@ -58,6 +58,7 @@ class ${data.clientName}Singleton {
         majorJwtToken: MAJOR_JWT_TOKEN,
         applicationId: '${data.applicationId}',
         resourceId: '${data.resourceId}',
+        fetch: (...args) => fetch(...args),
       });
     }
     return ${data.clientName}Singleton.instance;
