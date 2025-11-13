@@ -64,4 +64,27 @@ catch (e) { if (e instanceof ResourceInvokeError) { e.message, e.httpStatus, e.r
 
 **Types:** All exported: `BaseClientConfig`, `DatabaseInvokeResponse`, `ApiInvokeResponse`, `StorageInvokeResponse`, `HttpMethod`, `QueryParams`, `BodyPayload`, `S3Command`, etc.
 
+## 🛠️ CLI Tool - Generate Singleton Clients
+
+The package includes a CLI tool to generate pre-configured singleton clients for your resources:
+
+```bash
+# Add a resource
+npx major-client add "resource-123" "orders-db" "database-postgresql" "Orders database" "app-456"
+
+# List all resources
+npx major-client list
+
+# Remove a resource
+npx major-client remove "orders-db"
+```
+
+This generates TypeScript files in `src/clients/` that you can import:
+```typescript
+import { ordersDbClient } from './clients';
+const result = await ordersDbClient.invoke('SELECT * FROM orders', [], 'list-orders');
+```
+
+**Types:** `database-postgresql` | `api-custom` | `api-hubspot` | `storage-s3`
+
 MIT License
