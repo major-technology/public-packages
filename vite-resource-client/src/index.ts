@@ -9,6 +9,7 @@ export { ResourceInvokeError } from "./errors";
 
 // Export individual clients
 export { PostgresResourceClient } from "./clients/postgres";
+export { DynamoDBResourceClient } from "./clients/dynamodb";
 export { CustomApiResourceClient } from "./clients/api-custom";
 export { HubSpotResourceClient } from "./clients/hubspot";
 export { S3ResourceClient } from "./clients/s3";
