@@ -55,5 +55,8 @@
   "devDependencies": {
     "esbuild": "^0.24.0",
     "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.935.0"
   }
 }
