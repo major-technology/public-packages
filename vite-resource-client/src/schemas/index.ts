@@ -1,6 +1,7 @@
 // Re-export all types
 export * from "./common";
 export * from "./postgres";
+export * from "./dynamodb";
 export * from "./s3";
 export * from "./api-custom";
 export * from "./api-hubspot";
@@ -11,6 +12,7 @@ export * from "./response";
 import type { ApiCustomPayload } from "./api-custom";
 import type { ApiHubSpotPayload } from "./api-hubspot";
 import type { DbPostgresPayload } from "./postgres";
+import type { DbDynamoDBPayload } from "./dynamodb";
 import type { StorageS3Payload } from "./s3";
 
 /**
@@ -20,6 +22,7 @@ import type { StorageS3Payload } from "./s3";
 export type ResourceInvokePayload =
   | ApiCustomPayload
   | DbPostgresPayload
+  | DbDynamoDBPayload
   | ApiHubSpotPayload
   | StorageS3Payload;
 
