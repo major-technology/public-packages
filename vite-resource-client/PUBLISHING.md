@@ -1,5 +1,11 @@
 # Publishing Guide
 
+## Workflow
+
+1. Commit and merge your changes into main
+2. Run the steps in this guide
+3. Commit and merge the updated package.json 
+
 ## 🔨 Build
 
 ```bash
@@ -31,14 +37,11 @@ npm version major  # 0.1.0 → 1.0.0 (breaking changes)
 
 # 3. Publish to npm
 npm publish --access public
-
-# 4. Push version bump
-git push && git push --tags
 ```
 
 ### One-Liner
 ```bash
-npm version patch && npm publish --access public && git push && git push --tags
+npm version patch && npm publish --access public
 ```
 
 ## 🎯 Version Guidelines
