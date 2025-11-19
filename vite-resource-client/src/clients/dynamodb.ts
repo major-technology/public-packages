@@ -1,44 +1,17 @@
 import type {
   DbDynamoDBPayload,
-  DatabaseInvokeResponse,
+  DynamoDBCommandInputMap,
+  DbDynamoDBResultForCommand,
 } from "../schemas";
-import type {
-  GetItemCommandInput,
-  PutItemCommandInput,
-  UpdateItemCommandInput,
-  DeleteItemCommandInput,
-  QueryCommandInput,
-  ScanCommandInput,
-  BatchGetItemCommandInput,
-  BatchWriteItemCommandInput,
-  TransactGetItemsCommandInput,
-  TransactWriteItemsCommandInput,
-  ListTablesCommandInput,
-  DescribeTableCommandInput,
-} from "@aws-sdk/client-dynamodb";
+import type { BaseInvokeSuccess, InvokeFailure } from "../schemas/response";
 import { BaseResourceClient } from "../base";
 
-type DynamoDBCommandMap = {
-  GetItem: GetItemCommandInput;
-  PutItem: PutItemCommandInput;
-  UpdateItem: UpdateItemCommandInput;
-  DeleteItem: DeleteItemCommandInput;
-  Query: QueryCommandInput;
-  Scan: ScanCommandInput;
-  BatchGetItem: BatchGetItemCommandInput;
-  BatchWriteItem: BatchWriteItemCommandInput;
-  TransactGetItems: TransactGetItemsCommandInput;
-  TransactWriteItems: TransactWriteItemsCommandInput;
-  ListTables: ListTablesCommandInput;
-  DescribeTable: DescribeTableCommandInput;
-};
-
 export class DynamoDBResourceClient extends BaseResourceClient {
-  async invoke<C extends keyof DynamoDBCommandMap>(
+  async invoke<C extends keyof DynamoDBCommandInputMap>(
     command: C,
-    params: DynamoDBCommandMap[C],
+    params: DynamoDBCommandInputMap[C],
     invocationKey: string,
-  ): Promise<DatabaseInvokeResponse> {
+  ): Promise<BaseInvokeSuccess<DbDynamoDBResultForCommand<C>> | InvokeFailure> {
     const payload = {
       type: "database" as const,
       subtype: "dynamodb" as const,
@@ -46,6 +19,8 @@ export class DynamoDBResourceClient extends BaseResourceClient {
       params,
     };
 
-    return this.invokeRaw(payload as DbDynamoDBPayload, invocationKey) as Promise<DatabaseInvokeResponse>;
+    return this.invokeRaw(payload as DbDynamoDBPayload, invocationKey) as Promise<
+      BaseInvokeSuccess<DbDynamoDBResultForCommand<C>> | InvokeFailure
+    >;
   }
 }

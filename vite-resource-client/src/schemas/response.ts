@@ -1,11 +1,12 @@
 import type { ApiResult } from "./common";
 import type { DbResult } from "./postgres";
 import type { StorageS3Result } from "./s3";
+import type { DbDynamoDBResult } from "./dynamodb";
 
 /**
  * Union of all possible resource invocation result types
  */
-export type ResourceInvokeSuccess = ApiResult | DbResult | StorageS3Result;
+export type ResourceInvokeSuccess = ApiResult | DbResult | StorageS3Result | DbDynamoDBResult;
 
 /**
  * Base successful invocation response - generic over result type
@@ -60,4 +61,9 @@ export type ApiInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;
  * Response from S3 storage resource invocation
  */
 export type StorageInvokeResponse = BaseInvokeSuccess<StorageS3Result> | InvokeFailure;
+
+/**
+ * Response from DynamoDB database resource invocation
+ */
+export type DynamoDBInvokeResponse = BaseInvokeSuccess<DbDynamoDBResult> | InvokeFailure;
 

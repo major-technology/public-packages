@@ -17,6 +17,7 @@ export { S3ResourceClient } from "./clients/s3";
 // Re-export common response types for convenience
 export type {
   DatabaseInvokeResponse,
+  DynamoDBInvokeResponse,
   ApiInvokeResponse,
   StorageInvokeResponse,
   BaseInvokeSuccess,
