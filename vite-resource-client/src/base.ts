@@ -11,6 +11,11 @@ export interface BaseClientConfig {
   applicationId: string;
   resourceId: string;
   fetch?: typeof fetch;
+  /**
+   * Optional function to get additional headers (e.g. for auth)
+   * Useful for Next.js Server Components where headers() must be called dynamically
+   */
+  getHeaders?: () => Promise<Record<string, string>> | Record<string, string>;
 }
 
 export abstract class BaseResourceClient {
@@ -20,6 +25,7 @@ export abstract class BaseResourceClient {
     applicationId: string;
     resourceId: string;
     fetch: typeof fetch;
+    getHeaders?: () => Promise<Record<string, string>> | Record<string, string>;
   };
 
   constructor(config: BaseClientConfig) {
@@ -29,6 +35,7 @@ export abstract class BaseResourceClient {
       applicationId: config.applicationId,
       resourceId: config.resourceId,
       fetch: config.fetch || globalThis.fetch,
+      getHeaders: config.getHeaders,
     };
   }
 
@@ -43,12 +50,17 @@ export abstract class BaseResourceClient {
       invocationKey,
     };
 
-    const headers: Record<string, string> = {
+    let headers: Record<string, string> = {
       "Content-Type": "application/json",
     };
 
     if (this.config.majorJwtToken) {
       headers["x-major-jwt"] = this.config.majorJwtToken;
+    }
+
+    if (this.config.getHeaders) {
+      const extraHeaders = await this.config.getHeaders();
+      headers = { ...headers, ...extraHeaders };
     }
 
     try {
