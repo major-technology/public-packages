@@ -160,6 +160,7 @@ function addResource(resourceId, name, type, description, applicationId) {
   if (!validTypes.includes(type)) {
     console.error(`❌ Invalid type: ${type}`);
     console.log(`   Valid types: ${validTypes.join(', ')}`);
+    console.log(`   Your resource-client version might be out of date. Try running 'pnpm update @major-tech/resource-client'`)
     process.exit(1);
   }
 
