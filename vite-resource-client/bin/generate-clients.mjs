@@ -112,6 +112,7 @@ function toCamelCase(str) {
   return str
     .toLowerCase()
     .replace(/[^a-z0-9]+(.)/g, (_, char) => char.toUpperCase())
+    .replace(/[^a-z0-9]+$/, '') // Remove trailing non-alphanumerics
     .replace(/^[^a-z]+/, ''); // Remove leading non-letters
 }
 
