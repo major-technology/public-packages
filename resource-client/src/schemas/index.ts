@@ -5,12 +5,14 @@ export * from "./dynamodb";
 export * from "./s3";
 export * from "./api-custom";
 export * from "./api-hubspot";
+export * from "./api-googlesheets";
 export * from "./request";
 export * from "./response";
 
 // Import for discriminated union
 import type { ApiCustomPayload } from "./api-custom";
 import type { ApiHubSpotPayload } from "./api-hubspot";
+import type { ApiGoogleSheetsPayload } from "./api-googlesheets";
 import type { DbPostgresPayload } from "./postgres";
 import type { DbDynamoDBPayload } from "./dynamodb";
 import type { StorageS3Payload } from "./s3";
@@ -24,5 +26,6 @@ export type ResourceInvokePayload =
   | DbPostgresPayload
   | DbDynamoDBPayload
   | ApiHubSpotPayload
+  | ApiGoogleSheetsPayload
   | StorageS3Payload;
 
