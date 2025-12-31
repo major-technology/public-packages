@@ -183,8 +183,8 @@ function addResource(resourceId, name, type, description, applicationId, framewo
   const validTypes = ['database-postgresql', 'database-dynamodb', 'database-cosmosdb', 'api-hubspot', 'api-googlesheets', 'api-custom', 'storage-s3'];
   if (!validTypes.includes(type)) {
     console.error(`❌ Invalid type: ${type}`);
-    console.log(`   Valid types: ${validTypes.join(', ')}`);
-    console.log(`   Your resource-client version might be out of date. Try running 'pnpm update @major-tech/resource-client'`)
+    console.error(`   Valid types: ${validTypes.join(', ')}`);
+    console.error(`   Your resource-client version might be out of date. Try running 'pnpm update @major-tech/resource-client'`)
     process.exit(1);
   }
 

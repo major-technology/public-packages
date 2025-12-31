@@ -4,7 +4,7 @@
 
 1. Commit and merge your changes into main
 2. Run the steps in this guide
-3. Commit and merge the updated package.json 
+3. Commit and merge the updated package.json
 
 ## 🔨 Build
 
@@ -13,6 +13,7 @@ pnpm build
 ```
 
 This will:
+
 1. Clean the `dist/` folder
 2. Compile TypeScript to ESM + types
 3. Transpile ESM to CJS with esbuild
@@ -20,6 +21,7 @@ This will:
 ## 📦 Publish New Version
 
 ### First Time Setup
+
 ```bash
 npm login
 ```
@@ -40,6 +42,7 @@ npm publish --access public
 ```
 
 ### One-Liner
+
 ```bash
 npm version patch && npm publish --access public
 ```
@@ -55,4 +58,3 @@ npm version patch && npm publish --access public
 ```bash
 npm view @major-tech/resource-client
 ```
-
