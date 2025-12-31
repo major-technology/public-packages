@@ -72,16 +72,14 @@ export class CosmosDBResourceClient extends BaseResourceClient {
    * Read a single document by ID
    * @param container The container name
    * @param id The document ID
-   * @param partitionKey The partition key value
    * @param invocationKey Unique key for tracking this invocation
-   * @param options Additional options
+   * @param options Additional options (partitionKey, timeoutMs)
    */
   async read<T = Record<string, unknown>>(
     container: string,
     id: string,
-    partitionKey: PartitionKey,
     invocationKey: string,
-    options?: { timeoutMs?: number }
+    options?: { partitionKey?: PartitionKey; timeoutMs?: number }
   ): Promise<BaseInvokeSuccess<CosmosReadResult<T>> | InvokeFailure> {
     const payload: DbCosmosDBPayload = {
       type: "database",
@@ -89,7 +87,7 @@ export class CosmosDBResourceClient extends BaseResourceClient {
       operation: "read",
       container,
       id,
-      partitionKey,
+      partitionKey: options?.partitionKey,
       timeoutMs: options?.timeoutMs,
     };
 
@@ -103,13 +101,13 @@ export class CosmosDBResourceClient extends BaseResourceClient {
    * @param container The container name
    * @param body The document body (must include id and partition key properties)
    * @param invocationKey Unique key for tracking this invocation
-   * @param options Additional options
+   * @param options Additional options (partitionKey, timeoutMs)
    */
   async create<T = Record<string, unknown>>(
     container: string,
     body: Record<string, CosmosValue>,
     invocationKey: string,
-    options?: { timeoutMs?: number }
+    options?: { partitionKey?: PartitionKey; timeoutMs?: number }
   ): Promise<BaseInvokeSuccess<CosmosCreateResult<T>> | InvokeFailure> {
     const payload: DbCosmosDBPayload = {
       type: "database",
@@ -117,6 +115,7 @@ export class CosmosDBResourceClient extends BaseResourceClient {
       operation: "create",
       container,
       body,
+      partitionKey: options?.partitionKey,
       timeoutMs: options?.timeoutMs,
     };
 
@@ -129,18 +128,16 @@ export class CosmosDBResourceClient extends BaseResourceClient {
    * Replace an existing document
    * @param container The container name
    * @param id The document ID
-   * @param partitionKey The partition key value
    * @param body The new document body
    * @param invocationKey Unique key for tracking this invocation
-   * @param options Additional options
+   * @param options Additional options (partitionKey, timeoutMs)
    */
   async replace<T = Record<string, unknown>>(
     container: string,
     id: string,
-    partitionKey: PartitionKey,
     body: Record<string, CosmosValue>,
     invocationKey: string,
-    options?: { timeoutMs?: number }
+    options?: { partitionKey?: PartitionKey; timeoutMs?: number }
   ): Promise<BaseInvokeSuccess<CosmosReplaceResult<T>> | InvokeFailure> {
     const payload: DbCosmosDBPayload = {
       type: "database",
@@ -148,7 +145,7 @@ export class CosmosDBResourceClient extends BaseResourceClient {
       operation: "replace",
       container,
       id,
-      partitionKey,
+      partitionKey: options?.partitionKey,
       body,
       timeoutMs: options?.timeoutMs,
     };
@@ -163,13 +160,13 @@ export class CosmosDBResourceClient extends BaseResourceClient {
    * @param container The container name
    * @param body The document body (must include id and partition key properties)
    * @param invocationKey Unique key for tracking this invocation
-   * @param options Additional options
+   * @param options Additional options (partitionKey, timeoutMs)
    */
   async upsert<T = Record<string, unknown>>(
     container: string,
     body: Record<string, CosmosValue>,
     invocationKey: string,
-    options?: { timeoutMs?: number }
+    options?: { partitionKey?: PartitionKey; timeoutMs?: number }
   ): Promise<BaseInvokeSuccess<CosmosUpsertResult<T>> | InvokeFailure> {
     const payload: DbCosmosDBPayload = {
       type: "database",
@@ -177,6 +174,7 @@ export class CosmosDBResourceClient extends BaseResourceClient {
       operation: "upsert",
       container,
       body,
+      partitionKey: options?.partitionKey,
       timeoutMs: options?.timeoutMs,
     };
 
@@ -189,16 +187,14 @@ export class CosmosDBResourceClient extends BaseResourceClient {
    * Delete a document
    * @param container The container name
    * @param id The document ID
-   * @param partitionKey The partition key value
    * @param invocationKey Unique key for tracking this invocation
-   * @param options Additional options
+   * @param options Additional options (partitionKey, timeoutMs)
    */
   async delete(
     container: string,
     id: string,
-    partitionKey: PartitionKey,
     invocationKey: string,
-    options?: { timeoutMs?: number }
+    options?: { partitionKey?: PartitionKey; timeoutMs?: number }
   ): Promise<BaseInvokeSuccess<CosmosDeleteResult> | InvokeFailure> {
     const payload: DbCosmosDBPayload = {
       type: "database",
@@ -206,7 +202,7 @@ export class CosmosDBResourceClient extends BaseResourceClient {
       operation: "delete",
       container,
       id,
-      partitionKey,
+      partitionKey: options?.partitionKey,
       timeoutMs: options?.timeoutMs,
     };
 
@@ -219,18 +215,16 @@ export class CosmosDBResourceClient extends BaseResourceClient {
    * Patch a document with partial updates
    * @param container The container name
    * @param id The document ID
-   * @param partitionKey The partition key value
    * @param patchOperations Array of patch operations
    * @param invocationKey Unique key for tracking this invocation
-   * @param options Additional options (condition, timeoutMs)
+   * @param options Additional options (partitionKey, condition, timeoutMs)
    */
   async patch<T = Record<string, unknown>>(
     container: string,
     id: string,
-    partitionKey: PartitionKey,
     patchOperations: CosmosPatchOperation[],
     invocationKey: string,
-    options?: { condition?: string; timeoutMs?: number }
+    options?: { partitionKey?: PartitionKey; condition?: string; timeoutMs?: number }
   ): Promise<BaseInvokeSuccess<CosmosPatchResult<T>> | InvokeFailure> {
     const payload: DbCosmosDBPayload = {
       type: "database",
@@ -238,7 +232,7 @@ export class CosmosDBResourceClient extends BaseResourceClient {
       operation: "patch",
       container,
       id,
-      partitionKey,
+      partitionKey: options?.partitionKey,
       patchOperations,
       condition: options?.condition,
       timeoutMs: options?.timeoutMs,
