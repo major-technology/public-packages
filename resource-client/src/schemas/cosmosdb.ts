@@ -177,27 +177,3 @@ export type DbCosmosDBResultGeneric<T = Record<string, unknown>> =
   | CosmosDeleteResult
   | CosmosPatchResult<T>;
 
-// ============================================================================
-// Type Maps for Generic Invoke
-// ============================================================================
-
-/**
- * Map of operation names to their result types
- */
-export type CosmosDBOperationResultMap<T = Record<string, unknown>> = {
-  query: CosmosQueryResult<T>;
-  read: CosmosReadResult<T>;
-  create: CosmosCreateResult<T>;
-  replace: CosmosReplaceResult<T>;
-  upsert: CosmosUpsertResult<T>;
-  delete: CosmosDeleteResult;
-  patch: CosmosPatchResult<T>;
-};
-
-/**
- * Extract result type for a specific operation
- */
-export type DbCosmosDBResultForOperation<
-  O extends keyof CosmosDBOperationResultMap,
-  T = Record<string, unknown>,
-> = CosmosDBOperationResultMap<T>[O];
