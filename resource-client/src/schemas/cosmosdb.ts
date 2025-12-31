@@ -10,7 +10,10 @@ export type CosmosValue =
   | { [key: string]: CosmosValue };
 
 /**
- * Partition key type - single value or hierarchical array
+ * Partition key type - single value or hierarchical array.
+ *
+ * Required if and must be specified only if the collection is created with a partition key definition.
+ * @see https://learn.microsoft.com/en-us/rest/api/cosmos-db/common-cosmosdb-rest-request-headers
  */
 export type PartitionKey =
   | string
@@ -47,11 +50,18 @@ interface CosmosDBPayloadBase {
   timeoutMs?: number;
 }
 
+/**
+ * Query payload for CosmosDB
+ *
+ * @see https://learn.microsoft.com/en-us/rest/api/cosmos-db/query-documents
+ * If a partition key is provided, it will be used to filter the query to a single partition.
+ * If not provided, it will trigger a cross-partition query.
+ */
 export interface CosmosQueryPayload extends CosmosDBPayloadBase {
   operation: "query";
   query: string;
   parameters?: CosmosQueryParameter[];
-  partitionKey?: PartitionKey;
+  partitionKey?: PartitionKey; // If not provided, will trigger a cross-partition query
   maxItemCount?: number;
   continuationToken?: string;
 }
@@ -59,36 +69,38 @@ export interface CosmosQueryPayload extends CosmosDBPayloadBase {
 export interface CosmosReadPayload extends CosmosDBPayloadBase {
   operation: "read";
   id: string;
-  partitionKey: PartitionKey;
+  partitionKey?: PartitionKey;
 }
 
 export interface CosmosCreatePayload extends CosmosDBPayloadBase {
   operation: "create";
   body: Record<string, CosmosValue>;
+  partitionKey?: PartitionKey;
 }
 
 export interface CosmosReplacePayload extends CosmosDBPayloadBase {
   operation: "replace";
   id: string;
-  partitionKey: PartitionKey;
+  partitionKey?: PartitionKey;
   body: Record<string, CosmosValue>;
 }
 
 export interface CosmosUpsertPayload extends CosmosDBPayloadBase {
   operation: "upsert";
   body: Record<string, CosmosValue>;
+  partitionKey?: PartitionKey;
 }
 
 export interface CosmosDeletePayload extends CosmosDBPayloadBase {
   operation: "delete";
   id: string;
-  partitionKey: PartitionKey;
+  partitionKey?: PartitionKey;
 }
 
 export interface CosmosPatchPayload extends CosmosDBPayloadBase {
   operation: "patch";
   id: string;
-  partitionKey: PartitionKey;
+  partitionKey?: PartitionKey;
   patchOperations: CosmosPatchOperation[];
   condition?: string;
 }
