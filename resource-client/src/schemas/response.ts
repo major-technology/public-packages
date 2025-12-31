@@ -2,11 +2,12 @@ import type { ApiResult } from "./common";
 import type { DbResult } from "./postgres";
 import type { StorageS3Result } from "./s3";
 import type { DbDynamoDBResult } from "./dynamodb";
+import type { DbCosmosDBResult, DbCosmosDBResultGeneric } from "./cosmosdb";
 
 /**
  * Union of all possible resource invocation result types
  */
-export type ResourceInvokeSuccess = ApiResult | DbResult | StorageS3Result | DbDynamoDBResult;
+export type ResourceInvokeSuccess = ApiResult | DbResult | StorageS3Result | DbDynamoDBResult | DbCosmosDBResult;
 
 /**
  * Base successful invocation response - generic over result type
@@ -66,4 +67,11 @@ export type StorageInvokeResponse = BaseInvokeSuccess<StorageS3Result> | InvokeF
  * Response from DynamoDB database resource invocation
  */
 export type DynamoDBInvokeResponse = BaseInvokeSuccess<DbDynamoDBResult> | InvokeFailure;
+
+/**
+ * Response from CosmosDB database resource invocation (generic for typed documents)
+ */
+export type CosmosDBInvokeResponse<T = Record<string, unknown>> =
+  | BaseInvokeSuccess<DbCosmosDBResultGeneric<T>>
+  | InvokeFailure;
 
