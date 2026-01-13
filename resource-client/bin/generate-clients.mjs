@@ -41,7 +41,7 @@ function getClientsDir() {
  */
 function clientTemplate(data, framework) {
   const isNextJs = framework === 'nextjs';
-  
+
   const imports = [
     `import { ${data.clientClass} } from '@major-tech/resource-client';`,
     isNextJs ? `import { headers } from 'next/headers';` : ''
@@ -50,9 +50,12 @@ function clientTemplate(data, framework) {
   const getHeadersConfig = isNextJs ? `
         getHeaders: async () => {
           const h = await headers();
-          return {
-            'x-major-user-jwt': h.get('x-major-user-jwt') || '',
-          };
+          const userJwt = h.get('x-major-user-jwt');
+          // Only include header if it has a value, otherwise middleware will try to verify empty string
+          if (userJwt) {
+            return { 'x-major-user-jwt': userJwt };
+          }
+          return {};
         },` : '';
 
   return `${imports}
@@ -193,13 +196,13 @@ function addResource(resourceId, name, type, description, applicationId, framewo
   }
 
   const resources = loadResources();
-  
+
   const existing = resources.find(r => r.name === name);
   if (existing) {
     console.error(`❌ Resource with name "${name}" already exists`);
     process.exit(1);
   }
-  
+
   const newResource = {
     id: resourceId,
     name,
@@ -207,14 +210,14 @@ function addResource(resourceId, name, type, description, applicationId, framewo
     description,
     applicationId
   };
-  
+
   resources.push(newResource);
   saveResources(resources);
-  
+
   console.log(`✅ Added resource: ${name}`);
   console.log(`   Type: ${type}`);
   console.log(`   ID: ${resourceId}`);
-  
+
   regenerateClients(resources, framework);
 }
 
@@ -224,18 +227,18 @@ function addResource(resourceId, name, type, description, applicationId, framewo
 function removeResource(name, framework) {
   const resources = loadResources();
   const index = resources.findIndex(r => r.name === name);
-  
+
   if (index === -1) {
     console.error(`❌ Resource "${name}" not found`);
     process.exit(1);
   }
-  
+
   const removed = resources.splice(index, 1)[0];
   saveResources(resources);
-  
+
   console.log(`✅ Removed resource: ${removed.name}`);
   console.log(`   ID: ${removed.id}`);
-  
+
   regenerateClients(resources, framework);
 }
 
@@ -244,12 +247,12 @@ function removeResource(name, framework) {
  */
 function listResources() {
   const resources = loadResources();
-  
+
   if (resources.length === 0) {
     console.log('No resources configured');
     return;
   }
-  
+
   console.log(`Resources (${resources.length}):\n`);
   resources.forEach((r, idx) => {
     console.log(`${idx + 1}. ${r.name} (${r.type})`);
@@ -301,7 +304,7 @@ function regenerateClients(resources, framework) {
 function main() {
   const args = process.argv.slice(2);
   const command = args[0];
-  
+
   // Extract --framework flag
   const frameworkIndex = args.indexOf('--framework');
   let framework = undefined;
@@ -310,7 +313,7 @@ function main() {
     // Remove --framework and its value from args
     args.splice(frameworkIndex, 2);
   }
-  
+
   if (!command) {
     console.log('Usage:');
     console.log('  npx @major-tech/resource-client add <resource_id> <name> <type> <description> <application_id> [--framework <nextjs|vite>]');
@@ -319,7 +322,7 @@ function main() {
     console.log('\nTypes: database-postgresql | database-dynamodb | api-hubspot | api-googlesheets | api-custom | storage-s3');
     return;
   }
-  
+
   switch (command) {
     case 'add': {
       const [, resourceId, name, type, description, applicationId] = args;
@@ -331,7 +334,7 @@ function main() {
       addResource(resourceId, name, type, description, applicationId, framework);
       break;
     }
-    
+
     case 'remove': {
       const [, name] = args;
       if (!name) {
@@ -341,7 +344,7 @@ function main() {
       removeResource(name, framework);
       break;
     }
-    
+
     case 'list': {
       listResources();
       break;
