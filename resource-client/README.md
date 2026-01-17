@@ -1,6 +1,6 @@
 # @major-tech/resource-client
 
-TS client: PostgreSQL/CustomAPI/HubSpot/S3. Type-safe, 0-dep, universal (Node/browser/edge), ESM+CJS.
+TS client: PostgreSQL/DynamoDB/CosmosDB/Snowflake/CustomAPI/HubSpot/S3. Type-safe, 0-dep, universal (Node/browser/edge), ESM+CJS.
 
 ## Install
 
@@ -157,6 +157,95 @@ const r = await c.invoke("GET", "/crm/v3/objects/contacts", "fetch-contacts", {
 // r.ok && r.result.body.kind === 'json' ? r.result.body.value : r.error
 ```
 
+## SnowflakeResourceClient
+
+**Constructor:** `new SnowflakeResourceClient(config: BaseClientConfig)`
+
+**Methods:**
+
+- `execute(statement: string, invocationKey: string, options?: SnowflakeExecuteOptions): Promise<SnowflakeInvokeResponse>`
+- `status(statementHandle: string, invocationKey: string, options?: { partition?: number }): Promise<SnowflakeInvokeResponse>`
+- `cancel(statementHandle: string, invocationKey: string): Promise<SnowflakeInvokeResponse>`
+- `invoke(payload: DbSnowflakePayload, invocationKey: string): Promise<SnowflakeInvokeResponse>` - raw payload
+
+**Execute Options:**
+
+```typescript
+{
+  bindings?: Record<string, { type: SnowflakeBindingType; value: string | number | boolean | null }>;
+  database?: string;      // Override default database
+  schema?: string;        // Override default schema
+  warehouse?: string;     // Override default warehouse
+  role?: string;          // Override default role
+  timeout?: number;       // Timeout in seconds (max 604800 = 7 days)
+  async?: boolean;        // Execute asynchronously
+  parameters?: SnowflakeSessionParameters;  // Session params (timezone, query_tag, etc.)
+  nullable?: boolean;     // Return NULL as "null" string
+  requestId?: string;     // Idempotency key
+}
+```
+
+**Binding Types:** `"TEXT" | "FIXED" | "REAL" | "BOOLEAN" | "DATE" | "TIME" | "TIMESTAMP_LTZ" | "TIMESTAMP_NTZ" | "TIMESTAMP_TZ" | "BINARY" | "ARRAY" | "OBJECT" | "VARIANT"`
+
+**Result (ok=true):**
+
+```typescript
+{
+  kind: "snowflake";
+  code?: string;                    // Snowflake response code
+  message: string;                  // Response message
+  statementHandle?: string;         // Handle for async operations
+  statementHandles?: string[];      // Multi-statement handles
+  statementStatusUrl?: string;      // URL to check status
+  createdOn?: number;               // Timestamp
+  resultSetMetaData?: {             // Column metadata
+    numRows: number;
+    format: string;
+    rowType: SnowflakeColumnMetadata[];
+    partitionInfo?: SnowflakePartitionInfo[];
+  };
+  data?: (string | null)[][];       // Result rows
+  stats?: {                         // DML stats
+    numRowsInserted?: number;
+    numRowsUpdated?: number;
+    numRowsDeleted?: number;
+  };
+}
+```
+
+**Example:**
+
+```typescript
+import { SnowflakeResourceClient } from "@major-tech/resource-client";
+const c = new SnowflakeResourceClient({ baseUrl, applicationId, resourceId, majorJwtToken });
+
+// Execute a query
+const r = await c.execute(
+  "SELECT * FROM users WHERE region = ?",
+  "fetch-users",
+  {
+    bindings: { "1": { type: "TEXT", value: "US-WEST" } },
+    warehouse: "COMPUTE_WH",
+  }
+);
+// r.ok ? r.result.data : r.error.message
+
+// Async execution for long-running queries
+const async = await c.execute(
+  "INSERT INTO large_table SELECT * FROM source",
+  "bulk-insert",
+  { async: true }
+);
+// async.ok ? async.result.statementHandle : async.error
+
+// Check status of async query
+const status = await c.status(async.result.statementHandle!, "check-status");
+// status.result.code === "090001" means completed
+
+// Cancel a running query
+const cancel = await c.cancel(statementHandle, "cancel-query");
+```
+
 ## S3ResourceClient
 
 **Constructor:** `new S3ResourceClient(config: BaseClientConfig)`
@@ -215,7 +304,7 @@ catch (e) { if (e instanceof ResourceInvokeError) { e.message, e.httpStatus, e.r
 - `npx major-client remove <name>` - Remove resource
 - `npx major-client regenerate` - Regenerate all clients
 
-**Types:** `database-postgresql | database-dynamodb | api-custom | api-hubspot | storage-s3`
+**Types:** `database-postgresql | database-dynamodb | database-cosmosdb | database-snowflake | api-custom | api-hubspot | api-googlesheets | storage-s3`
 
 **Generated Files:**
 

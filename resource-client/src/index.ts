@@ -11,6 +11,7 @@ export { ResourceInvokeError } from "./errors";
 export { PostgresResourceClient } from "./clients/postgres";
 export { DynamoDBResourceClient } from "./clients/dynamodb";
 export { CosmosDBResourceClient } from "./clients/cosmosdb";
+export { SnowflakeResourceClient } from "./clients/snowflake";
 export { CustomApiResourceClient } from "./clients/api-custom";
 export { HubSpotResourceClient } from "./clients/hubspot";
 export { GoogleSheetsResourceClient } from "./clients/googlesheets";
@@ -21,6 +22,7 @@ export type {
   DatabaseInvokeResponse,
   DynamoDBInvokeResponse,
   CosmosDBInvokeResponse,
+  SnowflakeInvokeResponse,
   ApiInvokeResponse,
   StorageInvokeResponse,
   BaseInvokeSuccess,

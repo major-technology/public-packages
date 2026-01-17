@@ -3,6 +3,7 @@ export * from "./common";
 export * from "./postgres";
 export * from "./dynamodb";
 export * from "./cosmosdb";
+export * from "./snowflake";
 export * from "./s3";
 export * from "./api-custom";
 export * from "./api-hubspot";
@@ -17,6 +18,7 @@ import type { ApiGoogleSheetsPayload } from "./api-googlesheets";
 import type { DbPostgresPayload } from "./postgres";
 import type { DbDynamoDBPayload } from "./dynamodb";
 import type { DbCosmosDBPayload } from "./cosmosdb";
+import type { DbSnowflakePayload } from "./snowflake";
 import type { StorageS3Payload } from "./s3";
 
 /**
@@ -28,6 +30,7 @@ export type ResourceInvokePayload =
   | DbPostgresPayload
   | DbDynamoDBPayload
   | DbCosmosDBPayload
+  | DbSnowflakePayload
   | ApiHubSpotPayload
   | ApiGoogleSheetsPayload
   | StorageS3Payload;
