@@ -50,9 +50,11 @@ export type InvokeResponse = InvokeSuccess | InvokeFailure;
 // ============================================================================
 
 /**
- * Response from database resource invocation
+ * Response from database resource invocation (generic for typed rows)
  */
-export type DatabaseInvokeResponse = BaseInvokeSuccess<DbResult> | InvokeFailure;
+export type DatabaseInvokeResponse<T = Record<string, unknown>> =
+  | BaseInvokeSuccess<DbResult<T>>
+  | InvokeFailure;
 
 /**
  * Response from API resource invocation (custom or HubSpot)
