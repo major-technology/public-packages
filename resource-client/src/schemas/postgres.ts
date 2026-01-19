@@ -18,12 +18,12 @@ export interface DbPostgresPayload {
 }
 
 /**
- * Result from a database query execution
+ * Result from a database query execution with typed rows
  */
-export interface DbResult {
+export interface DbResult<T = Record<string, unknown>> {
   kind: "database";
   /** Array of row objects returned by the query */
-  rows: Record<string, unknown>[];
+  rows: T[];
   /** Number of rows affected by the query (for INSERT, UPDATE, DELETE) */
   rowsAffected?: number;
 }

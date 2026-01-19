@@ -1,15 +1,15 @@
 import type {
-  DbParamPrimitive,
-  DbPostgresPayload,
+  DbMssqlParamValue,
+  DbMssqlPayload,
   DatabaseInvokeResponse,
 } from "../schemas";
 import { BaseResourceClient } from "../base";
 
-export class PostgresResourceClient extends BaseResourceClient {
+export class MssqlResourceClient extends BaseResourceClient {
   /**
-   * Execute a SQL query against PostgreSQL
+   * Execute a SQL query against MSSQL
    * @param sql The SQL query to execute
-   * @param params Optional positional parameters ($1, $2, etc.)
+   * @param params Optional named parameters (e.g., { id: 123 } for @id in the query)
    * @param invocationKey Unique key for tracking this invocation
    * @param timeoutMs Optional timeout in milliseconds
    * @returns Typed response with rows of type T
@@ -19,8 +19,8 @@ export class PostgresResourceClient extends BaseResourceClient {
    * interface User { id: number; name: string; email: string }
    *
    * const response = await client.invoke<User>(
-   *   "SELECT id, name, email FROM users WHERE id = $1",
-   *   [123],
+   *   "SELECT id, name, email FROM users WHERE id = @id",
+   *   { id: 123 },
    *   "get-user-123"
    * );
    *
@@ -31,13 +31,13 @@ export class PostgresResourceClient extends BaseResourceClient {
    */
   async invoke<T = Record<string, unknown>>(
     sql: string,
-    params: DbParamPrimitive[] | undefined,
+    params: Record<string, DbMssqlParamValue> | undefined,
     invocationKey: string,
     timeoutMs?: number
   ): Promise<DatabaseInvokeResponse<T>> {
-    const payload: DbPostgresPayload = {
+    const payload: DbMssqlPayload = {
       type: "database",
-      subtype: "postgresql",
+      subtype: "mssql",
       sql,
       params,
       timeoutMs,
@@ -46,4 +46,3 @@ export class PostgresResourceClient extends BaseResourceClient {
     return this.invokeRaw(payload, invocationKey) as Promise<DatabaseInvokeResponse<T>>;
   }
 }
-
