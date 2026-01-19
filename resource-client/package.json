@@ -1,6 +1,6 @@
 {
   "name": "@major-tech/resource-client",
-  "version": "0.2.10",
+  "version": "0.2.11",
   "description": "TypeScript client library for invoking Major resources (PostgreSQL, Custom APIs, HubSpot, S3)",
   "type": "module",
   "sideEffects": false,
