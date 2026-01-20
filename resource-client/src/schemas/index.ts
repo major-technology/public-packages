@@ -25,6 +25,7 @@ import type { StorageS3Payload } from "./s3";
 
 /**
  * Discriminated union of all resource payload types
+ * Uses embedded structure for direct Go unmarshaling
  * Use the 'subtype' field to narrow the type
  */
 export type ResourceInvokePayload =
@@ -37,4 +38,3 @@ export type ResourceInvokePayload =
   | ApiHubSpotPayload
   | ApiGoogleSheetsPayload
   | StorageS3Payload;
-

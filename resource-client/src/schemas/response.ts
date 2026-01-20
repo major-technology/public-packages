@@ -1,30 +1,104 @@
 import type { ApiResult } from "./common";
 import type { DbResult } from "./postgres";
 import type { StorageS3Result } from "./s3";
-import type { DbDynamoDBResult } from "./dynamodb";
+import type { DbDynamoDBResult, DbDynamoDBResultForCommand, DynamoDBCommandOutputMap } from "./dynamodb";
 import type { DbCosmosDBResult, DbCosmosDBResultGeneric } from "./cosmosdb";
 import type { DbSnowflakeResult } from "./snowflake";
 
-/**
- * Union of all possible resource invocation result types
- */
-export type ResourceInvokeSuccess = ApiResult | DbResult | StorageS3Result | DbDynamoDBResult | DbCosmosDBResult | DbSnowflakeResult;
+// ============================================================================
+// Invoke Result Wrapper (nested structure)
+// ============================================================================
 
 /**
- * Base successful invocation response - generic over result type
+ * Result kind discriminator values
  */
-export interface BaseInvokeSuccess<T> {
+export type InvokeResultKind = "api" | "database" | "storage" | "dynamodb" | "cosmosdb" | "snowflake";
+
+/**
+ * Invoke result wrapper with nested structure.
+ * The `kind` field determines which nested result is populated.
+ * This matches the Go InvokeResult structure.
+ */
+export interface InvokeResultWrapper<K extends InvokeResultKind = InvokeResultKind> {
+  /** Discriminator for the result type */
+  kind: K;
+  /** API result (when kind is "api") */
+  api?: ApiResult;
+  /** Database result (when kind is "database") */
+  database?: DbResult;
+  /** Storage result (when kind is "storage") */
+  storage?: StorageS3Result;
+  /** DynamoDB result (when kind is "dynamodb") */
+  dynamodb?: DbDynamoDBResult;
+  /** CosmosDB result (when kind is "cosmosdb") */
+  cosmosdb?: DbCosmosDBResult;
+  /** Snowflake result (when kind is "snowflake") */
+  snowflake?: DbSnowflakeResult;
+}
+
+/**
+ * Typed result wrapper for specific result kinds
+ */
+export interface ApiInvokeResultWrapper extends InvokeResultWrapper<"api"> {
+  kind: "api";
+  api: ApiResult;
+}
+
+export interface DatabaseInvokeResultWrapper extends InvokeResultWrapper<"database"> {
+  kind: "database";
+  database: DbResult;
+}
+
+export interface StorageInvokeResultWrapper extends InvokeResultWrapper<"storage"> {
+  kind: "storage";
+  storage: StorageS3Result;
+}
+
+export interface DynamoDBInvokeResultWrapper<C extends keyof DynamoDBCommandOutputMap = keyof DynamoDBCommandOutputMap> extends InvokeResultWrapper<"dynamodb"> {
+  kind: "dynamodb";
+  dynamodb: DbDynamoDBResultForCommand<C>;
+}
+
+export interface CosmosDBInvokeResultWrapper<T = Record<string, unknown>> extends InvokeResultWrapper<"cosmosdb"> {
+  kind: "cosmosdb";
+  cosmosdb: DbCosmosDBResultGeneric<T>;
+}
+
+export interface SnowflakeInvokeResultWrapper extends InvokeResultWrapper<"snowflake"> {
+  kind: "snowflake";
+  snowflake: DbSnowflakeResult;
+}
+
+/**
+ * Union of all possible resource invocation result wrappers
+ */
+export type ResourceInvokeResult =
+  | ApiInvokeResultWrapper
+  | DatabaseInvokeResultWrapper
+  | StorageInvokeResultWrapper
+  | DynamoDBInvokeResultWrapper
+  | CosmosDBInvokeResultWrapper
+  | SnowflakeInvokeResultWrapper;
+
+// ============================================================================
+// Response Types
+// ============================================================================
+
+/**
+ * Base successful invocation response - generic over result wrapper type
+ */
+export interface BaseInvokeSuccess<T = InvokeResultWrapper> {
   ok: true;
   /** Unique ID for this request */
   requestId: string;
-  /** The result data from the resource */
+  /** The result wrapper containing the resource result */
   result: T;
 }
 
 /**
  * Successful invocation response (any resource type)
  */
-export type InvokeSuccess = BaseInvokeSuccess<ResourceInvokeSuccess>;
+export type InvokeSuccess = BaseInvokeSuccess<ResourceInvokeResult>;
 
 /**
  * Failed invocation response
@@ -50,36 +124,35 @@ export type InvokeResponse = InvokeSuccess | InvokeFailure;
 // ============================================================================
 
 /**
- * Response from database resource invocation (generic for typed rows)
+ * Response from database resource invocation
  */
-export type DatabaseInvokeResponse<T = Record<string, unknown>> =
-  | BaseInvokeSuccess<DbResult<T>>
-  | InvokeFailure;
+export type DatabaseInvokeResponse = BaseInvokeSuccess<DatabaseInvokeResultWrapper> | InvokeFailure;
 
 /**
- * Response from API resource invocation (custom or HubSpot)
+ * Response from API resource invocation (custom, HubSpot, or Google Sheets)
  */
-export type ApiInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;
+export type ApiInvokeResponse = BaseInvokeSuccess<ApiInvokeResultWrapper> | InvokeFailure;
 
 /**
  * Response from S3 storage resource invocation
  */
-export type StorageInvokeResponse = BaseInvokeSuccess<StorageS3Result> | InvokeFailure;
+export type StorageInvokeResponse = BaseInvokeSuccess<StorageInvokeResultWrapper> | InvokeFailure;
 
 /**
  * Response from DynamoDB database resource invocation
  */
-export type DynamoDBInvokeResponse = BaseInvokeSuccess<DbDynamoDBResult> | InvokeFailure;
+export type DynamoDBInvokeResponse<C extends keyof DynamoDBCommandOutputMap = keyof DynamoDBCommandOutputMap> = 
+  | BaseInvokeSuccess<DynamoDBInvokeResultWrapper<C>> 
+  | InvokeFailure;
 
 /**
- * Response from CosmosDB database resource invocation (generic for typed documents)
+ * Response from CosmosDB database resource invocation
  */
 export type CosmosDBInvokeResponse<T = Record<string, unknown>> =
-  | BaseInvokeSuccess<DbCosmosDBResultGeneric<T>>
+  | BaseInvokeSuccess<CosmosDBInvokeResultWrapper<T>>
   | InvokeFailure;
 
 /**
  * Response from Snowflake database resource invocation
  */
-export type SnowflakeInvokeResponse = BaseInvokeSuccess<DbSnowflakeResult> | InvokeFailure;
-
+export type SnowflakeInvokeResponse = BaseInvokeSuccess<SnowflakeInvokeResultWrapper> | InvokeFailure;

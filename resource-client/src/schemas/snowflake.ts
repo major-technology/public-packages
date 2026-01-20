@@ -42,11 +42,9 @@ export interface SnowflakeSessionParameters {
 }
 
 /**
- * Execute operation payload - submit a SQL statement
+ * Execute operation invoke data - submit a SQL statement
  */
-export interface SnowflakeExecutePayload {
-  type: "database";
-  subtype: "snowflake";
+export interface SnowflakeExecuteInvokeData {
   operation: "execute";
   /** SQL statement to execute */
   statement: string;
@@ -73,11 +71,9 @@ export interface SnowflakeExecutePayload {
 }
 
 /**
- * Status operation payload - get status/results of a running query
+ * Status operation invoke data - get status/results of a running query
  */
-export interface SnowflakeStatusPayload {
-  type: "database";
-  subtype: "snowflake";
+export interface SnowflakeStatusInvokeData {
   operation: "status";
   /** Statement handle from execute operation */
   statementHandle: string;
@@ -86,23 +82,32 @@ export interface SnowflakeStatusPayload {
 }
 
 /**
- * Cancel operation payload - cancel a running query
+ * Cancel operation invoke data - cancel a running query
  */
-export interface SnowflakeCancelPayload {
-  type: "database";
-  subtype: "snowflake";
+export interface SnowflakeCancelInvokeData {
   operation: "cancel";
   /** Statement handle to cancel */
   statementHandle: string;
 }
 
 /**
- * Discriminated union of all Snowflake operation payloads
+ * Discriminated union of all Snowflake operation invoke data
  */
-export type DbSnowflakePayload =
-  | SnowflakeExecutePayload
-  | SnowflakeStatusPayload
-  | SnowflakeCancelPayload;
+export type SnowflakeInvokeData =
+  | SnowflakeExecuteInvokeData
+  | SnowflakeStatusInvokeData
+  | SnowflakeCancelInvokeData;
+
+/**
+ * Payload for invoking a Snowflake database resource
+ * Uses embedded structure for direct Go unmarshaling
+ */
+export interface DbSnowflakePayload {
+  type: "database";
+  subtype: "snowflake";
+  /** Embedded Snowflake payload */
+  snowflake: SnowflakeInvokeData;
+}
 
 /**
  * Column metadata from Snowflake result set

@@ -6,6 +6,7 @@ import type {
 import { ResourceInvokeError } from "./errors";
 
 export interface BaseClientConfig {
+  /** Base URL for the Go API service */
   baseUrl: string;
   majorJwtToken?: string;
   applicationId: string;
@@ -43,7 +44,8 @@ export abstract class BaseResourceClient {
     payload: ResourceInvokePayload,
     invocationKey: string,
   ): Promise<InvokeResponse> {
-    const url = `${this.config.baseUrl}/internal/apps/v1/${this.config.applicationId}/resource/${this.config.resourceId}/invoke`;
+    // V2 endpoint on the Go service
+    const url = `${this.config.baseUrl}/v2/apps/${this.config.applicationId}/resources/${this.config.resourceId}/invoke`;
     
     const body: InvokeRequest = {
       payload,
@@ -79,4 +81,3 @@ export abstract class BaseResourceClient {
     }
   }
 }
-

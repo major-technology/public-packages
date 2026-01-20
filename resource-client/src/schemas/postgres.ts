@@ -4,11 +4,9 @@
 export type DbParamPrimitive = string | number | boolean | null;
 
 /**
- * Payload for invoking a PostgreSQL database resource
+ * PostgreSQL specific invoke data
  */
-export interface DbPostgresPayload {
-  type: "database";
-  subtype: "postgresql";
+export interface PostgresqlInvokeData {
   /** SQL query to execute */
   sql: string;
   /** Optional positional parameters for the query */
@@ -18,13 +16,23 @@ export interface DbPostgresPayload {
 }
 
 /**
- * Result from a database query execution with typed rows
+ * Payload for invoking a PostgreSQL database resource
+ * Uses embedded structure for direct Go unmarshaling
  */
-export interface DbResult<T = Record<string, unknown>> {
+export interface DbPostgresPayload {
+  type: "database";
+  subtype: "postgresql";
+  /** Embedded PostgreSQL payload */
+  postgresql: PostgresqlInvokeData;
+}
+
+/**
+ * Result from a database query execution
+ */
+export interface DbResult {
   kind: "database";
   /** Array of row objects returned by the query */
-  rows: T[];
+  rows: Record<string, unknown>[];
   /** Number of rows affected by the query (for INSERT, UPDATE, DELETE) */
   rowsAffected?: number;
 }
-

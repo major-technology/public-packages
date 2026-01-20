@@ -14,17 +14,26 @@ export type S3Command =
   | "GeneratePresignedUrl";
 
 /**
- * Payload for invoking an S3 storage resource
+ * S3 specific invoke data
  */
-export interface StorageS3Payload {
-  type: "storage";
-  subtype: "s3";
+export interface S3InvokeData {
   /** S3 command to execute */
   command: S3Command;
   /** Parameters for the S3 command (varies by command) */
   params: Record<string, unknown>;
   /** Optional timeout in milliseconds */
   timeoutMs?: number;
+}
+
+/**
+ * Payload for invoking an S3 storage resource
+ * Uses embedded structure for direct Go unmarshaling
+ */
+export interface StorageS3Payload {
+  type: "storage";
+  subtype: "s3";
+  /** Embedded S3 payload */
+  s3: S3InvokeData;
 }
 
 /**
@@ -52,4 +61,3 @@ export interface StorageS3ResultPresigned {
  * Result from an S3 storage operation
  */
 export type StorageS3Result = StorageS3ResultStandard | StorageS3ResultPresigned;
-
