@@ -1,11 +1,9 @@
 import type { BodyPayload, HttpMethod, QueryParams } from "./common";
 
 /**
- * Payload for invoking a custom API resource
+ * Custom API specific invoke data
  */
-export interface ApiCustomPayload {
-  type: "api";
-  subtype: "custom";
+export interface CustomAPIInvokeData {
   /** HTTP method to use */
   method: HttpMethod;
   /** Path to append to the resource's base URL */
@@ -20,3 +18,13 @@ export interface ApiCustomPayload {
   timeoutMs?: number;
 }
 
+/**
+ * Payload for invoking a custom API resource
+ * Uses embedded structure for direct Go unmarshaling
+ */
+export interface ApiCustomPayload {
+  type: "api";
+  subtype: "custom";
+  /** Embedded Custom API payload */
+  custom: CustomAPIInvokeData;
+}

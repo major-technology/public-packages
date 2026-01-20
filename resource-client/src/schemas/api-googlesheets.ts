@@ -1,13 +1,9 @@
 import type { JsonBody, HttpMethod, QueryParams } from "./common";
 
 /**
- * Payload for invoking a Google Sheets API resource
- * Note: Google Sheets authentication is handled automatically by the API
- * The resource is bound to a specific spreadsheet (stored in resourceMeta)
+ * Google Sheets specific invoke data
  */
-export interface ApiGoogleSheetsPayload {
-  type: "api";
-  subtype: "googlesheets";
+export interface GoogleSheetsInvokeData {
   /** HTTP method to use */
   method: HttpMethod;
   /** 
@@ -30,3 +26,15 @@ export interface ApiGoogleSheetsPayload {
   timeoutMs?: number;
 }
 
+/**
+ * Payload for invoking a Google Sheets API resource
+ * Uses embedded structure for direct Go unmarshaling
+ * Note: Google Sheets authentication is handled automatically by the API
+ * The resource is bound to a specific spreadsheet (stored in resourceMeta)
+ */
+export interface ApiGoogleSheetsPayload {
+  type: "api";
+  subtype: "googlesheets";
+  /** Embedded Google Sheets payload */
+  googlesheets: GoogleSheetsInvokeData;
+}

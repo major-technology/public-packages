@@ -1,12 +1,9 @@
 import type { JsonBody, HttpMethod, QueryParams } from "./common";
 
 /**
- * Payload for invoking a HubSpot API resource
- * Note: HubSpot authentication is handled automatically by the API
+ * HubSpot specific invoke data
  */
-export interface ApiHubSpotPayload {
-  type: "api";
-  subtype: "hubspot";
+export interface HubSpotInvokeData {
   /** HTTP method to use */
   method: HttpMethod;
   /** HubSpot API path (e.g., "/crm/v3/objects/deals") */
@@ -19,3 +16,14 @@ export interface ApiHubSpotPayload {
   timeoutMs?: number;
 }
 
+/**
+ * Payload for invoking a HubSpot API resource
+ * Uses embedded structure for direct Go unmarshaling
+ * Note: HubSpot authentication is handled automatically by the API
+ */
+export interface ApiHubSpotPayload {
+  type: "api";
+  subtype: "hubspot";
+  /** Embedded HubSpot payload */
+  hubspot: HubSpotInvokeData;
+}
