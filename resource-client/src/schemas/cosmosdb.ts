@@ -43,21 +43,19 @@ export interface CosmosPatchOperation {
 // Operation Payloads
 // ============================================================================
 
-interface CosmosDBPayloadBase {
-  type: "database";
-  subtype: "cosmosdb";
+interface CosmosDBInvokeDataBase {
   container: string;
   timeoutMs?: number;
 }
 
 /**
- * Query payload for CosmosDB
+ * Query invoke data for CosmosDB
  *
  * @see https://learn.microsoft.com/en-us/rest/api/cosmos-db/query-documents
  * If a partition key is provided, it will be used to filter the query to a single partition.
  * If not provided, it will trigger a cross-partition query.
  */
-export interface CosmosQueryPayload extends CosmosDBPayloadBase {
+export interface CosmosQueryInvokeData extends CosmosDBInvokeDataBase {
   operation: "query";
   query: string;
   parameters?: CosmosQueryParameter[];
@@ -66,38 +64,38 @@ export interface CosmosQueryPayload extends CosmosDBPayloadBase {
   continuationToken?: string;
 }
 
-export interface CosmosReadPayload extends CosmosDBPayloadBase {
+export interface CosmosReadInvokeData extends CosmosDBInvokeDataBase {
   operation: "read";
   id: string;
   partitionKey?: PartitionKey;
 }
 
-export interface CosmosCreatePayload extends CosmosDBPayloadBase {
+export interface CosmosCreateInvokeData extends CosmosDBInvokeDataBase {
   operation: "create";
   body: Record<string, CosmosValue>;
   partitionKey?: PartitionKey;
 }
 
-export interface CosmosReplacePayload extends CosmosDBPayloadBase {
+export interface CosmosReplaceInvokeData extends CosmosDBInvokeDataBase {
   operation: "replace";
   id: string;
   partitionKey?: PartitionKey;
   body: Record<string, CosmosValue>;
 }
 
-export interface CosmosUpsertPayload extends CosmosDBPayloadBase {
+export interface CosmosUpsertInvokeData extends CosmosDBInvokeDataBase {
   operation: "upsert";
   body: Record<string, CosmosValue>;
   partitionKey?: PartitionKey;
 }
 
-export interface CosmosDeletePayload extends CosmosDBPayloadBase {
+export interface CosmosDeleteInvokeData extends CosmosDBInvokeDataBase {
   operation: "delete";
   id: string;
   partitionKey?: PartitionKey;
 }
 
-export interface CosmosPatchPayload extends CosmosDBPayloadBase {
+export interface CosmosPatchInvokeData extends CosmosDBInvokeDataBase {
   operation: "patch";
   id: string;
   partitionKey?: PartitionKey;
@@ -106,16 +104,27 @@ export interface CosmosPatchPayload extends CosmosDBPayloadBase {
 }
 
 /**
- * Discriminated union of all CosmosDB operation payloads
+ * Discriminated union of all CosmosDB operation invoke data
  */
-export type DbCosmosDBPayload =
-  | CosmosQueryPayload
-  | CosmosReadPayload
-  | CosmosCreatePayload
-  | CosmosReplacePayload
-  | CosmosUpsertPayload
-  | CosmosDeletePayload
-  | CosmosPatchPayload;
+export type CosmosDBInvokeData =
+  | CosmosQueryInvokeData
+  | CosmosReadInvokeData
+  | CosmosCreateInvokeData
+  | CosmosReplaceInvokeData
+  | CosmosUpsertInvokeData
+  | CosmosDeleteInvokeData
+  | CosmosPatchInvokeData;
+
+/**
+ * Payload for invoking a CosmosDB database resource
+ * Uses embedded structure for direct Go unmarshaling
+ */
+export interface DbCosmosDBPayload {
+  type: "database";
+  subtype: "cosmosdb";
+  /** Embedded CosmosDB payload */
+  cosmosdb: CosmosDBInvokeData;
+}
 
 // ============================================================================
 // Operation Results

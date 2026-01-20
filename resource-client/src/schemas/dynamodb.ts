@@ -26,81 +26,32 @@ import type {
 } from "@aws-sdk/client-dynamodb";
 
 /**
- * Payload for invoking a DynamoDB database resource
+ * DynamoDB specific invoke data for each command type
  */
-export type DbDynamoDBPayload =
-  | {
-      type: "database";
-      subtype: "dynamodb";
-      command: "GetItem";
-      params: GetItemCommandInput;
-    }
-  | {
-      type: "database";
-      subtype: "dynamodb";
-      command: "PutItem";
-      params: PutItemCommandInput;
-    }
-  | {
-      type: "database";
-      subtype: "dynamodb";
-      command: "UpdateItem";
-      params: UpdateItemCommandInput;
-    }
-  | {
-      type: "database";
-      subtype: "dynamodb";
-      command: "DeleteItem";
-      params: DeleteItemCommandInput;
-    }
-  | {
-      type: "database";
-      subtype: "dynamodb";
-      command: "Query";
-      params: QueryCommandInput;
-    }
-  | {
-      type: "database";
-      subtype: "dynamodb";
-      command: "Scan";
-      params: ScanCommandInput;
-    }
-  | {
-      type: "database";
-      subtype: "dynamodb";
-      command: "BatchGetItem";
-      params: BatchGetItemCommandInput;
-    }
-  | {
-      type: "database";
-      subtype: "dynamodb";
-      command: "BatchWriteItem";
-      params: BatchWriteItemCommandInput;
-    }
-  | {
-      type: "database";
-      subtype: "dynamodb";
-      command: "TransactGetItems";
-      params: TransactGetItemsCommandInput;
-    }
-  | {
-      type: "database";
-      subtype: "dynamodb";
-      command: "TransactWriteItems";
-      params: TransactWriteItemsCommandInput;
-    }
-  | {
-      type: "database";
-      subtype: "dynamodb";
-      command: "ListTables";
-      params: ListTablesCommandInput;
-    }
-  | {
-      type: "database";
-      subtype: "dynamodb";
-      command: "DescribeTable";
-      params: DescribeTableCommandInput;
-    };
+export type DynamoDBInvokeData =
+  | { command: "GetItem"; params: GetItemCommandInput }
+  | { command: "PutItem"; params: PutItemCommandInput }
+  | { command: "UpdateItem"; params: UpdateItemCommandInput }
+  | { command: "DeleteItem"; params: DeleteItemCommandInput }
+  | { command: "Query"; params: QueryCommandInput }
+  | { command: "Scan"; params: ScanCommandInput }
+  | { command: "BatchGetItem"; params: BatchGetItemCommandInput }
+  | { command: "BatchWriteItem"; params: BatchWriteItemCommandInput }
+  | { command: "TransactGetItems"; params: TransactGetItemsCommandInput }
+  | { command: "TransactWriteItems"; params: TransactWriteItemsCommandInput }
+  | { command: "ListTables"; params: ListTablesCommandInput }
+  | { command: "DescribeTable"; params: DescribeTableCommandInput };
+
+/**
+ * Payload for invoking a DynamoDB database resource
+ * Uses embedded structure for direct Go unmarshaling
+ */
+export interface DbDynamoDBPayload {
+  type: "database";
+  subtype: "dynamodb";
+  /** Embedded DynamoDB payload */
+  dynamodb: DynamoDBInvokeData;
+}
 
 /**
  * DynamoDB command input type map

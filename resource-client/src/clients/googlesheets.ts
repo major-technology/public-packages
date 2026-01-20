@@ -1,30 +1,41 @@
 import type {
   HttpMethod,
   QueryParams,
+  JsonBody,
   ApiGoogleSheetsPayload,
-  ApiInvokeResponse,
 } from "../schemas";
+import type { ApiInvokeResponse } from "../schemas/response";
 import { BaseResourceClient } from "../base";
 
 export class GoogleSheetsResourceClient extends BaseResourceClient {
+  /**
+   * Make an HTTP request to the Google Sheets API
+   * @param method HTTP method
+   * @param path Google Sheets API path relative to the spreadsheet
+   * @param invocationKey Unique key for tracking this invocation
+   * @param options Optional query, body, and timeout
+   * @returns Response with nested result: response.result.api
+   */
   async invoke(
     method: HttpMethod,
     path: string,
     invocationKey: string,
     options: {
       query?: QueryParams;
-      body?: { type: "json"; value: unknown };
+      body?: JsonBody;
       timeoutMs?: number;
     } = {}
   ): Promise<ApiInvokeResponse> {
     const payload: ApiGoogleSheetsPayload = {
       type: "api",
       subtype: "googlesheets",
-      method,
-      path,
-      query: options.query,
-      body: options.body,
-      timeoutMs: options.timeoutMs || 30000,
+      googlesheets: {
+        method,
+        path,
+        query: options.query,
+        body: options.body,
+        timeoutMs: options.timeoutMs || 30000,
+      },
     };
 
     return this.invokeRaw(payload, invocationKey) as Promise<ApiInvokeResponse>;
@@ -160,4 +171,3 @@ export class GoogleSheetsResourceClient extends BaseResourceClient {
     });
   }
 }
-

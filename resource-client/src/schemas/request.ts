@@ -4,7 +4,7 @@ import type { ResourceInvokePayload } from ".";
  * Request envelope for resource invocation
  */
 export interface InvokeRequest {
-  /** The resource-specific payload */
+  /** The resource-specific payload with embedded structure */
   payload: ResourceInvokePayload;
   /** 
    * Invocation key - reused across multiple invocations of the same query.
@@ -13,4 +13,3 @@ export interface InvokeRequest {
    */
   invocationKey: string;
 }
-

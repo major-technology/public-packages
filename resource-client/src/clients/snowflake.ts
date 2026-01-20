@@ -1,136 +1,25 @@
 import type {
   DbSnowflakePayload,
-  DbSnowflakeResult,
-  SnowflakeBindingValue,
-  SnowflakeSessionParameters,
-  SnowflakeExecutePayload,
-  SnowflakeStatusPayload,
-  SnowflakeCancelPayload,
+  SnowflakeInvokeData,
 } from "../schemas";
-import type { BaseInvokeSuccess, InvokeFailure } from "../schemas/response";
+import type { SnowflakeInvokeResponse } from "../schemas/response";
 import { BaseResourceClient } from "../base";
-
-/**
- * Response type for Snowflake operations
- */
-export type SnowflakeInvokeResponse =
-  | BaseInvokeSuccess<DbSnowflakeResult>
-  | InvokeFailure;
-
-/**
- * Options for execute operation
- */
-export interface SnowflakeExecuteOptions {
-  /** Parameter bindings */
-  bindings?: Record<string, SnowflakeBindingValue>;
-  /** Override default database */
-  database?: string;
-  /** Override default schema */
-  schema?: string;
-  /** Override default warehouse */
-  warehouse?: string;
-  /** Override default role */
-  role?: string;
-  /** Timeout in seconds (0 = max timeout of 604800s / 7 days) */
-  timeout?: number;
-  /** Execute asynchronously - returns statementHandle immediately */
-  async?: boolean;
-  /** Session parameters for this execution */
-  parameters?: SnowflakeSessionParameters;
-  /** Return SQL NULL as string "null" instead of JSON null */
-  nullable?: boolean;
-  /** Request ID for idempotency (auto-generated if not provided) */
-  requestId?: string;
-}
-
-/**
- * Options for status operation
- */
-export interface SnowflakeStatusOptions {
-  /** For paginated results - retrieve specific partition (0-indexed) */
-  partition?: number;
-}
 
 export class SnowflakeResourceClient extends BaseResourceClient {
   /**
-   * Invoke a Snowflake operation with a raw payload
-   * @param payload The complete operation payload
+   * Execute a Snowflake operation
+   * @param invokeData The operation data (execute, status, or cancel)
    * @param invocationKey Unique key for tracking this invocation
+   * @returns Response with nested result: response.result.snowflake
    */
   async invoke(
-    payload: DbSnowflakePayload,
-    invocationKey: string
-  ): Promise<SnowflakeInvokeResponse> {
-    return this.invokeRaw(payload, invocationKey) as Promise<SnowflakeInvokeResponse>;
-  }
-
-  /**
-   * Execute a SQL statement
-   * @param statement The SQL statement to execute
-   * @param invocationKey Unique key for tracking this invocation
-   * @param options Execution options (bindings, database overrides, async, etc.)
-   */
-  async execute(
-    statement: string,
+    invokeData: SnowflakeInvokeData,
     invocationKey: string,
-    options: SnowflakeExecuteOptions = {}
   ): Promise<SnowflakeInvokeResponse> {
-    const payload: SnowflakeExecutePayload = {
+    const payload: DbSnowflakePayload = {
       type: "database",
       subtype: "snowflake",
-      operation: "execute",
-      statement,
-      bindings: options.bindings,
-      database: options.database,
-      schema: options.schema,
-      warehouse: options.warehouse,
-      role: options.role,
-      timeout: options.timeout,
-      async: options.async,
-      parameters: options.parameters,
-      nullable: options.nullable,
-      requestId: options.requestId,
-    };
-
-    return this.invokeRaw(payload, invocationKey) as Promise<SnowflakeInvokeResponse>;
-  }
-
-  /**
-   * Get status or results of a statement
-   * @param statementHandle The statement handle from execute operation
-   * @param invocationKey Unique key for tracking this invocation
-   * @param options Status options (partition for paginated results)
-   */
-  async status(
-    statementHandle: string,
-    invocationKey: string,
-    options: SnowflakeStatusOptions = {}
-  ): Promise<SnowflakeInvokeResponse> {
-    const payload: SnowflakeStatusPayload = {
-      type: "database",
-      subtype: "snowflake",
-      operation: "status",
-      statementHandle,
-      partition: options.partition,
-    };
-
-    return this.invokeRaw(payload, invocationKey) as Promise<SnowflakeInvokeResponse>;
-  }
-
-  /**
-   * Cancel a running statement
-   * @param statementHandle The statement handle to cancel
-   * @param invocationKey Unique key for tracking this invocation
-   */
-  async cancel(
-    statementHandle: string,
-    invocationKey: string
-  ): Promise<SnowflakeInvokeResponse> {
-    const payload: SnowflakeCancelPayload = {
-      type: "database",
-      subtype: "snowflake",
-      operation: "cancel",
-      statementHandle,
+      snowflake: invokeData,
     };
 
     return this.invokeRaw(payload, invocationKey) as Promise<SnowflakeInvokeResponse>;
