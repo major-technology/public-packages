@@ -17,6 +17,7 @@ export { CustomApiResourceClient } from "./clients/api-custom";
 export { HubSpotResourceClient } from "./clients/hubspot";
 export { GoogleSheetsResourceClient } from "./clients/googlesheets";
 export { S3ResourceClient } from "./clients/s3";
+export { LambdaResourceClient } from "./clients/lambda";
 
 // Re-export common response types for convenience
 export type {
@@ -26,6 +27,7 @@ export type {
   SnowflakeInvokeResponse,
   ApiInvokeResponse,
   StorageInvokeResponse,
+  LambdaInvokeResponse,
   BaseInvokeSuccess,
 } from "./schemas/response";
 

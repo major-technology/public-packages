@@ -4,11 +4,12 @@ import type { StorageS3Result } from "./s3";
 import type { DbDynamoDBResult } from "./dynamodb";
 import type { DbCosmosDBResult, DbCosmosDBResultGeneric } from "./cosmosdb";
 import type { DbSnowflakeResult } from "./snowflake";
+import type { ApiLambdaResult } from "./lambda";
 
 /**
  * Union of all possible resource invocation result types
  */
-export type ResourceInvokeSuccess = ApiResult | DbResult | StorageS3Result | DbDynamoDBResult | DbCosmosDBResult | DbSnowflakeResult;
+export type ResourceInvokeSuccess = ApiResult | DbResult | StorageS3Result | DbDynamoDBResult | DbCosmosDBResult | DbSnowflakeResult | ApiLambdaResult;
 
 /**
  * Base successful invocation response - generic over result type
@@ -82,4 +83,9 @@ export type CosmosDBInvokeResponse<T = Record<string, unknown>> =
  * Response from Snowflake database resource invocation
  */
 export type SnowflakeInvokeResponse = BaseInvokeSuccess<DbSnowflakeResult> | InvokeFailure;
+
+/**
+ * Response from Lambda resource invocation
+ */
+export type LambdaInvokeResponse = BaseInvokeSuccess<ApiLambdaResult> | InvokeFailure;
 

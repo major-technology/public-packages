@@ -9,6 +9,7 @@ export * from "./s3";
 export * from "./api-custom";
 export * from "./api-hubspot";
 export * from "./api-googlesheets";
+export * from "./lambda";
 export * from "./request";
 export * from "./response";
 
@@ -22,6 +23,7 @@ import type { DbDynamoDBPayload } from "./dynamodb";
 import type { DbCosmosDBPayload } from "./cosmosdb";
 import type { DbSnowflakePayload } from "./snowflake";
 import type { StorageS3Payload } from "./s3";
+import type { ApiLambdaPayload } from "./lambda";
 
 /**
  * Discriminated union of all resource payload types
@@ -36,5 +38,6 @@ export type ResourceInvokePayload =
   | DbSnowflakePayload
   | ApiHubSpotPayload
   | ApiGoogleSheetsPayload
-  | StorageS3Payload;
+  | StorageS3Payload
+  | ApiLambdaPayload;
 
