@@ -1,11 +1,11 @@
 import type {
-  ApiLambdaPayload,
   ApiLambdaResult,
   LambdaInvocationType,
   LambdaLogType,
 } from "../schemas";
 import type { BaseInvokeSuccess, InvokeFailure } from "../schemas/response";
 import { BaseResourceClient } from "../base";
+import { buildLambdaInvokePayload } from "../payload-builders/lambda";
 
 /**
  * Options for Lambda invocation
@@ -103,14 +103,7 @@ export class LambdaResourceClient extends BaseResourceClient {
     invocationKey: string,
     options: LambdaInvokeOptions = {},
   ): Promise<BaseInvokeSuccess<ApiLambdaResult> | InvokeFailure> {
-    const invokePayload: ApiLambdaPayload = {
-      type: "api",
-      subtype: "lambda",
-      FunctionName: functionName,
-      Payload: payload,
-      ...options,
-    };
-
+    const invokePayload = buildLambdaInvokePayload(functionName, payload, options);
     return this.invokeRaw(invokePayload, invocationKey) as Promise<
       BaseInvokeSuccess<ApiLambdaResult> | InvokeFailure
     >;

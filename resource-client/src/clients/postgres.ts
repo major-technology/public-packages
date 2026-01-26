@@ -1,9 +1,9 @@
 import type {
   DbParamPrimitive,
-  DbPostgresPayload,
   DatabaseInvokeResponse,
 } from "../schemas";
 import { BaseResourceClient } from "../base";
+import { buildPostgresInvokePayload } from "../payload-builders/postgres";
 
 export class PostgresResourceClient extends BaseResourceClient {
   /**
@@ -35,14 +35,7 @@ export class PostgresResourceClient extends BaseResourceClient {
     invocationKey: string,
     timeoutMs?: number
   ): Promise<DatabaseInvokeResponse<T>> {
-    const payload: DbPostgresPayload = {
-      type: "database",
-      subtype: "postgresql",
-      sql,
-      params,
-      timeoutMs,
-    };
-
+    const payload = buildPostgresInvokePayload(sql, params, timeoutMs);
     return this.invokeRaw(payload, invocationKey) as Promise<DatabaseInvokeResponse<T>>;
   }
 }

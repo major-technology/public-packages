@@ -1,10 +1,10 @@
 import type {
   HttpMethod,
   QueryParams,
-  ApiGoogleSheetsPayload,
   ApiInvokeResponse,
 } from "../schemas";
 import { BaseResourceClient } from "../base";
+import { buildGoogleSheetsInvokePayload } from "../payload-builders/googlesheets";
 
 export class GoogleSheetsResourceClient extends BaseResourceClient {
   async invoke(
@@ -17,16 +17,7 @@ export class GoogleSheetsResourceClient extends BaseResourceClient {
       timeoutMs?: number;
     } = {}
   ): Promise<ApiInvokeResponse> {
-    const payload: ApiGoogleSheetsPayload = {
-      type: "api",
-      subtype: "googlesheets",
-      method,
-      path,
-      query: options.query,
-      body: options.body,
-      timeoutMs: options.timeoutMs || 30000,
-    };
-
+    const payload = buildGoogleSheetsInvokePayload(method, path, options);
     return this.invokeRaw(payload, invocationKey) as Promise<ApiInvokeResponse>;
   }
 

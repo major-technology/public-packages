@@ -15,6 +15,16 @@ import type {
 } from "../schemas";
 import type { BaseInvokeSuccess, InvokeFailure } from "../schemas/response";
 import { BaseResourceClient } from "../base";
+import {
+  buildCosmosDBInvokePayload,
+  buildCosmosDBQueryPayload,
+  buildCosmosDBReadPayload,
+  buildCosmosDBCreatePayload,
+  buildCosmosDBReplacePayload,
+  buildCosmosDBUpsertPayload,
+  buildCosmosDBDeletePayload,
+  buildCosmosDBPatchPayload,
+} from "../payload-builders/cosmosdb";
 
 export class CosmosDBResourceClient extends BaseResourceClient {
   /**
@@ -26,7 +36,7 @@ export class CosmosDBResourceClient extends BaseResourceClient {
     payload: DbCosmosDBPayload,
     invocationKey: string
   ): Promise<BaseInvokeSuccess<DbCosmosDBResultGeneric<T>> | InvokeFailure> {
-    return this.invokeRaw(payload, invocationKey) as Promise<
+    return this.invokeRaw(buildCosmosDBInvokePayload(payload), invocationKey) as Promise<
       BaseInvokeSuccess<DbCosmosDBResultGeneric<T>> | InvokeFailure
     >;
   }
@@ -50,19 +60,7 @@ export class CosmosDBResourceClient extends BaseResourceClient {
       timeoutMs?: number;
     }
   ): Promise<BaseInvokeSuccess<CosmosQueryResult<T>> | InvokeFailure> {
-    const payload: DbCosmosDBPayload = {
-      type: "database",
-      subtype: "cosmosdb",
-      operation: "query",
-      container,
-      query,
-      parameters: options?.parameters,
-      partitionKey: options?.partitionKey,
-      maxItemCount: options?.maxItemCount,
-      continuationToken: options?.continuationToken,
-      timeoutMs: options?.timeoutMs,
-    };
-
+    const payload = buildCosmosDBQueryPayload(container, query, options);
     return this.invokeRaw(payload, invocationKey) as Promise<
       BaseInvokeSuccess<CosmosQueryResult<T>> | InvokeFailure
     >;
@@ -81,16 +79,7 @@ export class CosmosDBResourceClient extends BaseResourceClient {
     invocationKey: string,
     options?: { partitionKey?: PartitionKey; timeoutMs?: number }
   ): Promise<BaseInvokeSuccess<CosmosReadResult<T>> | InvokeFailure> {
-    const payload: DbCosmosDBPayload = {
-      type: "database",
-      subtype: "cosmosdb",
-      operation: "read",
-      container,
-      id,
-      partitionKey: options?.partitionKey,
-      timeoutMs: options?.timeoutMs,
-    };
-
+    const payload = buildCosmosDBReadPayload(container, id, options);
     return this.invokeRaw(payload, invocationKey) as Promise<
       BaseInvokeSuccess<CosmosReadResult<T>> | InvokeFailure
     >;
@@ -109,16 +98,7 @@ export class CosmosDBResourceClient extends BaseResourceClient {
     invocationKey: string,
     options?: { partitionKey?: PartitionKey; timeoutMs?: number }
   ): Promise<BaseInvokeSuccess<CosmosCreateResult<T>> | InvokeFailure> {
-    const payload: DbCosmosDBPayload = {
-      type: "database",
-      subtype: "cosmosdb",
-      operation: "create",
-      container,
-      body,
-      partitionKey: options?.partitionKey,
-      timeoutMs: options?.timeoutMs,
-    };
-
+    const payload = buildCosmosDBCreatePayload(container, body, options);
     return this.invokeRaw(payload, invocationKey) as Promise<
       BaseInvokeSuccess<CosmosCreateResult<T>> | InvokeFailure
     >;
@@ -139,17 +119,7 @@ export class CosmosDBResourceClient extends BaseResourceClient {
     invocationKey: string,
     options?: { partitionKey?: PartitionKey; timeoutMs?: number }
   ): Promise<BaseInvokeSuccess<CosmosReplaceResult<T>> | InvokeFailure> {
-    const payload: DbCosmosDBPayload = {
-      type: "database",
-      subtype: "cosmosdb",
-      operation: "replace",
-      container,
-      id,
-      partitionKey: options?.partitionKey,
-      body,
-      timeoutMs: options?.timeoutMs,
-    };
-
+    const payload = buildCosmosDBReplacePayload(container, id, body, options);
     return this.invokeRaw(payload, invocationKey) as Promise<
       BaseInvokeSuccess<CosmosReplaceResult<T>> | InvokeFailure
     >;
@@ -168,16 +138,7 @@ export class CosmosDBResourceClient extends BaseResourceClient {
     invocationKey: string,
     options?: { partitionKey?: PartitionKey; timeoutMs?: number }
   ): Promise<BaseInvokeSuccess<CosmosUpsertResult<T>> | InvokeFailure> {
-    const payload: DbCosmosDBPayload = {
-      type: "database",
-      subtype: "cosmosdb",
-      operation: "upsert",
-      container,
-      body,
-      partitionKey: options?.partitionKey,
-      timeoutMs: options?.timeoutMs,
-    };
-
+    const payload = buildCosmosDBUpsertPayload(container, body, options);
     return this.invokeRaw(payload, invocationKey) as Promise<
       BaseInvokeSuccess<CosmosUpsertResult<T>> | InvokeFailure
     >;
@@ -196,16 +157,7 @@ export class CosmosDBResourceClient extends BaseResourceClient {
     invocationKey: string,
     options?: { partitionKey?: PartitionKey; timeoutMs?: number }
   ): Promise<BaseInvokeSuccess<CosmosDeleteResult> | InvokeFailure> {
-    const payload: DbCosmosDBPayload = {
-      type: "database",
-      subtype: "cosmosdb",
-      operation: "delete",
-      container,
-      id,
-      partitionKey: options?.partitionKey,
-      timeoutMs: options?.timeoutMs,
-    };
-
+    const payload = buildCosmosDBDeletePayload(container, id, options);
     return this.invokeRaw(payload, invocationKey) as Promise<
       BaseInvokeSuccess<CosmosDeleteResult> | InvokeFailure
     >;
@@ -226,18 +178,7 @@ export class CosmosDBResourceClient extends BaseResourceClient {
     invocationKey: string,
     options?: { partitionKey?: PartitionKey; condition?: string; timeoutMs?: number }
   ): Promise<BaseInvokeSuccess<CosmosPatchResult<T>> | InvokeFailure> {
-    const payload: DbCosmosDBPayload = {
-      type: "database",
-      subtype: "cosmosdb",
-      operation: "patch",
-      container,
-      id,
-      partitionKey: options?.partitionKey,
-      patchOperations,
-      condition: options?.condition,
-      timeoutMs: options?.timeoutMs,
-    };
-
+    const payload = buildCosmosDBPatchPayload(container, id, patchOperations, options);
     return this.invokeRaw(payload, invocationKey) as Promise<
       BaseInvokeSuccess<CosmosPatchResult<T>> | InvokeFailure
     >;

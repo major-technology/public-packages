@@ -1,10 +1,10 @@
 import type {
   HttpMethod,
   QueryParams,
-  ApiSalesforcePayload,
   ApiInvokeResponse,
 } from "../schemas";
 import { BaseResourceClient } from "../base";
+import { buildSalesforceInvokePayload } from "../payload-builders/salesforce";
 
 /**
  * Client for interacting with Salesforce API resources.
@@ -66,16 +66,7 @@ export class SalesforceResourceClient extends BaseResourceClient {
       timeoutMs?: number;
     } = {}
   ): Promise<ApiInvokeResponse> {
-    const payload: ApiSalesforcePayload = {
-      type: "api",
-      subtype: "salesforce",
-      method,
-      path,
-      query: options.query,
-      body: options.body,
-      timeoutMs: options.timeoutMs || 30000,
-    };
-
+    const payload = buildSalesforceInvokePayload(method, path, options);
     return this.invokeRaw(payload, invocationKey) as Promise<ApiInvokeResponse>;
   }
 

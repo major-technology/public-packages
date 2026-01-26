@@ -1,9 +1,9 @@
 import type {
   S3Command,
-  StorageS3Payload,
   StorageInvokeResponse,
 } from "../schemas";
 import { BaseResourceClient } from "../base";
+import { buildS3InvokePayload } from "../payload-builders/s3";
 
 export class S3ResourceClient extends BaseResourceClient {
   async invoke(
@@ -14,14 +14,7 @@ export class S3ResourceClient extends BaseResourceClient {
       timeoutMs?: number;
     } = {}
   ): Promise<StorageInvokeResponse> {
-    const payload: StorageS3Payload = {
-      type: "storage",
-      subtype: "s3",
-      command,
-      params,
-      timeoutMs: options.timeoutMs,
-    };
-
+    const payload = buildS3InvokePayload(command, params, options);
     return this.invokeRaw(payload, invocationKey) as Promise<StorageInvokeResponse>;
   }
 }
