@@ -1,9 +1,9 @@
 import type {
   DbMssqlParamValue,
-  DbMssqlPayload,
   DatabaseInvokeResponse,
 } from "../schemas";
 import { BaseResourceClient } from "../base";
+import { buildMssqlInvokePayload } from "../payload-builders/mssql";
 
 export class MssqlResourceClient extends BaseResourceClient {
   /**
@@ -35,14 +35,7 @@ export class MssqlResourceClient extends BaseResourceClient {
     invocationKey: string,
     timeoutMs?: number
   ): Promise<DatabaseInvokeResponse<T>> {
-    const payload: DbMssqlPayload = {
-      type: "database",
-      subtype: "mssql",
-      sql,
-      params,
-      timeoutMs,
-    };
-
+    const payload = buildMssqlInvokePayload(sql, params, timeoutMs);
     return this.invokeRaw(payload, invocationKey) as Promise<DatabaseInvokeResponse<T>>;
   }
 }

@@ -2,10 +2,10 @@ import type {
   HttpMethod,
   QueryParams,
   BodyPayload,
-  ApiCustomPayload,
   ApiInvokeResponse,
 } from "../schemas";
 import { BaseResourceClient } from "../base";
+import { buildCustomApiInvokePayload } from "../payload-builders/custom";
 
 export class CustomApiResourceClient extends BaseResourceClient {
   async invoke(
@@ -19,17 +19,7 @@ export class CustomApiResourceClient extends BaseResourceClient {
       timeoutMs?: number;
     } = {}
   ): Promise<ApiInvokeResponse> {
-    const payload: ApiCustomPayload = {
-      type: "api",
-      subtype: "custom",
-      method,
-      path,
-      query: options.query,
-      headers: options.headers,
-      body: options.body,
-      timeoutMs: options.timeoutMs || 30000,
-    };
-
+    const payload = buildCustomApiInvokePayload(method, path, options);
     return this.invokeRaw(payload, invocationKey) as Promise<ApiInvokeResponse>;
   }
 }

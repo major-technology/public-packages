@@ -1,10 +1,10 @@
 import type {
   HttpMethod,
   QueryParams,
-  ApiHubSpotPayload,
   ApiInvokeResponse,
 } from "../schemas";
 import { BaseResourceClient } from "../base";
+import { buildHubSpotInvokePayload } from "../payload-builders/hubspot";
 
 export class HubSpotResourceClient extends BaseResourceClient {
   async invoke(
@@ -17,16 +17,7 @@ export class HubSpotResourceClient extends BaseResourceClient {
       timeoutMs?: number;
     } = {}
   ): Promise<ApiInvokeResponse> {
-    const payload: ApiHubSpotPayload = {
-      type: "api",
-      subtype: "hubspot",
-      method,
-      path,
-      query: options.query,
-      body: options.body,
-      timeoutMs: options.timeoutMs || 30000,
-    };
-
+    const payload = buildHubSpotInvokePayload(method, path, options);
     return this.invokeRaw(payload, invocationKey) as Promise<ApiInvokeResponse>;
   }
 }

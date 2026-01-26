@@ -20,6 +20,9 @@ export { GoogleSheetsResourceClient } from "./clients/googlesheets";
 export { S3ResourceClient } from "./clients/s3";
 export { LambdaResourceClient } from "./clients/lambda";
 
+// Export payload builders (for use in testing UIs, etc.)
+export * from "./payload-builders";
+
 // Re-export common response types for convenience
 export type {
   DatabaseInvokeResponse,

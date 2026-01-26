@@ -3,12 +3,15 @@ import type {
   DbSnowflakeResult,
   SnowflakeBindingValue,
   SnowflakeSessionParameters,
-  SnowflakeExecutePayload,
-  SnowflakeStatusPayload,
-  SnowflakeCancelPayload,
 } from "../schemas";
 import type { BaseInvokeSuccess, InvokeFailure } from "../schemas/response";
 import { BaseResourceClient } from "../base";
+import {
+  buildSnowflakeInvokePayload,
+  buildSnowflakeExecutePayload,
+  buildSnowflakeStatusPayload,
+  buildSnowflakeCancelPayload,
+} from "../payload-builders/snowflake";
 
 /**
  * Response type for Snowflake operations
@@ -61,7 +64,7 @@ export class SnowflakeResourceClient extends BaseResourceClient {
     payload: DbSnowflakePayload,
     invocationKey: string
   ): Promise<SnowflakeInvokeResponse> {
-    return this.invokeRaw(payload, invocationKey) as Promise<SnowflakeInvokeResponse>;
+    return this.invokeRaw(buildSnowflakeInvokePayload(payload), invocationKey) as Promise<SnowflakeInvokeResponse>;
   }
 
   /**
@@ -75,23 +78,7 @@ export class SnowflakeResourceClient extends BaseResourceClient {
     invocationKey: string,
     options: SnowflakeExecuteOptions = {}
   ): Promise<SnowflakeInvokeResponse> {
-    const payload: SnowflakeExecutePayload = {
-      type: "database",
-      subtype: "snowflake",
-      operation: "execute",
-      statement,
-      bindings: options.bindings,
-      database: options.database,
-      schema: options.schema,
-      warehouse: options.warehouse,
-      role: options.role,
-      timeout: options.timeout,
-      async: options.async,
-      parameters: options.parameters,
-      nullable: options.nullable,
-      requestId: options.requestId,
-    };
-
+    const payload = buildSnowflakeExecutePayload(statement, options);
     return this.invokeRaw(payload, invocationKey) as Promise<SnowflakeInvokeResponse>;
   }
 
@@ -106,14 +93,7 @@ export class SnowflakeResourceClient extends BaseResourceClient {
     invocationKey: string,
     options: SnowflakeStatusOptions = {}
   ): Promise<SnowflakeInvokeResponse> {
-    const payload: SnowflakeStatusPayload = {
-      type: "database",
-      subtype: "snowflake",
-      operation: "status",
-      statementHandle,
-      partition: options.partition,
-    };
-
+    const payload = buildSnowflakeStatusPayload(statementHandle, options);
     return this.invokeRaw(payload, invocationKey) as Promise<SnowflakeInvokeResponse>;
   }
 
@@ -126,13 +106,7 @@ export class SnowflakeResourceClient extends BaseResourceClient {
     statementHandle: string,
     invocationKey: string
   ): Promise<SnowflakeInvokeResponse> {
-    const payload: SnowflakeCancelPayload = {
-      type: "database",
-      subtype: "snowflake",
-      operation: "cancel",
-      statementHandle,
-    };
-
+    const payload = buildSnowflakeCancelPayload(statementHandle);
     return this.invokeRaw(payload, invocationKey) as Promise<SnowflakeInvokeResponse>;
   }
 }

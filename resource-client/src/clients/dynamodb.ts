@@ -1,10 +1,10 @@
 import type {
-  DbDynamoDBPayload,
   DynamoDBCommandInputMap,
   DbDynamoDBResultForCommand,
 } from "../schemas";
 import type { BaseInvokeSuccess, InvokeFailure } from "../schemas/response";
 import { BaseResourceClient } from "../base";
+import { buildDynamoDBInvokePayload } from "../payload-builders/dynamodb";
 
 export class DynamoDBResourceClient extends BaseResourceClient {
   async invoke<C extends keyof DynamoDBCommandInputMap>(
@@ -12,14 +12,8 @@ export class DynamoDBResourceClient extends BaseResourceClient {
     params: DynamoDBCommandInputMap[C],
     invocationKey: string,
   ): Promise<BaseInvokeSuccess<DbDynamoDBResultForCommand<C>> | InvokeFailure> {
-    const payload = {
-      type: "database" as const,
-      subtype: "dynamodb" as const,
-      command,
-      params,
-    };
-
-    return this.invokeRaw(payload as DbDynamoDBPayload, invocationKey) as Promise<
+    const payload = buildDynamoDBInvokePayload(command, params);
+    return this.invokeRaw(payload, invocationKey) as Promise<
       BaseInvokeSuccess<DbDynamoDBResultForCommand<C>> | InvokeFailure
     >;
   }
