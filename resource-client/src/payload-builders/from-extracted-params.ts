@@ -59,6 +59,18 @@ export interface ExtractedParam {
   name: string;
   value: string;
   valueType: string;
+  /** Whether the value was statically resolvable from source code */
+  known?: boolean;
+  /** Original expression if not known */
+  expression?: string;
+}
+
+/**
+ * Check if a param represents an undefined value
+ * An undefined param is one that is not statically known and has expression "undefined"
+ */
+function isUndefinedParam(param: ExtractedParam): boolean {
+  return param.known === false && param.expression === "undefined";
 }
 
 /**
@@ -84,10 +96,13 @@ function parseParamValue(value: string, valueType: string): unknown {
 
 /**
  * Find a param by name (case-insensitive)
+ * Returns undefined if param is not found or if param is an undefined expression
  */
 function findParam(params: ExtractedParam[], name: string): unknown {
   const param = params.find((p) => p.name.toLowerCase() === name.toLowerCase());
   if (!param) return undefined;
+  // If param is not known and expression is "undefined", treat it as undefined
+  if (isUndefinedParam(param)) return undefined;
   return parseParamValue(param.value, param.valueType);
 }
 
