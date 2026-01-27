@@ -89,7 +89,11 @@ export interface BigQueryCreateTableResult {
   created: boolean;
 }
 
-export interface BigQueryInvokeResponse {
+/**
+ * BigQuery result - the actual result data from the invoke
+ * This follows the pattern of other database results (DbResult, DbDynamoDBResult, etc.)
+ */
+export interface DbBigQueryResult {
   kind: "bigquery";
   operation: string;
   data:
