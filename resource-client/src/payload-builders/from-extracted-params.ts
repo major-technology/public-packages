@@ -42,6 +42,15 @@ import {
   buildSalesforceDescribeObjectPayload,
 } from "./salesforce";
 import { buildCustomApiInvokePayload } from "./custom";
+import {
+  buildBigQueryQueryPayload,
+  buildBigQueryListDatasetsPayload,
+  buildBigQueryListTablesPayload,
+  buildBigQueryGetTablePayload,
+  buildBigQueryInsertRowsPayload,
+  buildBigQueryCreateTablePayload,
+  buildBigQueryInvokePayload,
+} from "./bigquery";
 
 /**
  * Extracted parameter from query extraction
@@ -336,6 +345,48 @@ export function buildPayloadFromExtractedParams(
       const path = findParam(extractedParams, "Path") as string;
       const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
       return buildCustomApiInvokePayload(method, path, options);
+    }
+
+    // =========================================================================
+    // BigQuery
+    // =========================================================================
+    case "bigquery": {
+      if (methodName === "query") {
+        const sql = findParam(extractedParams, "SQL") as string;
+        const params = findParam(extractedParams, "Params") as Record<string, unknown> | undefined;
+        const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
+        return buildBigQueryQueryPayload(sql, params, options);
+      }
+      if (methodName === "listDatasets") {
+        const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
+        return buildBigQueryListDatasetsPayload(options);
+      }
+      if (methodName === "listTables") {
+        const datasetId = findParam(extractedParams, "DatasetId") as string;
+        const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
+        return buildBigQueryListTablesPayload(datasetId, options);
+      }
+      if (methodName === "getTable") {
+        const datasetId = findParam(extractedParams, "DatasetId") as string;
+        const tableId = findParam(extractedParams, "TableId") as string;
+        return buildBigQueryGetTablePayload(datasetId, tableId);
+      }
+      if (methodName === "insertRows") {
+        const datasetId = findParam(extractedParams, "DatasetId") as string;
+        const tableId = findParam(extractedParams, "TableId") as string;
+        const rows = findParam(extractedParams, "Rows") as Record<string, unknown>[];
+        return buildBigQueryInsertRowsPayload(datasetId, tableId, rows);
+      }
+      if (methodName === "createTable") {
+        const datasetId = findParam(extractedParams, "DatasetId") as string;
+        const tableId = findParam(extractedParams, "TableId") as string;
+        const schema = findParam(extractedParams, "Schema") as { fields: Array<{ name: string; type: string; mode?: string; description?: string }> };
+        const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
+        return buildBigQueryCreateTablePayload(datasetId, tableId, schema, options);
+      }
+      // Default: invoke method
+      const payload = findParam(extractedParams, "Payload") as Record<string, unknown>;
+      return buildBigQueryInvokePayload(payload as never);
     }
 
     default:

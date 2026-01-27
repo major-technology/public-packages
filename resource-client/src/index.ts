@@ -19,6 +19,7 @@ export { SalesforceResourceClient } from "./clients/salesforce";
 export { GoogleSheetsResourceClient } from "./clients/googlesheets";
 export { S3ResourceClient } from "./clients/s3";
 export { LambdaResourceClient } from "./clients/lambda";
+export { BigQueryResourceClient } from "./clients/bigquery";
 
 // Export payload builders (for use in testing UIs, etc.)
 export * from "./payload-builders";
@@ -34,4 +35,6 @@ export type {
   LambdaInvokeResponse,
   BaseInvokeSuccess,
 } from "./schemas/response";
+
+export type { BigQueryInvokeResponse } from "./schemas/bigquery";
 

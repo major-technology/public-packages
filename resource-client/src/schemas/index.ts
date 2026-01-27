@@ -11,6 +11,7 @@ export * from "./api-hubspot";
 export * from "./api-salesforce";
 export * from "./api-googlesheets";
 export * from "./lambda";
+export * from "./bigquery";
 export * from "./request";
 export * from "./response";
 
@@ -26,6 +27,7 @@ import type { DbCosmosDBPayload } from "./cosmosdb";
 import type { DbSnowflakePayload } from "./snowflake";
 import type { StorageS3Payload } from "./s3";
 import type { ApiLambdaPayload } from "./lambda";
+import type { DbBigQueryPayload } from "./bigquery";
 
 /**
  * Discriminated union of all resource payload types
@@ -42,5 +44,6 @@ export type ResourceInvokePayload =
   | ApiSalesforcePayload
   | ApiGoogleSheetsPayload
   | StorageS3Payload
-  | ApiLambdaPayload;
+  | ApiLambdaPayload
+  | DbBigQueryPayload;
 
