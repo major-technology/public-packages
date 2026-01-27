@@ -8,7 +8,7 @@
  *   npx @major-tech/resource-client remove <name>
  *   npx @major-tech/resource-client list
  * 
- * Types: database-postgresql | database-mssql | database-dynamodb | database-cosmosdb | database-snowflake | api-hubspot | api-googlesheets | api-custom | api-lambda | api-salesforce | storage-s3
+ * Types: database-postgresql | database-mssql | database-dynamodb | database-cosmosdb | database-snowflake | database-bigquery | api-hubspot | api-googlesheets | api-custom | api-lambda | api-salesforce | storage-s3
  * 
  * Examples:
  *   npx @major-tech/resource-client add "abc-123" "orders-db" "database-postgresql" "Orders database" "app-123"
@@ -145,6 +145,7 @@ function getClientClass(type) {
     'database-dynamodb': 'DynamoDBResourceClient',
     'database-cosmosdb': 'CosmosDBResourceClient',
     'database-snowflake': 'SnowflakeResourceClient',
+    'database-bigquery': 'BigQueryResourceClient',
     'api-custom': 'CustomApiResourceClient',
     'api-hubspot': 'HubSpotResourceClient',
     'api-googlesheets': 'GoogleSheetsResourceClient',
@@ -184,7 +185,7 @@ function generateIndexFile(resources) {
 }
 
 function addResource(resourceId, name, type, description, applicationId, framework) {
-  const validTypes = ['database-postgresql', 'database-mssql', 'database-dynamodb', 'database-cosmosdb', 'database-snowflake', 'api-hubspot', 'api-googlesheets', 'api-custom', 'api-lambda', 'api-salesforce', 'storage-s3'];
+  const validTypes = ['database-postgresql', 'database-mssql', 'database-dynamodb', 'database-cosmosdb', 'database-snowflake', 'database-bigquery', 'api-hubspot', 'api-googlesheets', 'api-custom', 'api-lambda', 'api-salesforce', 'storage-s3'];
   if (!validTypes.includes(type)) {
     console.error(`❌ Invalid type: ${type}`);
     console.error(`   Valid types: ${validTypes.join(', ')}`);
@@ -321,7 +322,7 @@ function main() {
     console.log('  npx @major-tech/resource-client add <resource_id> <name> <type> <description> <application_id> [--framework <nextjs|vite>]');
     console.log('  npx @major-tech/resource-client remove <name> [--framework <nextjs|vite>]');
     console.log('  npx @major-tech/resource-client list');
-    console.log('\nTypes: database-postgresql | database-mssql | database-dynamodb | database-cosmosdb | database-snowflake | api-hubspot | api-googlesheets | api-custom | api-lambda | api-salesforce | storage-s3');
+    console.log('\nTypes: database-postgresql | database-mssql | database-dynamodb | database-cosmosdb | database-snowflake | database-bigquery | api-hubspot | api-googlesheets | api-custom | api-lambda | api-salesforce | storage-s3');
     return;
   }
   

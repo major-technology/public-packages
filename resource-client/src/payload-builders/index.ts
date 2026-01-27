@@ -64,6 +64,17 @@ export {
 // Custom API
 export { buildCustomApiInvokePayload } from "./custom";
 
+// BigQuery
+export {
+  buildBigQueryQueryPayload,
+  buildBigQueryListDatasetsPayload,
+  buildBigQueryListTablesPayload,
+  buildBigQueryGetTablePayload,
+  buildBigQueryInsertRowsPayload,
+  buildBigQueryCreateTablePayload,
+  buildBigQueryInvokePayload,
+} from "./bigquery";
+
 // Universal builder from extracted params
 export { buildPayloadFromExtractedParams } from "./from-extracted-params";
 export type { ExtractedParam } from "./from-extracted-params";
