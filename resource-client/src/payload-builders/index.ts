@@ -35,13 +35,31 @@ export { buildLambdaInvokePayload } from "./lambda";
 export type { LambdaInvokeOptions } from "./lambda";
 
 // Google Sheets
-export { buildGoogleSheetsInvokePayload } from "./googlesheets";
+export {
+  buildGoogleSheetsInvokePayload,
+  buildGoogleSheetsGetValuesPayload,
+  buildGoogleSheetsUpdateValuesPayload,
+  buildGoogleSheetsAppendValuesPayload,
+  buildGoogleSheetsClearValuesPayload,
+  buildGoogleSheetsBatchGetValuesPayload,
+  buildGoogleSheetsBatchUpdateValuesPayload,
+  buildGoogleSheetsGetSpreadsheetPayload,
+  buildGoogleSheetsBatchUpdatePayload,
+} from "./googlesheets";
 
 // HubSpot
 export { buildHubSpotInvokePayload } from "./hubspot";
 
 // Salesforce
-export { buildSalesforceInvokePayload } from "./salesforce";
+export {
+  buildSalesforceInvokePayload,
+  buildSalesforceQueryPayload,
+  buildSalesforceGetRecordPayload,
+  buildSalesforceCreateRecordPayload,
+  buildSalesforceUpdateRecordPayload,
+  buildSalesforceDeleteRecordPayload,
+  buildSalesforceDescribeObjectPayload,
+} from "./salesforce";
 
 // Custom API
 export { buildCustomApiInvokePayload } from "./custom";

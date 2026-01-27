@@ -20,9 +20,27 @@ import {
 } from "./snowflake";
 import { buildS3InvokePayload } from "./s3";
 import { buildLambdaInvokePayload } from "./lambda";
-import { buildGoogleSheetsInvokePayload } from "./googlesheets";
+import {
+  buildGoogleSheetsInvokePayload,
+  buildGoogleSheetsGetValuesPayload,
+  buildGoogleSheetsUpdateValuesPayload,
+  buildGoogleSheetsAppendValuesPayload,
+  buildGoogleSheetsClearValuesPayload,
+  buildGoogleSheetsBatchGetValuesPayload,
+  buildGoogleSheetsBatchUpdateValuesPayload,
+  buildGoogleSheetsGetSpreadsheetPayload,
+  buildGoogleSheetsBatchUpdatePayload,
+} from "./googlesheets";
 import { buildHubSpotInvokePayload } from "./hubspot";
-import { buildSalesforceInvokePayload } from "./salesforce";
+import {
+  buildSalesforceInvokePayload,
+  buildSalesforceQueryPayload,
+  buildSalesforceGetRecordPayload,
+  buildSalesforceCreateRecordPayload,
+  buildSalesforceUpdateRecordPayload,
+  buildSalesforceDeleteRecordPayload,
+  buildSalesforceDescribeObjectPayload,
+} from "./salesforce";
 import { buildCustomApiInvokePayload } from "./custom";
 
 /**
@@ -217,6 +235,43 @@ export function buildPayloadFromExtractedParams(
     // Google Sheets
     // =========================================================================
     case "googlesheets": {
+      if (methodName === "getValues") {
+        const range = findParam(extractedParams, "Range") as string;
+        return buildGoogleSheetsGetValuesPayload(range);
+      }
+      if (methodName === "updateValues") {
+        const range = findParam(extractedParams, "Range") as string;
+        const values = findParam(extractedParams, "Values") as unknown[][];
+        const valueInputOption = (findParam(extractedParams, "ValueInputOption") as "RAW" | "USER_ENTERED") ?? "USER_ENTERED";
+        return buildGoogleSheetsUpdateValuesPayload(range, values, valueInputOption);
+      }
+      if (methodName === "appendValues") {
+        const range = findParam(extractedParams, "Range") as string;
+        const values = findParam(extractedParams, "Values") as unknown[][];
+        const valueInputOption = (findParam(extractedParams, "ValueInputOption") as "RAW" | "USER_ENTERED") ?? "USER_ENTERED";
+        return buildGoogleSheetsAppendValuesPayload(range, values, valueInputOption);
+      }
+      if (methodName === "clearValues") {
+        const range = findParam(extractedParams, "Range") as string;
+        return buildGoogleSheetsClearValuesPayload(range);
+      }
+      if (methodName === "batchGetValues") {
+        const ranges = findParam(extractedParams, "Ranges") as string[];
+        return buildGoogleSheetsBatchGetValuesPayload(ranges);
+      }
+      if (methodName === "batchUpdateValues") {
+        const data = findParam(extractedParams, "Data") as Array<{ range: string; values: unknown[][] }>;
+        const valueInputOption = (findParam(extractedParams, "ValueInputOption") as "RAW" | "USER_ENTERED") ?? "USER_ENTERED";
+        return buildGoogleSheetsBatchUpdateValuesPayload(data, valueInputOption);
+      }
+      if (methodName === "getSpreadsheet") {
+        return buildGoogleSheetsGetSpreadsheetPayload();
+      }
+      if (methodName === "batchUpdate") {
+        const requests = findParam(extractedParams, "Requests") as unknown[];
+        return buildGoogleSheetsBatchUpdatePayload(requests);
+      }
+      // Default: invoke method
       const method = findParam(extractedParams, "Method") as "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
       const path = findParam(extractedParams, "Path") as string;
       const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
@@ -237,6 +292,36 @@ export function buildPayloadFromExtractedParams(
     // Salesforce
     // =========================================================================
     case "salesforce": {
+      if (methodName === "query") {
+        const query = findParam(extractedParams, "Query") as string;
+        return buildSalesforceQueryPayload(query);
+      }
+      if (methodName === "getRecord") {
+        const objectType = findParam(extractedParams, "ObjectType") as string;
+        const recordId = findParam(extractedParams, "RecordId") as string;
+        return buildSalesforceGetRecordPayload(objectType, recordId);
+      }
+      if (methodName === "createRecord") {
+        const objectType = findParam(extractedParams, "ObjectType") as string;
+        const data = findParam(extractedParams, "Data") as Record<string, unknown>;
+        return buildSalesforceCreateRecordPayload(objectType, data);
+      }
+      if (methodName === "updateRecord") {
+        const objectType = findParam(extractedParams, "ObjectType") as string;
+        const recordId = findParam(extractedParams, "RecordId") as string;
+        const data = findParam(extractedParams, "Data") as Record<string, unknown>;
+        return buildSalesforceUpdateRecordPayload(objectType, recordId, data);
+      }
+      if (methodName === "deleteRecord") {
+        const objectType = findParam(extractedParams, "ObjectType") as string;
+        const recordId = findParam(extractedParams, "RecordId") as string;
+        return buildSalesforceDeleteRecordPayload(objectType, recordId);
+      }
+      if (methodName === "describeObject") {
+        const objectType = findParam(extractedParams, "ObjectType") as string;
+        return buildSalesforceDescribeObjectPayload(objectType);
+      }
+      // Default: invoke method
       const method = findParam(extractedParams, "Method") as "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
       const path = findParam(extractedParams, "Path") as string;
       const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
