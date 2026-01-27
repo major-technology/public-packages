@@ -33,8 +33,7 @@ export type {
   ApiInvokeResponse,
   StorageInvokeResponse,
   LambdaInvokeResponse,
+  BigQueryInvokeResponse,
   BaseInvokeSuccess,
 } from "./schemas/response";
-
-export type { BigQueryInvokeResponse } from "./schemas/bigquery";
 

@@ -5,11 +5,12 @@ import type { DbDynamoDBResult } from "./dynamodb";
 import type { DbCosmosDBResult, DbCosmosDBResultGeneric } from "./cosmosdb";
 import type { DbSnowflakeResult } from "./snowflake";
 import type { ApiLambdaResult } from "./lambda";
+import type { DbBigQueryResult } from "./bigquery";
 
 /**
  * Union of all possible resource invocation result types
  */
-export type ResourceInvokeSuccess = ApiResult | DbResult | StorageS3Result | DbDynamoDBResult | DbCosmosDBResult | DbSnowflakeResult | ApiLambdaResult;
+export type ResourceInvokeSuccess = ApiResult | DbResult | StorageS3Result | DbDynamoDBResult | DbCosmosDBResult | DbSnowflakeResult | ApiLambdaResult | DbBigQueryResult;
 
 /**
  * Base successful invocation response - generic over result type
@@ -88,4 +89,9 @@ export type SnowflakeInvokeResponse = BaseInvokeSuccess<DbSnowflakeResult> | Inv
  * Response from Lambda resource invocation
  */
 export type LambdaInvokeResponse = BaseInvokeSuccess<ApiLambdaResult> | InvokeFailure;
+
+/**
+ * Response from BigQuery database resource invocation
+ */
+export type BigQueryInvokeResponse = BaseInvokeSuccess<DbBigQueryResult> | InvokeFailure;
 
