@@ -75,6 +75,9 @@ export {
   buildBigQueryInvokePayload,
 } from "./bigquery";
 
+// Outreach
+export { buildOutreachInvokePayload } from "./outreach";
+
 // Universal builder from extracted params
 export { buildPayloadFromExtractedParams } from "./from-extracted-params";
 export type { ExtractedParam } from "./from-extracted-params";

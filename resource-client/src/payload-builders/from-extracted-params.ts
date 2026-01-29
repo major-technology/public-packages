@@ -51,6 +51,7 @@ import {
   buildBigQueryCreateTablePayload,
   buildBigQueryInvokePayload,
 } from "./bigquery";
+import { buildOutreachInvokePayload } from "./outreach";
 
 /**
  * Extracted parameter from query extraction
@@ -402,6 +403,16 @@ export function buildPayloadFromExtractedParams(
       // Default: invoke method
       const payload = findParam(extractedParams, "Payload") as Record<string, unknown>;
       return buildBigQueryInvokePayload(payload as never);
+    }
+
+    // =========================================================================
+    // Outreach
+    // =========================================================================
+    case "outreach": {
+      const method = findParam(extractedParams, "Method") as "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+      const path = findParam(extractedParams, "Path") as string;
+      const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
+      return buildOutreachInvokePayload(method, path, options);
     }
 
     default:
