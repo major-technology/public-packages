@@ -20,6 +20,7 @@ export { GoogleSheetsResourceClient } from "./clients/googlesheets";
 export { S3ResourceClient } from "./clients/s3";
 export { LambdaResourceClient } from "./clients/lambda";
 export { BigQueryResourceClient } from "./clients/bigquery";
+export { OutreachResourceClient } from "./clients/outreach";
 
 // Export payload builders (for use in testing UIs, etc.)
 export * from "./payload-builders";
@@ -34,6 +35,7 @@ export type {
   StorageInvokeResponse,
   LambdaInvokeResponse,
   BigQueryInvokeResponse,
+  OutreachInvokeResponse,
   BaseInvokeSuccess,
 } from "./schemas/response";
 

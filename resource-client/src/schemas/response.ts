@@ -6,11 +6,12 @@ import type { DbCosmosDBResult, DbCosmosDBResultGeneric } from "./cosmosdb";
 import type { DbSnowflakeResult } from "./snowflake";
 import type { ApiLambdaResult } from "./lambda";
 import type { DbBigQueryResult } from "./bigquery";
+import type { ApiOutreachResult } from "./api-outreach";
 
 /**
  * Union of all possible resource invocation result types
  */
-export type ResourceInvokeSuccess = ApiResult | DbResult | StorageS3Result | DbDynamoDBResult | DbCosmosDBResult | DbSnowflakeResult | ApiLambdaResult | DbBigQueryResult;
+export type ResourceInvokeSuccess = ApiResult | DbResult | StorageS3Result | DbDynamoDBResult | DbCosmosDBResult | DbSnowflakeResult | ApiLambdaResult | DbBigQueryResult | ApiOutreachResult;
 
 /**
  * Base successful invocation response - generic over result type
@@ -94,4 +95,9 @@ export type LambdaInvokeResponse = BaseInvokeSuccess<ApiLambdaResult> | InvokeFa
  * Response from BigQuery database resource invocation
  */
 export type BigQueryInvokeResponse = BaseInvokeSuccess<DbBigQueryResult> | InvokeFailure;
+
+/**
+ * Response from Outreach API resource invocation
+ */
+export type OutreachInvokeResponse = BaseInvokeSuccess<ApiOutreachResult> | InvokeFailure;
 

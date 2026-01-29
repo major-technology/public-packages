@@ -10,6 +10,7 @@ export * from "./api-custom";
 export * from "./api-hubspot";
 export * from "./api-salesforce";
 export * from "./api-googlesheets";
+export * from "./api-outreach";
 export * from "./lambda";
 export * from "./bigquery";
 export * from "./request";
@@ -20,6 +21,7 @@ import type { ApiCustomPayload } from "./api-custom";
 import type { ApiHubSpotPayload } from "./api-hubspot";
 import type { ApiSalesforcePayload } from "./api-salesforce";
 import type { ApiGoogleSheetsPayload } from "./api-googlesheets";
+import type { ApiOutreachPayload } from "./api-outreach";
 import type { DbPostgresPayload } from "./postgres";
 import type { DbMssqlPayload } from "./mssql";
 import type { DbDynamoDBPayload } from "./dynamodb";
@@ -43,6 +45,7 @@ export type ResourceInvokePayload =
   | ApiHubSpotPayload
   | ApiSalesforcePayload
   | ApiGoogleSheetsPayload
+  | ApiOutreachPayload
   | StorageS3Payload
   | ApiLambdaPayload
   | DbBigQueryPayload;
