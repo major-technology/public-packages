@@ -13,6 +13,7 @@ export * from "./api-googlesheets";
 export * from "./api-outreach";
 export * from "./lambda";
 export * from "./bigquery";
+export * from "./neo4j";
 export * from "./request";
 export * from "./response";
 
@@ -30,6 +31,7 @@ import type { DbSnowflakePayload } from "./snowflake";
 import type { StorageS3Payload } from "./s3";
 import type { ApiLambdaPayload } from "./lambda";
 import type { DbBigQueryPayload } from "./bigquery";
+import type { DbNeo4jPayload } from "./neo4j";
 
 /**
  * Discriminated union of all resource payload types
@@ -48,5 +50,6 @@ export type ResourceInvokePayload =
   | ApiOutreachPayload
   | StorageS3Payload
   | ApiLambdaPayload
-  | DbBigQueryPayload;
+  | DbBigQueryPayload
+  | DbNeo4jPayload;
 
