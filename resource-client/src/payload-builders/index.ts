@@ -78,6 +78,9 @@ export {
 // Outreach
 export { buildOutreachInvokePayload } from "./outreach";
 
+// Neo4j
+export { buildNeo4jInvokePayload } from "./neo4j";
+
 // Universal builder from extracted params
 export { buildPayloadFromExtractedParams } from "./from-extracted-params";
 export type { ExtractedParam } from "./from-extracted-params";

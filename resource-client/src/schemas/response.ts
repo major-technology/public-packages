@@ -7,11 +7,12 @@ import type { DbSnowflakeResult } from "./snowflake";
 import type { ApiLambdaResult } from "./lambda";
 import type { DbBigQueryResult } from "./bigquery";
 import type { ApiOutreachResult } from "./api-outreach";
+import type { DbNeo4jResult } from "./neo4j";
 
 /**
  * Union of all possible resource invocation result types
  */
-export type ResourceInvokeSuccess = ApiResult | DbResult | StorageS3Result | DbDynamoDBResult | DbCosmosDBResult | DbSnowflakeResult | ApiLambdaResult | DbBigQueryResult | ApiOutreachResult;
+export type ResourceInvokeSuccess = ApiResult | DbResult | StorageS3Result | DbDynamoDBResult | DbCosmosDBResult | DbSnowflakeResult | ApiLambdaResult | DbBigQueryResult | ApiOutreachResult | DbNeo4jResult;
 
 /**
  * Base successful invocation response - generic over result type
@@ -100,4 +101,9 @@ export type BigQueryInvokeResponse = BaseInvokeSuccess<DbBigQueryResult> | Invok
  * Response from Outreach API resource invocation
  */
 export type OutreachInvokeResponse = BaseInvokeSuccess<ApiOutreachResult> | InvokeFailure;
+
+/**
+ * Response from Neo4j database resource invocation
+ */
+export type Neo4jInvokeResponse = BaseInvokeSuccess<DbNeo4jResult> | InvokeFailure;
 
