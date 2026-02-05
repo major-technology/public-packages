@@ -304,7 +304,7 @@ catch (e) { if (e instanceof ResourceInvokeError) { e.message, e.httpStatus, e.r
 - `npx major-client remove <name>` - Remove resource
 - `npx major-client regenerate` - Regenerate all clients
 
-**Types:** `database-postgresql | database-dynamodb | database-cosmosdb | database-snowflake | api-custom | api-hubspot | api-googlesheets | storage-s3`
+**Types:** `postgresql | dynamodb | cosmosdb | snowflake | custom | hubspot | googlesheets | s3`
 
 **Generated Files:**
 
@@ -317,7 +317,7 @@ catch (e) { if (e instanceof ResourceInvokeError) { e.message, e.httpStatus, e.r
 **Example:**
 
 ```bash
-npx major-client add "res_123" "orders-db" "database-postgresql" "Orders DB" "app_456"
+npx major-client add "res_123" "orders-db" "postgresql" "Orders DB" "app_456"
 ```
 
 ```typescript
