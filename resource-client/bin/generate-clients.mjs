@@ -8,7 +8,7 @@
  *   npx @major-tech/resource-client remove <name>
  *   npx @major-tech/resource-client list
  * 
- * Types: postgresql | mssql | dynamodb | cosmosdb | snowflake | bigquery | neo4j | hubspot | googlesheets | outreach | custom | lambda | salesforce | s3
+ * Types: postgresql | mssql | dynamodb | cosmosdb | snowflake | bigquery | neo4j | hubspot | googlesheets | outreach | custom | lambda | salesforce | s3 | slack
  * 
  * Examples:
  *   npx @major-tech/resource-client add "abc-123" "orders-db" "postgresql" "Orders database" "app-123"
@@ -154,6 +154,7 @@ function getClientClass(type) {
     'outreach': 'OutreachResourceClient',
     'salesforce': 'SalesforceResourceClient',
     's3': 'S3ResourceClient',
+    'slack': 'SlackResourceClient',
   };
   return typeMap[type] || 'PostgresResourceClient';
 }
@@ -187,7 +188,7 @@ function generateIndexFile(resources) {
 }
 
 function addResource(resourceId, name, type, description, applicationId, framework) {
-  const validTypes = ['postgresql', 'mssql', 'dynamodb', 'cosmosdb', 'snowflake', 'bigquery', 'neo4j', 'hubspot', 'googlesheets', 'outreach', 'custom', 'lambda', 'salesforce', 's3'];
+  const validTypes = ['postgresql', 'mssql', 'dynamodb', 'cosmosdb', 'snowflake', 'bigquery', 'neo4j', 'hubspot', 'googlesheets', 'outreach', 'custom', 'lambda', 'salesforce', 's3', 'slack'];
   if (!validTypes.includes(type)) {
     console.error(`❌ Invalid type: ${type}`);
     console.error(`   Valid types: ${validTypes.join(', ')}`);
@@ -324,7 +325,7 @@ function main() {
     console.log('  npx @major-tech/resource-client add <resource_id> <name> <type> <description> <application_id> [--framework <nextjs|vite>]');
     console.log('  npx @major-tech/resource-client remove <name> [--framework <nextjs|vite>]');
     console.log('  npx @major-tech/resource-client list');
-    console.log('\nTypes: postgresql | mssql | dynamodb | cosmosdb | snowflake | bigquery | neo4j | hubspot | googlesheets | outreach | custom | lambda | salesforce | s3');
+    console.log('\nTypes: postgresql | mssql | dynamodb | cosmosdb | snowflake | bigquery | neo4j | hubspot | googlesheets | outreach | custom | lambda | salesforce | s3 | slack');
     return;
   }
   
