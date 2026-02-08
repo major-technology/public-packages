@@ -53,6 +53,7 @@ import {
 } from "./bigquery";
 import { buildOutreachInvokePayload } from "./outreach";
 import { buildNeo4jInvokePayload } from "./neo4j";
+import { buildSlackInvokePayload } from "./slack";
 
 /**
  * Extracted parameter from query extraction
@@ -424,6 +425,15 @@ export function buildPayloadFromExtractedParams(
       const params = findParam(extractedParams, "Params") as Record<string, unknown> | undefined;
       const timeoutMs = findParam(extractedParams, "Timeout") as number | undefined;
       return buildNeo4jInvokePayload(cypher, params, timeoutMs);
+    }
+
+    // =========================================================================
+    // Slack
+    // =========================================================================
+    case "slack": {
+      const method = findParam(extractedParams, "Method") as string;
+      const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
+      return buildSlackInvokePayload(method, options);
     }
 
     default:
