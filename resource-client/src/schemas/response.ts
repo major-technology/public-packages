@@ -107,3 +107,8 @@ export type OutreachInvokeResponse = BaseInvokeSuccess<ApiOutreachResult> | Invo
  */
 export type Neo4jInvokeResponse = BaseInvokeSuccess<DbNeo4jResult> | InvokeFailure;
 
+/**
+ * Response from Slack API resource invocation
+ */
+export type SlackInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;
+

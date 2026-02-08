@@ -22,6 +22,7 @@ export { LambdaResourceClient } from "./clients/lambda";
 export { BigQueryResourceClient } from "./clients/bigquery";
 export { OutreachResourceClient } from "./clients/outreach";
 export { Neo4jResourceClient } from "./clients/neo4j";
+export { SlackResourceClient } from "./clients/slack";
 
 // Export payload builders (for use in testing UIs, etc.)
 export * from "./payload-builders";
@@ -38,6 +39,7 @@ export type {
   BigQueryInvokeResponse,
   OutreachInvokeResponse,
   Neo4jInvokeResponse,
+  SlackInvokeResponse,
   BaseInvokeSuccess,
 } from "./schemas/response";
 

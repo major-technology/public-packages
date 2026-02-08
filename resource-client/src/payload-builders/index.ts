@@ -81,6 +81,9 @@ export { buildOutreachInvokePayload } from "./outreach";
 // Neo4j
 export { buildNeo4jInvokePayload } from "./neo4j";
 
+// Slack
+export { buildSlackInvokePayload } from "./slack";
+
 // Universal builder from extracted params
 export { buildPayloadFromExtractedParams } from "./from-extracted-params";
 export type { ExtractedParam } from "./from-extracted-params";

@@ -11,6 +11,7 @@ export * from "./api-hubspot";
 export * from "./api-salesforce";
 export * from "./api-googlesheets";
 export * from "./api-outreach";
+export * from "./api-slack";
 export * from "./lambda";
 export * from "./bigquery";
 export * from "./neo4j";
@@ -23,6 +24,7 @@ import type { ApiHubSpotPayload } from "./api-hubspot";
 import type { ApiSalesforcePayload } from "./api-salesforce";
 import type { ApiGoogleSheetsPayload } from "./api-googlesheets";
 import type { ApiOutreachPayload } from "./api-outreach";
+import type { ApiSlackPayload } from "./api-slack";
 import type { DbPostgresPayload } from "./postgres";
 import type { DbMssqlPayload } from "./mssql";
 import type { DbDynamoDBPayload } from "./dynamodb";
@@ -51,5 +53,6 @@ export type ResourceInvokePayload =
   | StorageS3Payload
   | ApiLambdaPayload
   | DbBigQueryPayload
-  | DbNeo4jPayload;
+  | DbNeo4jPayload
+  | ApiSlackPayload;
 
