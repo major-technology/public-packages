@@ -54,6 +54,7 @@ import {
 import { buildOutreachInvokePayload } from "./outreach";
 import { buildNeo4jInvokePayload } from "./neo4j";
 import { buildSlackInvokePayload } from "./slack";
+import { buildAuthShareAccessPayload, buildAuthRevokeAccessPayload } from "./auth";
 
 /**
  * Extracted parameter from query extraction
@@ -434,6 +435,17 @@ export function buildPayloadFromExtractedParams(
       const method = findParam(extractedParams, "Method") as string;
       const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
       return buildSlackInvokePayload(method, options);
+    }
+
+    // =========================================================================
+    // Major Auth
+    // =========================================================================
+    case "majorauth": {
+      const email = findParam(extractedParams, "Email") as string;
+      if (methodName === "revokeAccess") {
+        return buildAuthRevokeAccessPayload(email, "");
+      }
+      return buildAuthShareAccessPayload(email, "");
     }
 
     default:

@@ -8,7 +8,7 @@
  *   npx @major-tech/resource-client remove <name>
  *   npx @major-tech/resource-client list
  * 
- * Types: postgresql | mssql | dynamodb | cosmosdb | snowflake | bigquery | neo4j | hubspot | googlesheets | outreach | custom | lambda | salesforce | s3 | slack
+ * Types: postgresql | mssql | dynamodb | cosmosdb | snowflake | bigquery | neo4j | hubspot | googlesheets | outreach | custom | lambda | salesforce | s3 | slack | majorauth
  * 
  * Examples:
  *   npx @major-tech/resource-client add "abc-123" "orders-db" "postgresql" "Orders database" "app-123"
@@ -41,7 +41,7 @@ function getClientsDir() {
  */
 function clientTemplate(data, framework) {
   const isNextJs = framework === 'nextjs';
-  
+
   const imports = [
     `import { ${data.clientClass} } from '@major-tech/resource-client';`,
     isNextJs ? `import { headers } from 'next/headers';` : ''
@@ -155,6 +155,7 @@ function getClientClass(type) {
     'salesforce': 'SalesforceResourceClient',
     's3': 'S3ResourceClient',
     'slack': 'SlackResourceClient',
+    'majorauth': 'MajorAuthResourceClient',
   };
   return typeMap[type] || 'PostgresResourceClient';
 }
@@ -188,7 +189,7 @@ function generateIndexFile(resources) {
 }
 
 function addResource(resourceId, name, type, description, applicationId, framework) {
-  const validTypes = ['postgresql', 'mssql', 'dynamodb', 'cosmosdb', 'snowflake', 'bigquery', 'neo4j', 'hubspot', 'googlesheets', 'outreach', 'custom', 'lambda', 'salesforce', 's3', 'slack'];
+  const validTypes = ['postgresql', 'mssql', 'dynamodb', 'cosmosdb', 'snowflake', 'bigquery', 'neo4j', 'hubspot', 'googlesheets', 'outreach', 'custom', 'lambda', 'salesforce', 's3', 'slack', 'majorauth'];
   if (!validTypes.includes(type)) {
     console.error(`❌ Invalid type: ${type}`);
     console.error(`   Valid types: ${validTypes.join(', ')}`);
@@ -202,13 +203,13 @@ function addResource(resourceId, name, type, description, applicationId, framewo
   }
 
   const resources = loadResources();
-  
+
   const existing = resources.find(r => r.name === name);
   if (existing) {
     console.error(`❌ Resource with name "${name}" already exists`);
     process.exit(1);
   }
-  
+
   const newResource = {
     id: resourceId,
     name,
@@ -216,14 +217,14 @@ function addResource(resourceId, name, type, description, applicationId, framewo
     description,
     applicationId
   };
-  
+
   resources.push(newResource);
   saveResources(resources);
-  
+
   console.log(`✅ Added resource: ${name}`);
   console.log(`   Type: ${type}`);
   console.log(`   ID: ${resourceId}`);
-  
+
   regenerateClients(resources, framework);
 }
 
@@ -233,18 +234,18 @@ function addResource(resourceId, name, type, description, applicationId, framewo
 function removeResource(name, framework) {
   const resources = loadResources();
   const index = resources.findIndex(r => r.name === name);
-  
+
   if (index === -1) {
     console.error(`❌ Resource "${name}" not found`);
     process.exit(1);
   }
-  
+
   const removed = resources.splice(index, 1)[0];
   saveResources(resources);
-  
+
   console.log(`✅ Removed resource: ${removed.name}`);
   console.log(`   ID: ${removed.id}`);
-  
+
   regenerateClients(resources, framework);
 }
 
@@ -253,12 +254,12 @@ function removeResource(name, framework) {
  */
 function listResources() {
   const resources = loadResources();
-  
+
   if (resources.length === 0) {
     console.log('No resources configured');
     return;
   }
-  
+
   console.log(`Resources (${resources.length}):\n`);
   resources.forEach((r, idx) => {
     console.log(`${idx + 1}. ${r.name} (${r.type})`);
@@ -310,7 +311,7 @@ function regenerateClients(resources, framework) {
 function main() {
   const args = process.argv.slice(2);
   const command = args[0];
-  
+
   // Extract --framework flag
   const frameworkIndex = args.indexOf('--framework');
   let framework = undefined;
@@ -319,16 +320,16 @@ function main() {
     // Remove --framework and its value from args
     args.splice(frameworkIndex, 2);
   }
-  
+
   if (!command) {
     console.log('Usage:');
     console.log('  npx @major-tech/resource-client add <resource_id> <name> <type> <description> <application_id> [--framework <nextjs|vite>]');
     console.log('  npx @major-tech/resource-client remove <name> [--framework <nextjs|vite>]');
     console.log('  npx @major-tech/resource-client list');
-    console.log('\nTypes: postgresql | mssql | dynamodb | cosmosdb | snowflake | bigquery | neo4j | hubspot | googlesheets | outreach | custom | lambda | salesforce | s3 | slack');
+    console.log('\nTypes: postgresql | mssql | dynamodb | cosmosdb | snowflake | bigquery | neo4j | hubspot | googlesheets | outreach | custom | lambda | salesforce | s3 | slack | majorauth');
     return;
   }
-  
+
   switch (command) {
     case 'add': {
       const [, resourceId, name, type, description, applicationId] = args;
@@ -340,7 +341,7 @@ function main() {
       addResource(resourceId, name, type, description, applicationId, framework);
       break;
     }
-    
+
     case 'remove': {
       const [, name] = args;
       if (!name) {
@@ -350,7 +351,7 @@ function main() {
       removeResource(name, framework);
       break;
     }
-    
+
     case 'list': {
       listResources();
       break;
