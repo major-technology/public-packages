@@ -8,11 +8,12 @@ import type { ApiLambdaResult } from "./lambda";
 import type { DbBigQueryResult } from "./bigquery";
 import type { ApiOutreachResult } from "./api-outreach";
 import type { DbNeo4jResult } from "./neo4j";
+import type { AuthResult } from "./auth";
 
 /**
  * Union of all possible resource invocation result types
  */
-export type ResourceInvokeSuccess = ApiResult | DbResult | StorageS3Result | DbDynamoDBResult | DbCosmosDBResult | DbSnowflakeResult | ApiLambdaResult | DbBigQueryResult | ApiOutreachResult | DbNeo4jResult;
+export type ResourceInvokeSuccess = ApiResult | DbResult | StorageS3Result | DbDynamoDBResult | DbCosmosDBResult | DbSnowflakeResult | ApiLambdaResult | DbBigQueryResult | ApiOutreachResult | DbNeo4jResult | AuthResult;
 
 /**
  * Base successful invocation response - generic over result type
@@ -112,3 +113,7 @@ export type Neo4jInvokeResponse = BaseInvokeSuccess<DbNeo4jResult> | InvokeFailu
  */
 export type SlackInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;
 
+/**
+ * Response from Major Auth resource invocation
+ */
+export type AuthInvokeResponse = BaseInvokeSuccess<AuthResult> | InvokeFailure;

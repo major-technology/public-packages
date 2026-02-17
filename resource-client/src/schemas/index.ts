@@ -15,6 +15,7 @@ export * from "./api-slack";
 export * from "./lambda";
 export * from "./bigquery";
 export * from "./neo4j";
+export * from "./auth";
 export * from "./request";
 export * from "./response";
 
@@ -34,6 +35,7 @@ import type { StorageS3Payload } from "./s3";
 import type { ApiLambdaPayload } from "./lambda";
 import type { DbBigQueryPayload } from "./bigquery";
 import type { DbNeo4jPayload } from "./neo4j";
+import type { AuthPayload } from "./auth";
 
 /**
  * Discriminated union of all resource payload types
@@ -54,5 +56,5 @@ export type ResourceInvokePayload =
   | ApiLambdaPayload
   | DbBigQueryPayload
   | DbNeo4jPayload
-  | ApiSlackPayload;
-
+  | ApiSlackPayload
+  | AuthPayload;

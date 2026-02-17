@@ -84,6 +84,9 @@ export { buildNeo4jInvokePayload } from "./neo4j";
 // Slack
 export { buildSlackInvokePayload } from "./slack";
 
+// Major Auth
+export { buildAuthShareAccessPayload, buildAuthRevokeAccessPayload } from "./auth";
+
 // Universal builder from extracted params
 export { buildPayloadFromExtractedParams } from "./from-extracted-params";
 export type { ExtractedParam } from "./from-extracted-params";
