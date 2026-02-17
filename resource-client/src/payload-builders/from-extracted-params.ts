@@ -443,9 +443,9 @@ export function buildPayloadFromExtractedParams(
     case "majorauth": {
       const email = findParam(extractedParams, "Email") as string;
       if (methodName === "revokeAccess") {
-        return buildAuthRevokeAccessPayload(email, "");
+        return buildAuthRevokeAccessPayload(email);
       }
-      return buildAuthShareAccessPayload(email, "");
+      return buildAuthShareAccessPayload(email);
     }
 
     default:
