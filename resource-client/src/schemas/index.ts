@@ -7,6 +7,7 @@ export * from "./cosmosdb";
 export * from "./snowflake";
 export * from "./s3";
 export * from "./api-custom";
+export * from "./api-graphql";
 export * from "./api-hubspot";
 export * from "./api-salesforce";
 export * from "./api-googlesheets";
@@ -22,6 +23,7 @@ export * from "./response";
 
 // Import for discriminated union
 import type { ApiCustomPayload } from "./api-custom";
+import type { ApiGraphQLPayload } from "./api-graphql";
 import type { ApiHubSpotPayload } from "./api-hubspot";
 import type { ApiSalesforcePayload } from "./api-salesforce";
 import type { ApiGoogleSheetsPayload } from "./api-googlesheets";
@@ -45,6 +47,7 @@ import type { ApiGoogleAnalyticsPayload } from "./google-analytics";
  */
 export type ResourceInvokePayload =
   | ApiCustomPayload
+  | ApiGraphQLPayload
   | DbPostgresPayload
   | DbMssqlPayload
   | DbDynamoDBPayload
