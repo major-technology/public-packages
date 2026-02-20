@@ -62,6 +62,7 @@ import {
   buildGoogleAnalyticsListPropertiesPayload,
   buildGoogleAnalyticsInvokePayload,
 } from "./google-analytics";
+import { buildGraphQLInvokePayload } from "./graphql";
 
 /**
  * Extracted parameter from query extraction
@@ -486,6 +487,14 @@ export function buildPayloadFromExtractedParams(
       // Default: invoke method
       const payload = findParam(extractedParams, "Payload") as Record<string, unknown>;
       return buildGoogleAnalyticsInvokePayload(payload as never);
+    }
+    // =========================================================================
+    // GraphQL
+    // =========================================================================
+    case "graphql": {
+      const query = findParam(extractedParams, "Query") as string;
+      const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
+      return buildGraphQLInvokePayload(query, options);
     }
 
     default:

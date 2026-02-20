@@ -123,3 +123,9 @@ export type AuthInvokeResponse = BaseInvokeSuccess<AuthResult> | InvokeFailure;
  * Response from Google Analytics resource invocation
  */
 export type GoogleAnalyticsInvokeResponse = BaseInvokeSuccess<ApiGoogleAnalyticsResult> | InvokeFailure;
+
+/**
+ * Response from GraphQL API resource invocation
+ */
+export type GraphQLInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;
+
