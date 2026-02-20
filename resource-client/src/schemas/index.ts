@@ -16,6 +16,7 @@ export * from "./lambda";
 export * from "./bigquery";
 export * from "./neo4j";
 export * from "./auth";
+export * from "./google-analytics";
 export * from "./request";
 export * from "./response";
 
@@ -36,6 +37,7 @@ import type { ApiLambdaPayload } from "./lambda";
 import type { DbBigQueryPayload } from "./bigquery";
 import type { DbNeo4jPayload } from "./neo4j";
 import type { AuthPayload } from "./auth";
+import type { ApiGoogleAnalyticsPayload } from "./google-analytics";
 
 /**
  * Discriminated union of all resource payload types
@@ -57,4 +59,5 @@ export type ResourceInvokePayload =
   | DbBigQueryPayload
   | DbNeo4jPayload
   | ApiSlackPayload
-  | AuthPayload;
+  | AuthPayload
+  | ApiGoogleAnalyticsPayload;

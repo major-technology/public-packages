@@ -24,6 +24,7 @@ export { OutreachResourceClient } from "./clients/outreach";
 export { Neo4jResourceClient } from "./clients/neo4j";
 export { SlackResourceClient } from "./clients/slack";
 export { MajorAuthResourceClient } from "./clients/auth";
+export { GoogleAnalyticsResourceClient } from "./clients/google-analytics";
 
 // Export payload builders (for use in testing UIs, etc.)
 export * from "./payload-builders";
@@ -42,5 +43,6 @@ export type {
   Neo4jInvokeResponse,
   SlackInvokeResponse,
   AuthInvokeResponse,
+  GoogleAnalyticsInvokeResponse,
   BaseInvokeSuccess,
 } from "./schemas/response";
