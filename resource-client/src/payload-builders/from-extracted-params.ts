@@ -55,6 +55,13 @@ import { buildOutreachInvokePayload } from "./outreach";
 import { buildNeo4jInvokePayload } from "./neo4j";
 import { buildSlackInvokePayload } from "./slack";
 import { buildAuthShareAccessPayload, buildAuthRevokeAccessPayload } from "./auth";
+import {
+  buildGoogleAnalyticsRunReportPayload,
+  buildGoogleAnalyticsGetMetadataPayload,
+  buildGoogleAnalyticsListAccountsPayload,
+  buildGoogleAnalyticsListPropertiesPayload,
+  buildGoogleAnalyticsInvokePayload,
+} from "./google-analytics";
 
 /**
  * Extracted parameter from query extraction
@@ -446,6 +453,39 @@ export function buildPayloadFromExtractedParams(
         return buildAuthRevokeAccessPayload(email);
       }
       return buildAuthShareAccessPayload(email);
+    }
+
+    // =========================================================================
+    // Google Analytics
+    // =========================================================================
+    case "googleanalytics": {
+      if (methodName === "runReport") {
+        const dimensions = findParam(extractedParams, "Dimensions") as { name: string }[] | undefined;
+        const metrics = findParam(extractedParams, "Metrics") as { name: string }[] | undefined;
+        const dateRanges = findParam(extractedParams, "DateRanges") as { startDate: string; endDate: string }[] | undefined;
+        const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
+        return buildGoogleAnalyticsRunReportPayload(
+          dimensions ?? [],
+          metrics ?? [],
+          dateRanges ?? [],
+          options as never
+        );
+      }
+      if (methodName === "getMetadata") {
+        return buildGoogleAnalyticsGetMetadataPayload();
+      }
+      if (methodName === "listAccounts") {
+        const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
+        return buildGoogleAnalyticsListAccountsPayload(options as never);
+      }
+      if (methodName === "listProperties") {
+        const accountId = findParam(extractedParams, "AccountId") as string | undefined;
+        const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
+        return buildGoogleAnalyticsListPropertiesPayload(accountId, options as never);
+      }
+      // Default: invoke method
+      const payload = findParam(extractedParams, "Payload") as Record<string, unknown>;
+      return buildGoogleAnalyticsInvokePayload(payload as never);
     }
 
     default:
