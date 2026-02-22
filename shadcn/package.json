@@ -1,0 +1,40 @@
+{
+  "name": "@major-tech/shadcn",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Shadcn registry items for Major components",
+  "type": "module",
+  "scripts": {
+    "build": "tsx scripts/build-registry.mts",
+    "lint": "tsc --noEmit && eslint --max-warnings 0 .",
+    "format": "prettier --write \"src/**/*.{ts,tsx}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx}\""
+  },
+  "dependencies": {
+    "@radix-ui/react-checkbox": "^1",
+    "@radix-ui/react-dropdown-menu": "^2.1.16",
+    "@radix-ui/react-select": "^2",
+    "@radix-ui/react-slot": "^1",
+    "@tanstack/react-table": "^8",
+    "@tanstack/react-virtual": "^3",
+    "class-variance-authority": "^0.7",
+    "clsx": "^2",
+    "lucide-react": ">=0.400",
+    "react": "^19",
+    "react-dom": "^19",
+    "tailwind-merge": "^3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.3",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@typescript-eslint/eslint-plugin": "^8.56.0",
+    "@typescript-eslint/parser": "^8.56.0",
+    "eslint": "^9.39.3",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "prettier": "^3.8.1",
+    "tsx": "^4.19.0",
+    "typescript": "^5.9.3"
+  }
+}
