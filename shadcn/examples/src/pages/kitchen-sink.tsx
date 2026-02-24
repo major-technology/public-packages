@@ -16,7 +16,7 @@ import {
 	DataTableExport,
 	type ActionDefinition,
 } from "@data-table";
-import { baseColumns, userFilterDefinitions, loadUsers, type User } from "../mock-data";
+import { baseColumns, userFilterDefinitions, loadUsers, ALL_USERS, type User } from "../mock-data";
 
 function formatUsersCsv(rows: User[]): string {
 	const headers = ["Name", "Email", "Role", "Status", "Department"];
@@ -54,6 +54,7 @@ function ExpandedRowDetail({ row }: { row: Row<User> }) {
 }
 
 interface FeatureFlags {
+	serverSide: boolean;
 	rowSelection: boolean;
 	rowActions: boolean;
 	expandableRows: boolean;
@@ -68,6 +69,7 @@ interface FeatureFlags {
 }
 
 const defaultFlags: FeatureFlags = {
+	serverSide: true,
 	rowSelection: true,
 	rowActions: true,
 	export: true,
@@ -82,6 +84,7 @@ const defaultFlags: FeatureFlags = {
 };
 
 const featureLabels: Record<keyof FeatureFlags, string> = {
+	serverSide: "Server-Side",
 	rowSelection: "Row Selection",
 	rowActions: "Row Actions",
 	expandableRows: "Expandable Rows",
@@ -127,7 +130,7 @@ export default function KitchenSinkPage() {
 		[],
 	);
 
-	const tableKey = `${flags.rowSelection}-${flags.expandableRows}-${flags.rowActions}`;
+	const tableKey = `${flags.serverSide}-${flags.rowSelection}-${flags.expandableRows}-${flags.rowActions}`;
 
 	const columns = useMemo<ColumnDef<User, unknown>[]>(() => {
 		const cols: ColumnDef<User, unknown>[] = [];
@@ -174,7 +177,7 @@ export default function KitchenSinkPage() {
 
 			<DataTable
 				key={tableKey}
-				onLoadRows={loadUsers}
+				{...(flags.serverSide ? { onLoadRows: loadUsers } : { data: ALL_USERS })}
 				columns={columns}
 				getRowId={(row) => row.id}
 				pageSize={50}

@@ -1,7 +1,16 @@
 @import "tailwindcss";
-@source "../../src";
+@source "../../registry";
 
 @custom-variant dark (&:is(.dark *));
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
 
 @theme {
   --color-background: hsl(0 0% 100%);
@@ -33,6 +42,4 @@ body {
     BlinkMacSystemFont,
     "Segoe UI",
     sans-serif;
-  color: var(--color-foreground);
-  background: var(--color-background);
 }
