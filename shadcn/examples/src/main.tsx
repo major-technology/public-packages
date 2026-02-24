@@ -16,7 +16,6 @@ import DataExportPage from "./pages/data-export";
 import ExpandablePage from "./pages/expandable";
 import ColumnVisibilityPage from "./pages/column-visibility";
 import ColumnReorderingPage from "./pages/column-reordering";
-import ServerSidePage from "./pages/server-side";
 import ErrorHandlingPage from "./pages/error-handling";
 import VirtualizedPage from "./pages/virtualized";
 import KitchenSinkPage from "./pages/kitchen-sink";
@@ -38,7 +37,6 @@ createRoot(document.getElementById("root")!).render(
 					<Route path="expandable" element={<ExpandablePage />} />
 					<Route path="column-visibility" element={<ColumnVisibilityPage />} />
 					<Route path="column-reordering" element={<ColumnReorderingPage />} />
-					<Route path="server-side" element={<ServerSidePage />} />
 					<Route path="error-handling" element={<ErrorHandlingPage />} />
 					<Route path="virtualized" element={<VirtualizedPage />} />
 					<Route path="kitchen-sink" element={<KitchenSinkPage />} />

@@ -7,10 +7,12 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
+    "baseUrl": ".",
     "paths": {
-      "@data-table": ["../src/data-table/index.ts"],
-      "@data-table/*": ["../src/data-table/*"]
+      "@data-table": ["../registry/default/data-table/index.ts"],
+      "@data-table/*": ["../registry/default/data-table/*"],
+      "@/*": ["../*"]
     }
   },
-  "include": ["src", "../src", "vite.config.ts"]
+  "include": ["src", "server", "../registry", "vite.config.ts"]
 }

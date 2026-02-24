@@ -1,7 +1,7 @@
 import { NavLink, Outlet } from "react-router-dom";
 
 const demos = [
-	{ to: "/basic", label: "Basic" },
+	{ to: "/basic", label: "Client-Side" },
 	{ to: "/sortable", label: "Sortable" },
 	{ to: "/searchable", label: "Search & Filter" },
 	{ to: "/paginated", label: "Paginated" },
@@ -12,7 +12,6 @@ const demos = [
 	{ to: "/expandable", label: "Expandable" },
 	{ to: "/column-visibility", label: "Column Visibility" },
 	{ to: "/column-reordering", label: "Column Reordering" },
-	{ to: "/server-side", label: "Server-Side" },
 	{ to: "/error-handling", label: "Error Handling" },
 	{ to: "/virtualized", label: "Virtualized" },
 	{ to: "/kitchen-sink", label: "Kitchen Sink" },

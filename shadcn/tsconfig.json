@@ -9,7 +9,11 @@
 		"jsx": "react-jsx",
 		"declaration": false,
 		"noEmit": true,
-		"isolatedModules": true
+		"isolatedModules": true,
+		"baseUrl": ".",
+		"paths": {
+			"@/*": ["./*"]
+		}
 	},
-	"include": ["src/**/*", "scripts/**/*"]
+	"include": ["registry/**/*", "scripts/**/*"]
 }
