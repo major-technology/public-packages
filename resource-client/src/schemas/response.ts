@@ -115,6 +115,11 @@ export type Neo4jInvokeResponse = BaseInvokeSuccess<DbNeo4jResult> | InvokeFailu
 export type SlackInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;
 
 /**
+ * Response from QuickBooks API resource invocation
+ */
+export type QuickBooksInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;
+
+/**
  * Response from Major Auth resource invocation
  */
 export type AuthInvokeResponse = BaseInvokeSuccess<AuthResult> | InvokeFailure;

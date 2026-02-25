@@ -54,6 +54,7 @@ import {
 import { buildOutreachInvokePayload } from "./outreach";
 import { buildNeo4jInvokePayload } from "./neo4j";
 import { buildSlackInvokePayload } from "./slack";
+import { buildQuickBooksInvokePayload, buildQuickBooksQueryPayload } from "./quickbooks";
 import { buildAuthShareAccessPayload, buildAuthRevokeAccessPayload } from "./auth";
 import {
   buildGoogleAnalyticsRunReportPayload,
@@ -443,6 +444,21 @@ export function buildPayloadFromExtractedParams(
       const method = findParam(extractedParams, "Method") as string;
       const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
       return buildSlackInvokePayload(method, options);
+    }
+
+    // =========================================================================
+    // QuickBooks
+    // =========================================================================
+    case "quickbooks": {
+      if (methodName === "query") {
+        const query = findParam(extractedParams, "Query") as string;
+        return buildQuickBooksQueryPayload(query);
+      }
+
+      const method = findParam(extractedParams, "Method") as "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+      const path = findParam(extractedParams, "Path") as string;
+      const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
+      return buildQuickBooksInvokePayload(method, path, options);
     }
 
     // =========================================================================

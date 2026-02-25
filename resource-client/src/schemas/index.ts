@@ -13,6 +13,7 @@ export * from "./api-salesforce";
 export * from "./api-googlesheets";
 export * from "./api-outreach";
 export * from "./api-slack";
+export * from "./api-quickbooks";
 export * from "./lambda";
 export * from "./bigquery";
 export * from "./neo4j";
@@ -38,6 +39,7 @@ import type { StorageS3Payload } from "./s3";
 import type { ApiLambdaPayload } from "./lambda";
 import type { DbBigQueryPayload } from "./bigquery";
 import type { DbNeo4jPayload } from "./neo4j";
+import type { ApiQuickBooksPayload } from "./api-quickbooks";
 import type { AuthPayload } from "./auth";
 import type { ApiGoogleAnalyticsPayload } from "./google-analytics";
 
@@ -62,5 +64,6 @@ export type ResourceInvokePayload =
   | DbBigQueryPayload
   | DbNeo4jPayload
   | ApiSlackPayload
+  | ApiQuickBooksPayload
   | AuthPayload
   | ApiGoogleAnalyticsPayload;
