@@ -87,6 +87,9 @@ export { buildNeo4jInvokePayload } from "./neo4j";
 // Slack
 export { buildSlackInvokePayload } from "./slack";
 
+// QuickBooks
+export { buildQuickBooksInvokePayload, buildQuickBooksQueryPayload } from "./quickbooks";
+
 // Major Auth
 export { buildAuthShareAccessPayload, buildAuthRevokeAccessPayload } from "./auth";
 

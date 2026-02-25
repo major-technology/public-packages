@@ -23,6 +23,7 @@ export { BigQueryResourceClient } from "./clients/bigquery";
 export { OutreachResourceClient } from "./clients/outreach";
 export { Neo4jResourceClient } from "./clients/neo4j";
 export { SlackResourceClient } from "./clients/slack";
+export { QuickBooksResourceClient } from "./clients/quickbooks";
 export { MajorAuthResourceClient } from "./clients/auth";
 export { GoogleAnalyticsResourceClient } from "./clients/google-analytics";
 export { GraphQLResourceClient } from "./clients/api-graphql";
@@ -43,6 +44,7 @@ export type {
   OutreachInvokeResponse,
   Neo4jInvokeResponse,
   SlackInvokeResponse,
+  QuickBooksInvokeResponse,
   AuthInvokeResponse,
   GoogleAnalyticsInvokeResponse,
   GraphQLInvokeResponse,
