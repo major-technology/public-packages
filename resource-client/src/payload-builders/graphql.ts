@@ -10,6 +10,7 @@ export function buildGraphQLInvokePayload(
   options?: {
     variables?: Record<string, unknown>;
     operationName?: string;
+    headers?: Record<string, string>;
     timeoutMs?: number;
   }
 ): ApiGraphQLPayload {
@@ -19,6 +20,7 @@ export function buildGraphQLInvokePayload(
     query,
     variables: options?.variables,
     operationName: options?.operationName,
+    headers: options?.headers,
     timeoutMs: options?.timeoutMs ?? 30000,
   };
 }
