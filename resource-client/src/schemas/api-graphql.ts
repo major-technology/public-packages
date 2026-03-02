@@ -10,6 +10,8 @@ export interface ApiGraphQLPayload {
   variables?: Record<string, unknown>;
   /** Name of the operation to execute (when query contains multiple operations) */
   operationName?: string;
+  /** Additional HTTP headers to include in the request */
+  headers?: Record<string, string>;
   /** Optional timeout in milliseconds (default: 30000) */
   timeoutMs?: number;
 }

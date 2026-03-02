@@ -9,6 +9,7 @@ export class GraphQLResourceClient extends BaseResourceClient {
     options: {
       variables?: Record<string, unknown>;
       operationName?: string;
+      headers?: Record<string, string>;
       timeoutMs?: number;
     } = {}
   ): Promise<ApiInvokeResponse> {
@@ -22,6 +23,7 @@ export class GraphQLResourceClient extends BaseResourceClient {
     options: {
       variables?: Record<string, unknown>;
       operationName?: string;
+      headers?: Record<string, string>;
       timeoutMs?: number;
     } = {}
   ): Promise<ApiInvokeResponse> {
