@@ -8,7 +8,8 @@ import { ResourceInvokeError } from "./errors";
 export interface BaseClientConfig {
   baseUrl: string;
   majorJwtToken?: string;
-  applicationId: string;
+  applicationId?: string;  // For app mode
+  toolId?: string;         // For tool mode — mutually exclusive with applicationId
   resourceId: string;
   fetch?: typeof fetch;
   /**
@@ -22,17 +23,23 @@ export abstract class BaseResourceClient {
   protected readonly config: {
     baseUrl: string;
     majorJwtToken?: string;
-    applicationId: string;
+    applicationId?: string;
+    toolId?: string;
     resourceId: string;
     fetch: typeof fetch;
     getHeaders?: () => Promise<Record<string, string>> | Record<string, string>;
   };
 
   constructor(config: BaseClientConfig) {
+    if (!config.applicationId && !config.toolId) {
+      throw new Error("BaseResourceClient requires either applicationId or toolId");
+    }
+
     this.config = {
       baseUrl: config.baseUrl.replace(/\/$/, ""),
       majorJwtToken: config.majorJwtToken,
       applicationId: config.applicationId,
+      toolId: config.toolId,
       resourceId: config.resourceId,
       fetch: config.fetch || globalThis.fetch,
       getHeaders: config.getHeaders,
@@ -43,7 +50,9 @@ export abstract class BaseResourceClient {
     payload: ResourceInvokePayload,
     invocationKey: string,
   ): Promise<InvokeResponse> {
-    const url = `${this.config.baseUrl}/internal/apps/v1/${this.config.applicationId}/resource/${this.config.resourceId}/invoke`;
+    const entityType = this.config.toolId ? "tools" : "apps";
+    const entityId = this.config.toolId || this.config.applicationId;
+    const url = `${this.config.baseUrl}/internal/${entityType}/v1/${entityId}/resource/${this.config.resourceId}/invoke`;
     
     const body: InvokeRequest = {
       payload,
