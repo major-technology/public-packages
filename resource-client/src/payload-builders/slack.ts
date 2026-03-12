@@ -20,3 +20,33 @@ export function buildSlackInvokePayload(
     timeoutMs: options?.timeoutMs ?? 30000,
   };
 }
+
+export function buildSlackGetUploadURLPayload(
+  filename: string,
+  length: number,
+  options?: { altText?: string; snippetType?: string }
+): ApiSlackPayload {
+  return buildSlackInvokePayload("files.getUploadURLExternal", {
+    body: {
+      filename,
+      length,
+      alt_txt: options?.altText,
+      snippet_type: options?.snippetType,
+    },
+  });
+}
+
+export function buildSlackCompleteUploadPayload(
+  files: Array<{ id: string; title?: string }>,
+  channelId: string,
+  options?: { initialComment?: string; threadTs?: string }
+): ApiSlackPayload {
+  return buildSlackInvokePayload("files.completeUploadExternal", {
+    body: {
+      files,
+      channel_id: channelId,
+      initial_comment: options?.initialComment,
+      thread_ts: options?.threadTs,
+    },
+  });
+}
