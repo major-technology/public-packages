@@ -53,7 +53,7 @@ import {
 } from "./bigquery";
 import { buildOutreachInvokePayload } from "./outreach";
 import { buildNeo4jInvokePayload } from "./neo4j";
-import { buildSlackInvokePayload } from "./slack";
+import { buildSlackInvokePayload, buildSlackGetUploadURLPayload, buildSlackCompleteUploadPayload } from "./slack";
 import { buildQuickBooksInvokePayload, buildQuickBooksQueryPayload } from "./quickbooks";
 import { buildAuthShareAccessPayload, buildAuthRevokeAccessPayload } from "./auth";
 import {
@@ -441,6 +441,21 @@ export function buildPayloadFromExtractedParams(
     // Slack
     // =========================================================================
     case "slack": {
+      if (methodName === "getUploadURL") {
+        const filename = findParam(extractedParams, "Filename") as string;
+        const length = findParam(extractedParams, "Length") as number;
+        const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
+        return buildSlackGetUploadURLPayload(filename, length, options);
+      }
+
+      if (methodName === "completeUpload") {
+        const files = findParam(extractedParams, "Files") as Array<{ id: string; title?: string }>;
+        const channelId = findParam(extractedParams, "ChannelId") as string;
+        const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
+        return buildSlackCompleteUploadPayload(files, channelId, options);
+      }
+
+      // Default: generic invoke
       const method = findParam(extractedParams, "Method") as string;
       const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
       return buildSlackInvokePayload(method, options);
