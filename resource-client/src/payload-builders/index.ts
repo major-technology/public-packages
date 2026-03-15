@@ -53,6 +53,9 @@ export { buildHubSpotInvokePayload } from "./hubspot";
 // Gong
 export { buildGongInvokePayload } from "./gong";
 
+// Google Calendar
+export { buildGoogleCalendarInvokePayload } from "./googlecalendar";
+
 // Salesforce
 export {
   buildSalesforceInvokePayload,

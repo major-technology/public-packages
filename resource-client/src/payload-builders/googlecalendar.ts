@@ -1,29 +1,27 @@
-import type { ApiCustomPayload, HttpMethod, QueryParams, BodyPayload } from "../schemas";
+import type { ApiGoogleCalendarPayload, HttpMethod, QueryParams, JsonBody } from "../schemas";
 import { normalizeQueryParams } from "./normalize-query";
 
 /**
- * Build a Custom API invoke payload
+ * Build a Google Calendar invoke payload
  * @param method HTTP method to use
- * @param path Path to append to the resource's base URL
+ * @param path Google Calendar API path
  * @param options Additional options
  */
-export function buildCustomApiInvokePayload(
+export function buildGoogleCalendarInvokePayload(
   method: HttpMethod,
   path: string,
   options?: {
     query?: QueryParams;
-    headers?: Record<string, string>;
-    body?: BodyPayload;
+    body?: JsonBody;
     timeoutMs?: number;
   }
-): ApiCustomPayload {
+): ApiGoogleCalendarPayload {
   return {
     type: "api",
-    subtype: "custom",
+    subtype: "googlecalendar",
     method,
     path,
     query: normalizeQueryParams(options?.query),
-    headers: options?.headers,
     body: options?.body,
     timeoutMs: options?.timeoutMs ?? 30000,
   };
