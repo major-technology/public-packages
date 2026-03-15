@@ -9,6 +9,7 @@ export * from "./s3";
 export * from "./api-custom";
 export * from "./api-graphql";
 export * from "./api-hubspot";
+export * from "./api-googlecalendar";
 export * from "./api-salesforce";
 export * from "./api-googlesheets";
 export * from "./api-outreach";
@@ -26,6 +27,7 @@ export * from "./response";
 import type { ApiCustomPayload } from "./api-custom";
 import type { ApiGraphQLPayload } from "./api-graphql";
 import type { ApiHubSpotPayload } from "./api-hubspot";
+import type { ApiGoogleCalendarPayload } from "./api-googlecalendar";
 import type { ApiSalesforcePayload } from "./api-salesforce";
 import type { ApiGoogleSheetsPayload } from "./api-googlesheets";
 import type { ApiOutreachPayload } from "./api-outreach";
@@ -56,6 +58,7 @@ export type ResourceInvokePayload =
   | DbCosmosDBPayload
   | DbSnowflakePayload
   | ApiHubSpotPayload
+  | ApiGoogleCalendarPayload
   | ApiSalesforcePayload
   | ApiGoogleSheetsPayload
   | ApiOutreachPayload

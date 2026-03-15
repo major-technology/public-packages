@@ -32,6 +32,7 @@ import {
   buildGoogleSheetsBatchUpdatePayload,
 } from "./googlesheets";
 import { buildHubSpotInvokePayload } from "./hubspot";
+import { buildGoogleCalendarInvokePayload } from "./googlecalendar";
 import {
   buildSalesforceInvokePayload,
   buildSalesforceQueryPayload,
@@ -323,6 +324,16 @@ export function buildPayloadFromExtractedParams(
       const path = findParam(extractedParams, "Path") as string;
       const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
       return buildHubSpotInvokePayload(method, path, options);
+    }
+
+    // =========================================================================
+    // Google Calendar
+    // =========================================================================
+    case "googlecalendar": {
+      const method = findParam(extractedParams, "Method") as "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+      const path = findParam(extractedParams, "Path") as string;
+      const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
+      return buildGoogleCalendarInvokePayload(method, path, options);
     }
 
     // =========================================================================
