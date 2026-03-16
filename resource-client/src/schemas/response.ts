@@ -44,6 +44,10 @@ export interface InvokeFailure {
     message: string;
     httpStatus?: number;
   };
+  /** Machine-readable error code, e.g. "USER_OAUTH_REQUIRED" */
+  code?: string;
+  /** Additional structured metadata about the error */
+  metadata?: Record<string, unknown>;
 }
 
 /**

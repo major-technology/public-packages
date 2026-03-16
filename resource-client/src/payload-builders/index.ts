@@ -50,6 +50,9 @@ export {
 // HubSpot
 export { buildHubSpotInvokePayload } from "./hubspot";
 
+// Google Calendar
+export { buildGoogleCalendarInvokePayload } from "./googlecalendar";
+
 // Salesforce
 export {
   buildSalesforceInvokePayload,
