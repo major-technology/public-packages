@@ -27,6 +27,7 @@ export { QuickBooksResourceClient } from "./clients/quickbooks";
 export { MajorAuthResourceClient } from "./clients/auth";
 export { GoogleAnalyticsResourceClient } from "./clients/google-analytics";
 export { GraphQLResourceClient } from "./clients/api-graphql";
+export { GongResourceClient } from "./clients/gong";
 
 // Export payload builders (for use in testing UIs, etc.)
 export * from "./payload-builders";
@@ -48,5 +49,6 @@ export type {
   AuthInvokeResponse,
   GoogleAnalyticsInvokeResponse,
   GraphQLInvokeResponse,
+  GongInvokeResponse,
   BaseInvokeSuccess,
 } from "./schemas/response";

@@ -120,6 +120,11 @@ export type SlackInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;
 export type QuickBooksInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;
 
 /**
+ * Response from Gong API resource invocation
+ */
+export type GongInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;
+
+/**
  * Response from Major Auth resource invocation
  */
 export type AuthInvokeResponse = BaseInvokeSuccess<AuthResult> | InvokeFailure;

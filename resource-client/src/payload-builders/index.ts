@@ -50,6 +50,9 @@ export {
 // HubSpot
 export { buildHubSpotInvokePayload } from "./hubspot";
 
+// Gong
+export { buildGongInvokePayload } from "./gong";
+
 // Salesforce
 export {
   buildSalesforceInvokePayload,
