@@ -65,6 +65,12 @@ import {
   buildGoogleAnalyticsInvokePayload,
 } from "./google-analytics";
 import { buildGraphQLInvokePayload } from "./graphql";
+import {
+  buildDynamicsInvokePayload,
+  buildDynamicsListEntitiesPayload,
+  buildDynamicsGetRecordsPayload,
+  buildDynamicsGetRecordPayload,
+} from "./dynamics";
 
 /**
  * Extracted parameter from query extraction
@@ -537,6 +543,50 @@ export function buildPayloadFromExtractedParams(
       const query = findParam(extractedParams, "Query") as string;
       const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
       return buildGraphQLInvokePayload(query, options);
+    }
+
+    // =========================================================================
+    // Dynamics 365 (Dataverse Web API)
+    // =========================================================================
+    case "dynamics": {
+      if (methodName === "listEntities") {
+        const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
+        return buildDynamicsListEntitiesPayload(options as { timeoutMs?: number } | undefined);
+      }
+
+      if (methodName === "getRecords") {
+        const entitySet = findParam(extractedParams, "EntitySet") as string;
+        const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
+        return buildDynamicsGetRecordsPayload(entitySet, options as {
+          select?: string;
+          filter?: string;
+          orderBy?: string;
+          top?: number;
+          expand?: string;
+          timeoutMs?: number;
+        } | undefined);
+      }
+
+      if (methodName === "getRecord") {
+        const entitySet = findParam(extractedParams, "EntitySet") as string;
+        const recordId = findParam(extractedParams, "RecordID") as string;
+        const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
+        return buildDynamicsGetRecordPayload(entitySet, recordId, options as {
+          select?: string;
+          expand?: string;
+          timeoutMs?: number;
+        } | undefined);
+      }
+
+      // Default: generic invoke passthrough
+      const method = findParam(extractedParams, "Method") as "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+      const path = findParam(extractedParams, "Path") as string;
+      const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
+      return buildDynamicsInvokePayload(method, path, options as {
+        query?: Record<string, string | string[]>;
+        body?: { type: "json"; value: unknown };
+        timeoutMs?: number;
+      } | undefined);
     }
 
     default:
