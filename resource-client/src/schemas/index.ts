@@ -20,6 +20,7 @@ export * from "./bigquery";
 export * from "./neo4j";
 export * from "./auth";
 export * from "./google-analytics";
+export * from "./api-linear";
 export * from "./request";
 export * from "./response";
 
@@ -44,6 +45,7 @@ import type { ApiQuickBooksPayload } from "./api-quickbooks";
 import type { ApiGongPayload } from "./api-gong";
 import type { AuthPayload } from "./auth";
 import type { ApiGoogleAnalyticsPayload } from "./google-analytics";
+import type { ApiLinearPayload } from "./api-linear";
 
 /**
  * Discriminated union of all resource payload types
@@ -69,4 +71,5 @@ export type ResourceInvokePayload =
   | ApiQuickBooksPayload
   | AuthPayload
   | ApiGoogleAnalyticsPayload
-  | ApiGongPayload;
+  | ApiGongPayload
+  | ApiLinearPayload;

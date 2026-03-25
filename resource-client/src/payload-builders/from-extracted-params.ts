@@ -65,6 +65,7 @@ import {
   buildGoogleAnalyticsInvokePayload,
 } from "./google-analytics";
 import { buildGraphQLInvokePayload } from "./graphql";
+import { buildLinearGraphQLPayload } from "./linear";
 
 /**
  * Extracted parameter from query extraction
@@ -537,6 +538,15 @@ export function buildPayloadFromExtractedParams(
       const query = findParam(extractedParams, "Query") as string;
       const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
       return buildGraphQLInvokePayload(query, options);
+    }
+
+    // =========================================================================
+    // Linear
+    // =========================================================================
+    case "linear": {
+      const query = findParam(extractedParams, "Query") as string;
+      const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
+      return buildLinearGraphQLPayload(query, options);
     }
 
     default:
