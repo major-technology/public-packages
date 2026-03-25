@@ -70,6 +70,9 @@ export { buildCustomApiInvokePayload } from "./custom";
 // GraphQL
 export { buildGraphQLInvokePayload } from "./graphql";
 
+// Linear
+export { buildLinearGraphQLPayload } from "./linear";
+
 // BigQuery
 export {
   buildBigQueryQueryPayload,
