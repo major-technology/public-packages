@@ -31,6 +31,8 @@ export { GongResourceClient } from "./clients/gong";
 export { DynamicsResourceClient } from "./clients/dynamics";
 export { LinearResourceClient } from "./clients/linear";
 export { RingCentralResourceClient } from "./clients/ringcentral";
+export { ZohoDeskResourceClient } from "./clients/zohodesk";
+export { ZohoProjectsResourceClient } from "./clients/zohoprojects";
 
 // Export payload builders (for use in testing UIs, etc.)
 export * from "./payload-builders";
@@ -56,5 +58,7 @@ export type {
   DynamicsInvokeResponse,
   LinearInvokeResponse,
   RingCentralInvokeResponse,
+  ZohoDeskInvokeResponse,
+  ZohoProjectsInvokeResponse,
   BaseInvokeSuccess,
 } from "./schemas/response";

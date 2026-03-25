@@ -23,6 +23,8 @@ export * from "./auth";
 export * from "./google-analytics";
 export * from "./api-linear";
 export * from "./api-ringcentral";
+export * from "./api-zohodesk";
+export * from "./api-zohoprojects";
 export * from "./request";
 export * from "./response";
 
@@ -50,6 +52,8 @@ import type { AuthPayload } from "./auth";
 import type { ApiGoogleAnalyticsPayload } from "./google-analytics";
 import type { ApiLinearPayload } from "./api-linear";
 import type { ApiRingCentralPayload } from "./api-ringcentral";
+import type { ApiZohoDeskPayload } from "./api-zohodesk";
+import type { ApiZohoProjectsPayload } from "./api-zohoprojects";
 
 /**
  * Discriminated union of all resource payload types
@@ -78,4 +82,6 @@ export type ResourceInvokePayload =
   | ApiGongPayload
   | ApiDynamicsPayload
   | ApiLinearPayload
-  | ApiRingCentralPayload;
+  | ApiRingCentralPayload
+  | ApiZohoDeskPayload
+  | ApiZohoProjectsPayload;
