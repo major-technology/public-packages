@@ -144,3 +144,8 @@ export type GraphQLInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure
  */
 export type DynamicsInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;
 
+/**
+ * Response from Linear API resource invocation
+ */
+export type LinearInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;
+

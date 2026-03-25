@@ -71,6 +71,7 @@ import {
   buildDynamicsGetRecordsPayload,
   buildDynamicsGetRecordPayload,
 } from "./dynamics";
+import { buildLinearGraphQLPayload } from "./linear";
 
 /**
  * Extracted parameter from query extraction
@@ -587,6 +588,15 @@ export function buildPayloadFromExtractedParams(
         body?: { type: "json"; value: unknown };
         timeoutMs?: number;
       } | undefined);
+    }
+
+    // =========================================================================
+    // Linear
+    // =========================================================================
+    case "linear": {
+      const query = findParam(extractedParams, "Query") as string;
+      const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
+      return buildLinearGraphQLPayload(query, options);
     }
 
     default:
