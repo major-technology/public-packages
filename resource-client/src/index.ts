@@ -28,6 +28,7 @@ export { MajorAuthResourceClient } from "./clients/auth";
 export { GoogleAnalyticsResourceClient } from "./clients/google-analytics";
 export { GraphQLResourceClient } from "./clients/api-graphql";
 export { GongResourceClient } from "./clients/gong";
+export { DynamicsResourceClient } from "./clients/dynamics";
 
 // Export payload builders (for use in testing UIs, etc.)
 export * from "./payload-builders";
@@ -50,5 +51,6 @@ export type {
   GoogleAnalyticsInvokeResponse,
   GraphQLInvokeResponse,
   GongInvokeResponse,
+  DynamicsInvokeResponse,
   BaseInvokeSuccess,
 } from "./schemas/response";
