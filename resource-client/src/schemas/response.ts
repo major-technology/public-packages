@@ -139,3 +139,8 @@ export type GoogleAnalyticsInvokeResponse = BaseInvokeSuccess<ApiGoogleAnalytics
  */
 export type GraphQLInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;
 
+/**
+ * Response from Microsoft Dynamics 365 resource invocation
+ */
+export type DynamicsInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;
+

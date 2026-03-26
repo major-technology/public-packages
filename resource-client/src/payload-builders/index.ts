@@ -107,6 +107,14 @@ export {
   buildGoogleAnalyticsInvokePayload,
 } from "./google-analytics";
 
+// Dynamics
+export {
+  buildDynamicsInvokePayload,
+  buildDynamicsListEntitiesPayload,
+  buildDynamicsGetRecordsPayload,
+  buildDynamicsGetRecordPayload,
+} from "./dynamics";
+
 // Universal builder from extracted params
 export { buildPayloadFromExtractedParams } from "./from-extracted-params";
 export type { ExtractedParam } from "./from-extracted-params";
