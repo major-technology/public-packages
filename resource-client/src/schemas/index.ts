@@ -22,6 +22,7 @@ export * from "./neo4j";
 export * from "./auth";
 export * from "./google-analytics";
 export * from "./api-linear";
+export * from "./api-ringcentral";
 export * from "./request";
 export * from "./response";
 
@@ -48,6 +49,7 @@ import type { ApiDynamicsPayload } from "./api-dynamics";
 import type { AuthPayload } from "./auth";
 import type { ApiGoogleAnalyticsPayload } from "./google-analytics";
 import type { ApiLinearPayload } from "./api-linear";
+import type { ApiRingCentralPayload } from "./api-ringcentral";
 
 /**
  * Discriminated union of all resource payload types
@@ -75,4 +77,5 @@ export type ResourceInvokePayload =
   | ApiGoogleAnalyticsPayload
   | ApiGongPayload
   | ApiDynamicsPayload
-  | ApiLinearPayload;
+  | ApiLinearPayload
+  | ApiRingCentralPayload;

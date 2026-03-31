@@ -118,6 +118,17 @@ export {
   buildDynamicsGetRecordPayload,
 } from "./dynamics";
 
+// RingCentral
+export {
+  buildRingCentralInvokePayload,
+  buildRingCentralListCallLogPayload,
+  buildRingCentralGetCallRecordPayload,
+  buildRingCentralSendSmsPayload,
+  buildRingCentralListMessagesPayload,
+  buildRingCentralListExtensionsPayload,
+  buildRingCentralGetExtensionPayload,
+} from "./ringcentral";
+
 // Universal builder from extracted params
 export { buildPayloadFromExtractedParams } from "./from-extracted-params";
 export type { ExtractedParam } from "./from-extracted-params";

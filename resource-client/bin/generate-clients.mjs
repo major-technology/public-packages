@@ -10,7 +10,7 @@
  *   npx @major-tech/resource-client list
  *
  * Modes: app (default) | tool
- * Types: postgresql | mssql | dynamodb | cosmosdb | snowflake | bigquery | neo4j | hubspot | googlesheets | outreach | custom | graphql | lambda | salesforce | s3 | slack | majorauth | googleanalytics | quickbooks | gong | dynamics | linear
+ * Types: postgresql | mssql | dynamodb | cosmosdb | snowflake | bigquery | neo4j | hubspot | googlesheets | outreach | custom | graphql | lambda | salesforce | s3 | slack | majorauth | googleanalytics | quickbooks | gong | dynamics | linear | ringcentral
  *
  * Examples:
  *   npx @major-tech/resource-client add "abc-123" "orders-db" "postgresql" "Orders database" "app-123"
@@ -209,6 +209,7 @@ function getClientClass(type) {
     'gong': 'GongResourceClient',
     'dynamics': 'DynamicsResourceClient',
     'linear': 'LinearResourceClient',
+    'ringcentral': 'RingCentralResourceClient',
   };
   return typeMap[type] || 'PostgresResourceClient';
 }
@@ -267,7 +268,7 @@ function generateIndexFile(resources) {
 }
 
 function addResource(resourceId, name, type, description, applicationId, framework, mode) {
-  const validTypes = ['postgresql', 'mssql', 'dynamodb', 'cosmosdb', 'snowflake', 'bigquery', 'neo4j', 'hubspot', 'googlesheets', 'outreach', 'custom', 'graphql', 'lambda', 'salesforce', 's3', 'slack', 'majorauth', 'googleanalytics', 'quickbooks', 'gong', 'dynamics', 'linear'];
+  const validTypes = ['postgresql', 'mssql', 'dynamodb', 'cosmosdb', 'snowflake', 'bigquery', 'neo4j', 'hubspot', 'googlesheets', 'outreach', 'custom', 'graphql', 'lambda', 'salesforce', 's3', 'slack', 'majorauth', 'googleanalytics', 'quickbooks', 'gong', 'dynamics', 'linear', 'ringcentral'];
   if (!validTypes.includes(type)) {
     console.error(`❌ Invalid type: ${type}`);
     console.error(`   Valid types: ${validTypes.join(', ')}`);
@@ -422,7 +423,7 @@ function main() {
     console.log('\nModes: app (default) | tool');
     console.log('  app  — requires <application_id>, reads MAJOR_API_BASE_URL');
     console.log('  tool — embeds toolId from tool.json at generation time, reads RESOURCE_API_URL');
-    console.log('\nTypes: postgresql | mssql | dynamodb | cosmosdb | snowflake | bigquery | neo4j | hubspot | googlesheets | outreach | custom | graphql | lambda | salesforce | s3 | slack | majorauth | googleanalytics | quickbooks | gong | dynamics | linear');
+    console.log('\nTypes: postgresql | mssql | dynamodb | cosmosdb | snowflake | bigquery | neo4j | hubspot | googlesheets | outreach | custom | graphql | lambda | salesforce | s3 | slack | majorauth | googleanalytics | quickbooks | gong | dynamics | linear | ringcentral');
     return;
   }
 

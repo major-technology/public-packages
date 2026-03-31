@@ -149,3 +149,8 @@ export type DynamicsInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailur
  */
 export type LinearInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;
 
+/**
+ * Response from RingCentral API resource invocation
+ */
+export type RingCentralInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;
+

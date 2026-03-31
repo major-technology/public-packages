@@ -30,6 +30,7 @@ export { GraphQLResourceClient } from "./clients/api-graphql";
 export { GongResourceClient } from "./clients/gong";
 export { DynamicsResourceClient } from "./clients/dynamics";
 export { LinearResourceClient } from "./clients/linear";
+export { RingCentralResourceClient } from "./clients/ringcentral";
 
 // Export payload builders (for use in testing UIs, etc.)
 export * from "./payload-builders";
@@ -54,5 +55,6 @@ export type {
   GongInvokeResponse,
   DynamicsInvokeResponse,
   LinearInvokeResponse,
+  RingCentralInvokeResponse,
   BaseInvokeSuccess,
 } from "./schemas/response";
