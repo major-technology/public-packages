@@ -129,6 +129,12 @@ export {
   buildRingCentralGetExtensionPayload,
 } from "./ringcentral";
 
+// Zoho Desk
+export { buildZohoDeskInvokePayload } from "./zohodesk";
+
+// Zoho Projects
+export { buildZohoProjectsInvokePayload } from "./zohoprojects";
+
 // Universal builder from extracted params
 export { buildPayloadFromExtractedParams } from "./from-extracted-params";
 export type { ExtractedParam } from "./from-extracted-params";
