@@ -71,6 +71,16 @@ import {
   buildDynamicsGetRecordsPayload,
   buildDynamicsGetRecordPayload,
 } from "./dynamics";
+import { buildLinearGraphQLPayload } from "./linear";
+import {
+  buildRingCentralInvokePayload,
+  buildRingCentralListCallLogPayload,
+  buildRingCentralGetCallRecordPayload,
+  buildRingCentralSendSmsPayload,
+  buildRingCentralListMessagesPayload,
+  buildRingCentralListExtensionsPayload,
+  buildRingCentralGetExtensionPayload,
+} from "./ringcentral";
 
 /**
  * Extracted parameter from query extraction
@@ -587,6 +597,52 @@ export function buildPayloadFromExtractedParams(
         body?: { type: "json"; value: unknown };
         timeoutMs?: number;
       } | undefined);
+    }
+
+    // =========================================================================
+    // Linear
+    // =========================================================================
+    case "linear": {
+      const query = findParam(extractedParams, "Query") as string;
+      const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
+      return buildLinearGraphQLPayload(query, options);
+    }
+
+    // =========================================================================
+    // RingCentral
+    // =========================================================================
+    case "ringcentral": {
+      if (methodName === "listCallLog") {
+        const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
+        return buildRingCentralListCallLogPayload(options as never);
+      }
+      if (methodName === "getCallRecord") {
+        const callRecordId = findParam(extractedParams, "CallRecordId") as string;
+        return buildRingCentralGetCallRecordPayload(callRecordId);
+      }
+      if (methodName === "sendSms") {
+        const from = findParam(extractedParams, "From") as string;
+        const to = findParam(extractedParams, "To") as string;
+        const text = findParam(extractedParams, "Text") as string;
+        return buildRingCentralSendSmsPayload(from, to, text);
+      }
+      if (methodName === "listMessages") {
+        const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
+        return buildRingCentralListMessagesPayload(options as never);
+      }
+      if (methodName === "listExtensions") {
+        const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
+        return buildRingCentralListExtensionsPayload(options as never);
+      }
+      if (methodName === "getExtension") {
+        const extensionId = findParam(extractedParams, "ExtensionId") as string;
+        return buildRingCentralGetExtensionPayload(extensionId);
+      }
+      // Default: invoke method
+      const method = findParam(extractedParams, "Method") as "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+      const path = findParam(extractedParams, "Path") as string;
+      const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
+      return buildRingCentralInvokePayload(method, path, options);
     }
 
     default:

@@ -70,6 +70,9 @@ export { buildCustomApiInvokePayload } from "./custom";
 // GraphQL
 export { buildGraphQLInvokePayload } from "./graphql";
 
+// Linear
+export { buildLinearGraphQLPayload } from "./linear";
+
 // BigQuery
 export {
   buildBigQueryQueryPayload,
@@ -114,6 +117,17 @@ export {
   buildDynamicsGetRecordsPayload,
   buildDynamicsGetRecordPayload,
 } from "./dynamics";
+
+// RingCentral
+export {
+  buildRingCentralInvokePayload,
+  buildRingCentralListCallLogPayload,
+  buildRingCentralGetCallRecordPayload,
+  buildRingCentralSendSmsPayload,
+  buildRingCentralListMessagesPayload,
+  buildRingCentralListExtensionsPayload,
+  buildRingCentralGetExtensionPayload,
+} from "./ringcentral";
 
 // Universal builder from extracted params
 export { buildPayloadFromExtractedParams } from "./from-extracted-params";
