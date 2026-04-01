@@ -81,6 +81,8 @@ import {
   buildRingCentralListExtensionsPayload,
   buildRingCentralGetExtensionPayload,
 } from "./ringcentral";
+import { buildZohoDeskInvokePayload } from "./zohodesk";
+import { buildZohoProjectsInvokePayload } from "./zohoprojects";
 
 /**
  * Extracted parameter from query extraction
@@ -643,6 +645,26 @@ export function buildPayloadFromExtractedParams(
       const path = findParam(extractedParams, "Path") as string;
       const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
       return buildRingCentralInvokePayload(method, path, options);
+    }
+
+    // =========================================================================
+    // Zoho Desk
+    // =========================================================================
+    case "zohodesk": {
+      const method = findParam(extractedParams, "Method") as "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+      const path = findParam(extractedParams, "Path") as string;
+      const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
+      return buildZohoDeskInvokePayload(method, path, options);
+    }
+
+    // =========================================================================
+    // Zoho Projects
+    // =========================================================================
+    case "zohoprojects": {
+      const method = findParam(extractedParams, "Method") as "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+      const path = findParam(extractedParams, "Path") as string;
+      const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
+      return buildZohoProjectsInvokePayload(method, path, options);
     }
 
     default:
