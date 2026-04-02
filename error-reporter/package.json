@@ -9,7 +9,8 @@
   },
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "exports": {
     ".": {
@@ -40,6 +41,10 @@
     "type": "git",
     "url": "https://github.com/major-technology/public-packages.git",
     "directory": "error-reporter"
+  },
+  "homepage": "https://github.com/major-technology/public-packages/tree/main/error-reporter#readme",
+  "bugs": {
+    "url": "https://github.com/major-technology/public-packages/issues"
   },
   "publishConfig": {
     "access": "public"
