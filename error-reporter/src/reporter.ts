@@ -108,6 +108,28 @@ export class ErrorReporter {
     }
   }
 
+  async flushAsync(): Promise<void> {
+    if (this.buffer.length === 0 || !this.applicationId) {
+      return;
+    }
+
+    const errors = this.buffer.splice(0);
+    const url = `${this.config.endpoint}/internal/apps/v1/${this.applicationId}/errors`;
+
+    try {
+      await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-major-jwt": this.config.jwtToken,
+        },
+        body: JSON.stringify({ errors }),
+      });
+    } catch {
+      // Silently ignore — error reporter must never itself cause errors
+    }
+  }
+
   destroy(): void {
     if (this.flushTimer) {
       clearInterval(this.flushTimer);

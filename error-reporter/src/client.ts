@@ -7,6 +7,15 @@ type BeforeUnloadHandler = () => void;
 let installedErrorHandler: ErrorHandler | null = null;
 let installedRejectionHandler: RejectionHandler | null = null;
 let installedBeforeUnloadHandler: BeforeUnloadHandler | null = null;
+let clientReporter: ErrorReporter | null = null;
+
+export function setClientReporter(reporter: ErrorReporter | null): void {
+  clientReporter = reporter;
+}
+
+export function getClientReporter(): ErrorReporter | null {
+  return clientReporter;
+}
 
 export function installClientHandlers(reporter: ErrorReporter): void {
   if (typeof window === "undefined") {
