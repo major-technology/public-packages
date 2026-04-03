@@ -41,3 +41,35 @@ export function getErrorReporter(): ErrorReporter | null {
 export function reportError(error: Error | string, context?: Record<string, unknown>): void {
   instance?.captureError(error, context);
 }
+
+/**
+ * Capture a server-side request error from Next.js onRequestError instrumentation hook.
+ * Flushes immediately to ensure the error is sent before the response completes.
+ */
+export async function captureRequestError(
+  err: Error & { digest?: string },
+  request: { path: string; method: string; headers: Record<string, string> },
+  context: {
+    routerKind: string;
+    routePath: string;
+    routeType: string;
+    renderSource?: string;
+  },
+): Promise<void> {
+  if (!instance) {
+    return;
+  }
+
+  instance.captureError(err, {
+    type: "request-error",
+    digest: err.digest,
+    path: request.path,
+    method: request.method,
+    routerKind: context.routerKind,
+    routePath: context.routePath,
+    routeType: context.routeType,
+    renderSource: context.renderSource,
+  });
+
+  await instance.flushAsync();
+}
