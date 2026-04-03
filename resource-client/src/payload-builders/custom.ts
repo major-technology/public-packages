@@ -1,5 +1,4 @@
 import type { ApiCustomPayload, HttpMethod, QueryParams, BodyPayload } from "../schemas";
-import { normalizeQueryParams } from "./normalize-query";
 
 /**
  * Build a Custom API invoke payload
@@ -22,7 +21,7 @@ export function buildCustomApiInvokePayload(
     subtype: "custom",
     method,
     path,
-    query: normalizeQueryParams(options?.query),
+    query: options?.query,
     headers: options?.headers,
     body: options?.body,
     timeoutMs: options?.timeoutMs ?? 30000,
