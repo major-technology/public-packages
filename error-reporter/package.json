@@ -1,6 +1,6 @@
 {
   "name": "@major-tech/error-reporter",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Error reporting client for Major applications — captures and batches errors to the Major API",
   "type": "module",
   "sideEffects": false,
