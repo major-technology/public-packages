@@ -1,6 +1,6 @@
 import type { ErrorReporter } from "./reporter";
 
-type ErrorHandler = OnErrorEventHandler;
+type ErrorHandler = (event: ErrorEvent) => void;
 type RejectionHandler = (event: PromiseRejectionEvent) => void;
 type BeforeUnloadHandler = () => void;
 
@@ -22,17 +22,19 @@ export function installClientHandlers(reporter: ErrorReporter): void {
     return;
   }
 
-  installedErrorHandler = (
-    _event: Event | string,
-    source?: string,
-    lineno?: number,
-    colno?: number,
-    error?: Error,
-  ) => {
-    if (error) {
-      reporter.captureError(error, { source, lineno, colno });
-    } else if (typeof _event === "string") {
-      reporter.captureError(_event, { source, lineno, colno });
+  installedErrorHandler = (event: ErrorEvent) => {
+    if (event.error) {
+      reporter.captureError(event.error, {
+        source: event.filename,
+        lineno: event.lineno,
+        colno: event.colno,
+      });
+    } else if (event.message) {
+      reporter.captureError(event.message, {
+        source: event.filename,
+        lineno: event.lineno,
+        colno: event.colno,
+      });
     }
   };
 
@@ -50,7 +52,7 @@ export function installClientHandlers(reporter: ErrorReporter): void {
     reporter.flush();
   };
 
-  window.onerror = installedErrorHandler;
+  window.addEventListener("error", installedErrorHandler);
   window.addEventListener("unhandledrejection", installedRejectionHandler);
   window.addEventListener("beforeunload", installedBeforeUnloadHandler);
 }
@@ -61,7 +63,7 @@ export function uninstallClientHandlers(): void {
   }
 
   if (installedErrorHandler) {
-    window.onerror = null;
+    window.removeEventListener("error", installedErrorHandler);
     installedErrorHandler = null;
   }
 
