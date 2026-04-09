@@ -12,6 +12,7 @@ export * from "./api-hubspot";
 export * from "./api-linkedin";
 export * from "./api-googlecalendar";
 export * from "./api-gmail";
+export * from "./api-googledrive";
 export * from "./api-salesforce";
 export * from "./api-googlesheets";
 export * from "./api-outreach";
@@ -45,6 +46,7 @@ import type { ApiHubSpotPayload } from "./api-hubspot";
 import type { ApiLinkedInPayload } from "./api-linkedin";
 import type { ApiGoogleCalendarPayload } from "./api-googlecalendar";
 import type { ApiGmailPayload } from "./api-gmail";
+import type { ApiGoogleDrivePayload } from "./api-googledrive";
 import type { ApiSalesforcePayload } from "./api-salesforce";
 import type { ApiGoogleSheetsPayload } from "./api-googlesheets";
 import type { ApiOutreachPayload } from "./api-outreach";
@@ -114,4 +116,5 @@ export type ResourceInvokePayload =
   | ApiZohoProjectsPayload
   | ApiMetaMarketingPayload
   | ApiSqsPayload
-  | ApiGmailPayload;
+  | ApiGmailPayload
+  | ApiGoogleDrivePayload;

@@ -18,6 +18,7 @@ export { HubSpotResourceClient } from "./clients/hubspot";
 export { LinkedInResourceClient } from "./clients/linkedin";
 export { GoogleCalendarResourceClient } from "./clients/googlecalendar";
 export { GmailResourceClient } from "./clients/gmail";
+export { GoogleDriveResourceClient } from "./clients/googledrive";
 export { SalesforceResourceClient } from "./clients/salesforce";
 export { GoogleSheetsResourceClient } from "./clients/googlesheets";
 export { S3ResourceClient } from "./clients/s3";

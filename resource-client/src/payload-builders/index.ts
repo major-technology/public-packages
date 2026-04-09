@@ -88,6 +88,9 @@ export { buildGoogleCalendarInvokePayload } from "./googlecalendar";
 // Gmail
 export { buildGmailInvokePayload } from "./gmail";
 
+// Google Drive
+export { buildGoogleDriveInvokePayload } from "./googledrive";
+
 // Salesforce
 export {
   buildSalesforceInvokePayload,
