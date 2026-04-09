@@ -10,7 +10,7 @@
  *   npx @major-tech/resource-client list
  *
  * Modes: app (default) | tool
- * Types: postgresql | mssql | dynamodb | cosmosdb | snowflake | bigquery | neo4j | hubspot | linkedin | tiktokads | googlecalendar | googlesheets | outreach | custom | graphql | lambda | salesforce | s3 | slack | majorauth | googleanalytics | quickbooks | gong | clerk | stripe | fireflies | attio | dynamics | linear | ringcentral | zohodesk | zohoprojects | sqs | metamarketing
+ * Types: postgresql | mssql | dynamodb | cosmosdb | snowflake | bigquery | neo4j | hubspot | linkedin | tiktokads | googlecalendar | gmail | googlesheets | outreach | custom | graphql | lambda | salesforce | s3 | slack | majorauth | googleanalytics | quickbooks | gong | clerk | stripe | fireflies | attio | dynamics | linear | ringcentral | zohodesk | zohoprojects | sqs | metamarketing
  *
  * Examples:
  *   npx @major-tech/resource-client add "abc-123" "orders-db" "postgresql" "Orders database" "app-123"
@@ -198,6 +198,7 @@ function getClientClass(type) {
     'hubspot': 'HubSpotResourceClient',
     'linkedin': 'LinkedInResourceClient',
     'googlecalendar': 'GoogleCalendarResourceClient',
+    'gmail': 'GmailResourceClient',
     'googlesheets': 'GoogleSheetsResourceClient',
     'lambda': 'LambdaResourceClient',
     'outreach': 'OutreachResourceClient',
@@ -279,7 +280,7 @@ function generateIndexFile(resources) {
 }
 
 function addResource(resourceId, name, type, description, applicationId, framework, mode) {
-  const validTypes = ['postgresql', 'mssql', 'dynamodb', 'cosmosdb', 'snowflake', 'bigquery', 'neo4j', 'hubspot', 'linkedin', 'tiktokads', 'googlecalendar', 'googlesheets', 'outreach', 'custom', 'graphql', 'lambda', 'salesforce', 's3', 'slack', 'majorauth', 'googleanalytics', 'quickbooks', 'gong', 'clerk', 'stripe', 'fireflies', 'attio', 'dynamics', 'linear', 'ringcentral', 'zohodesk', 'zohoprojects', 'sqs', 'metamarketing'];
+  const validTypes = ['postgresql', 'mssql', 'dynamodb', 'cosmosdb', 'snowflake', 'bigquery', 'neo4j', 'hubspot', 'linkedin', 'tiktokads', 'googlecalendar', 'gmail', 'googlesheets', 'outreach', 'custom', 'graphql', 'lambda', 'salesforce', 's3', 'slack', 'majorauth', 'googleanalytics', 'quickbooks', 'gong', 'clerk', 'stripe', 'fireflies', 'attio', 'dynamics', 'linear', 'ringcentral', 'zohodesk', 'zohoprojects', 'sqs', 'metamarketing'];
   if (!validTypes.includes(type)) {
     console.error(`❌ Invalid type: ${type}`);
     console.error(`   Valid types: ${validTypes.join(', ')}`);
@@ -434,7 +435,7 @@ function main() {
     console.log('\nModes: app (default) | tool');
     console.log('  app  — requires <application_id>, reads MAJOR_API_BASE_URL');
     console.log('  tool — embeds toolId from tool.json at generation time, reads RESOURCE_API_URL');
-    console.log('\nTypes: postgresql | mssql | dynamodb | cosmosdb | snowflake | bigquery | neo4j | hubspot | linkedin | tiktokads | googlecalendar | googlesheets | outreach | custom | graphql | lambda | salesforce | s3 | slack | majorauth | googleanalytics | quickbooks | gong | clerk | stripe | fireflies | attio | dynamics | linear | ringcentral | zohodesk | zohoprojects | sqs | metamarketing');
+    console.log('\nTypes: postgresql | mssql | dynamodb | cosmosdb | snowflake | bigquery | neo4j | hubspot | linkedin | tiktokads | googlecalendar | gmail | googlesheets | outreach | custom | graphql | lambda | salesforce | s3 | slack | majorauth | googleanalytics | quickbooks | gong | clerk | stripe | fireflies | attio | dynamics | linear | ringcentral | zohodesk | zohoprojects | sqs | metamarketing');
     return;
   }
 
