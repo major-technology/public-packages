@@ -10,11 +10,12 @@ import type { ApiOutreachResult } from "./api-outreach";
 import type { DbNeo4jResult } from "./neo4j";
 import type { AuthResult } from "./auth";
 import type { ApiGoogleAnalyticsResult } from "./google-analytics";
+import type { ApiSqsResult } from "./sqs";
 
 /**
  * Union of all possible resource invocation result types
  */
-export type ResourceInvokeSuccess = ApiResult | DbResult | StorageS3Result | DbDynamoDBResult | DbCosmosDBResult | DbSnowflakeResult | ApiLambdaResult | DbBigQueryResult | ApiOutreachResult | DbNeo4jResult | AuthResult | ApiGoogleAnalyticsResult;
+export type ResourceInvokeSuccess = ApiResult | DbResult | StorageS3Result | DbDynamoDBResult | DbCosmosDBResult | DbSnowflakeResult | ApiLambdaResult | DbBigQueryResult | ApiOutreachResult | DbNeo4jResult | AuthResult | ApiGoogleAnalyticsResult | ApiSqsResult;
 
 /**
  * Base successful invocation response - generic over result type
@@ -163,4 +164,9 @@ export type ZohoDeskInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailur
  * Response from Zoho Projects API resource invocation
  */
 export type ZohoProjectsInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;
+
+/**
+ * Response from SQS resource invocation
+ */
+export type SqsInvokeResponse = BaseInvokeSuccess<ApiSqsResult> | InvokeFailure;
 
