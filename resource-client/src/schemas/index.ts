@@ -26,6 +26,7 @@ export * from "./api-linear";
 export * from "./api-ringcentral";
 export * from "./api-zohodesk";
 export * from "./api-zohoprojects";
+export * from "./sqs";
 export * from "./request";
 export * from "./response";
 
@@ -56,6 +57,7 @@ import type { ApiLinearPayload } from "./api-linear";
 import type { ApiRingCentralPayload } from "./api-ringcentral";
 import type { ApiZohoDeskPayload } from "./api-zohodesk";
 import type { ApiZohoProjectsPayload } from "./api-zohoprojects";
+import type { ApiSqsPayload } from "./sqs";
 
 /**
  * Discriminated union of all resource payload types
@@ -87,4 +89,5 @@ export type ResourceInvokePayload =
   | ApiLinearPayload
   | ApiRingCentralPayload
   | ApiZohoDeskPayload
-  | ApiZohoProjectsPayload;
+  | ApiZohoProjectsPayload
+  | ApiSqsPayload;

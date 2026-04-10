@@ -84,6 +84,7 @@ import {
 } from "./ringcentral";
 import { buildZohoDeskInvokePayload } from "./zohodesk";
 import { buildZohoProjectsInvokePayload } from "./zohoprojects";
+import { buildSqsInvokePayload } from "./sqs";
 
 /**
  * Extracted parameter from query extraction
@@ -676,6 +677,17 @@ export function buildPayloadFromExtractedParams(
       const path = findParam(extractedParams, "Path") as string;
       const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
       return buildZohoProjectsInvokePayload(method, path, options);
+    }
+
+    // =========================================================================
+    // SQS
+    // =========================================================================
+    case "sqs": {
+      const command = findParam(extractedParams, "Command") as string;
+      const params = findParam(extractedParams, "Params") as Record<string, unknown>;
+      const queueUrl = findParam(extractedParams, "QueueUrl") as string | undefined;
+      const timeoutMs = findParam(extractedParams, "Timeout") as number | undefined;
+      return buildSqsInvokePayload(command as never, params, { queueUrl, timeoutMs });
     }
 
     default:

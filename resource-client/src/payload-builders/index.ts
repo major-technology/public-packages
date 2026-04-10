@@ -138,6 +138,9 @@ export { buildZohoDeskInvokePayload } from "./zohodesk";
 // Zoho Projects
 export { buildZohoProjectsInvokePayload } from "./zohoprojects";
 
+// SQS
+export { buildSqsInvokePayload } from "./sqs";
+
 // Universal builder from extracted params
 export { buildPayloadFromExtractedParams } from "./from-extracted-params";
 export type { ExtractedParam } from "./from-extracted-params";
