@@ -82,6 +82,7 @@ import {
   buildRingCentralListExtensionsPayload,
   buildRingCentralGetExtensionPayload,
 } from "./ringcentral";
+import { buildLinkedInAdsInvokePayload } from "./linkedinads";
 import { buildZohoDeskInvokePayload } from "./zohodesk";
 import { buildZohoProjectsInvokePayload } from "./zohoprojects";
 import { buildSqsInvokePayload } from "./sqs";
@@ -657,6 +658,16 @@ export function buildPayloadFromExtractedParams(
       const path = findParam(extractedParams, "Path") as string;
       const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
       return buildRingCentralInvokePayload(method, path, options);
+    }
+
+    // =========================================================================
+    // LinkedIn Ads
+    // =========================================================================
+    case "linkedinads": {
+      const method = findParam(extractedParams, "Method") as "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+      const path = findParam(extractedParams, "Path") as string;
+      const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
+      return buildLinkedInAdsInvokePayload(method, path, options);
     }
 
     // =========================================================================

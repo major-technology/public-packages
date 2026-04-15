@@ -121,6 +121,9 @@ export {
   buildDynamicsGetRecordPayload,
 } from "./dynamics";
 
+// LinkedIn Ads
+export { buildLinkedInAdsInvokePayload } from "./linkedinads";
+
 // RingCentral
 export {
   buildRingCentralInvokePayload,

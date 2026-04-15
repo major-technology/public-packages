@@ -32,6 +32,7 @@ export { GongResourceClient } from "./clients/gong";
 export { DynamicsResourceClient } from "./clients/dynamics";
 export { LinearResourceClient } from "./clients/linear";
 export { RingCentralResourceClient } from "./clients/ringcentral";
+export { LinkedInAdsResourceClient } from "./clients/linkedinads";
 export { ZohoDeskResourceClient } from "./clients/zohodesk";
 export { ZohoProjectsResourceClient } from "./clients/zohoprojects";
 export { SqsResourceClient } from "./clients/sqs";
@@ -61,6 +62,7 @@ export type {
   LinearInvokeResponse,
   RingCentralInvokeResponse,
   ZohoDeskInvokeResponse,
+  LinkedInAdsInvokeResponse,
   ZohoProjectsInvokeResponse,
   SqsInvokeResponse,
   BaseInvokeSuccess,
