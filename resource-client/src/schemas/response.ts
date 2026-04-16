@@ -156,6 +156,11 @@ export type LinearInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;
 export type RingCentralInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;
 
 /**
+ * Response from Clerk API resource invocation
+ */
+export type ClerkInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;
+
+/**
  * Response from Zoho Desk API resource invocation
  */
 export type ZohoDeskInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;

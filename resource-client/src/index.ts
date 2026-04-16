@@ -29,6 +29,7 @@ export { MajorAuthResourceClient } from "./clients/auth";
 export { GoogleAnalyticsResourceClient } from "./clients/google-analytics";
 export { GraphQLResourceClient } from "./clients/api-graphql";
 export { GongResourceClient } from "./clients/gong";
+export { ClerkResourceClient } from "./clients/clerk";
 export { DynamicsResourceClient } from "./clients/dynamics";
 export { LinearResourceClient } from "./clients/linear";
 export { RingCentralResourceClient } from "./clients/ringcentral";
@@ -57,6 +58,7 @@ export type {
   GoogleAnalyticsInvokeResponse,
   GraphQLInvokeResponse,
   GongInvokeResponse,
+  ClerkInvokeResponse,
   DynamicsInvokeResponse,
   LinearInvokeResponse,
   RingCentralInvokeResponse,
