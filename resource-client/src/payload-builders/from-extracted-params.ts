@@ -33,6 +33,7 @@ import {
 } from "./googlesheets";
 import { buildHubSpotInvokePayload } from "./hubspot";
 import { buildGongInvokePayload } from "./gong";
+import { buildClerkInvokePayload } from "./clerk";
 import { buildGoogleCalendarInvokePayload } from "./googlecalendar";
 import {
   buildSalesforceInvokePayload,
@@ -354,6 +355,16 @@ export function buildPayloadFromExtractedParams(
       const path = findParam(extractedParams, "Path") as string;
       const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
       return buildGongInvokePayload(method, path, options);
+    }
+
+    // =========================================================================
+    // Clerk
+    // =========================================================================
+    case "clerk": {
+      const method = findParam(extractedParams, "Method") as "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+      const path = findParam(extractedParams, "Path") as string;
+      const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
+      return buildClerkInvokePayload(method, path, options);
     }
 
     // =========================================================================
