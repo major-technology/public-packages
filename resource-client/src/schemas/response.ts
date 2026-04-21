@@ -210,3 +210,10 @@ export type MetaMarketingRawInvokeResponse = BaseInvokeSuccess<ApiResult> | Invo
  * Response from SharePoint API resource invocation (raw format, for invokeRaw usage)
  */
 export type SharePointRawInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;
+
+/**
+ * Response from MySQL database resource invocation
+ */
+export type MysqlInvokeResponse<T = Record<string, unknown>> =
+  | BaseInvokeSuccess<DbResult<T>>
+  | InvokeFailure;

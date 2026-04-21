@@ -12,6 +12,7 @@ import {
   buildCosmosDBPatchPayload,
 } from "./cosmosdb";
 import { buildMssqlInvokePayload } from "./mssql";
+import { buildMysqlInvokePayload } from "./mysql";
 import {
   buildSnowflakeInvokePayload,
   buildSnowflakeExecutePayload,
@@ -241,6 +242,16 @@ export function buildPayloadFromExtractedParams(
       // Default: try raw payload
       const payload = findParam(extractedParams, "Payload");
       return buildCosmosDBInvokePayload(payload as never);
+    }
+
+    // =========================================================================
+    // MySQL
+    // =========================================================================
+    case "mysql": {
+      const sql = findParam(extractedParams, "SQL") as string;
+      const params = findParam(extractedParams, "Params") as unknown[] | undefined;
+      const timeoutMs = findParam(extractedParams, "Timeout") as number | undefined;
+      return buildMysqlInvokePayload(sql, params as (string | number | boolean | null)[], timeoutMs);
     }
 
     // =========================================================================

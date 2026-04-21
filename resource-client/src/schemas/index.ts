@@ -2,6 +2,7 @@
 export * from "./common";
 export * from "./postgres";
 export * from "./mssql";
+export * from "./mysql";
 export * from "./dynamodb";
 export * from "./cosmosdb";
 export * from "./snowflake";
@@ -55,6 +56,7 @@ import type { ApiOutreachPayload } from "./api-outreach";
 import type { ApiSlackPayload } from "./api-slack";
 import type { DbPostgresPayload } from "./postgres";
 import type { DbMssqlPayload } from "./mssql";
+import type { DbMysqlPayload } from "./mysql";
 import type { DbDynamoDBPayload } from "./dynamodb";
 import type { DbCosmosDBPayload } from "./cosmosdb";
 import type { DbSnowflakePayload } from "./snowflake";
@@ -90,6 +92,7 @@ export type ResourceInvokePayload =
   | ApiGraphQLPayload
   | DbPostgresPayload
   | DbMssqlPayload
+  | DbMysqlPayload
   | DbDynamoDBPayload
   | DbCosmosDBPayload
   | DbSnowflakePayload
