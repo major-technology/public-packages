@@ -180,3 +180,8 @@ export type SqsInvokeResponse = BaseInvokeSuccess<ApiSqsResult> | InvokeFailure;
  */
 export type StripeRawInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;
 
+/**
+ * Response from Fireflies API resource invocation (raw format, for invokeRaw usage)
+ */
+export type FirefliesRawInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;
+
