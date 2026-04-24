@@ -61,6 +61,8 @@ export { buildStripeInvokePayload } from "./stripe";
 
 // Fireflies
 export { buildFirefliesQueryPayload, buildFirefliesMutatePayload } from "./fireflies";
+// Attio
+export { buildAttioInvokePayload } from "./attio";
 
 // Google Calendar
 export { buildGoogleCalendarInvokePayload } from "./googlecalendar";

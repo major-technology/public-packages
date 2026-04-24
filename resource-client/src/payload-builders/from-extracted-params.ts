@@ -36,6 +36,7 @@ import { buildGongInvokePayload } from "./gong";
 import { buildClerkInvokePayload } from "./clerk";
 import { buildStripeInvokePayload } from "./stripe";
 import { buildFirefliesQueryPayload, buildFirefliesMutatePayload } from "./fireflies";
+import { buildAttioInvokePayload } from "./attio";
 import { buildGoogleCalendarInvokePayload } from "./googlecalendar";
 import {
   buildSalesforceInvokePayload,
@@ -680,6 +681,16 @@ export function buildPayloadFromExtractedParams(
       const path = findParam(extractedParams, "Path") as string;
       const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
       return buildRingCentralInvokePayload(method, path, options);
+    }
+
+    // =========================================================================
+    // Attio
+    // =========================================================================
+    case "attio": {
+      const method = findParam(extractedParams, "Method") as "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+      const path = findParam(extractedParams, "Path") as string;
+      const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
+      return buildAttioInvokePayload(method, path, options);
     }
 
     // =========================================================================
