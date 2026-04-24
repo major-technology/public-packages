@@ -56,6 +56,9 @@ export { buildGongInvokePayload } from "./gong";
 // Clerk
 export { buildClerkInvokePayload } from "./clerk";
 
+// Stripe
+export { buildStripeInvokePayload } from "./stripe";
+
 // Google Calendar
 export { buildGoogleCalendarInvokePayload } from "./googlecalendar";
 

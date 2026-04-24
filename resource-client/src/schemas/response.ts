@@ -175,3 +175,8 @@ export type ZohoProjectsInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFa
  */
 export type SqsInvokeResponse = BaseInvokeSuccess<ApiSqsResult> | InvokeFailure;
 
+/**
+ * Response from Stripe API resource invocation (raw format, for invokeRaw usage)
+ */
+export type StripeRawInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;
+
