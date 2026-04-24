@@ -59,6 +59,9 @@ export { buildClerkInvokePayload } from "./clerk";
 // Stripe
 export { buildStripeInvokePayload } from "./stripe";
 
+// Fireflies
+export { buildFirefliesQueryPayload, buildFirefliesMutatePayload } from "./fireflies";
+
 // Google Calendar
 export { buildGoogleCalendarInvokePayload } from "./googlecalendar";
 

@@ -35,6 +35,7 @@ import { buildHubSpotInvokePayload } from "./hubspot";
 import { buildGongInvokePayload } from "./gong";
 import { buildClerkInvokePayload } from "./clerk";
 import { buildStripeInvokePayload } from "./stripe";
+import { buildFirefliesQueryPayload, buildFirefliesMutatePayload } from "./fireflies";
 import { buildGoogleCalendarInvokePayload } from "./googlecalendar";
 import {
   buildSalesforceInvokePayload,
@@ -699,6 +700,18 @@ export function buildPayloadFromExtractedParams(
       const path = findParam(extractedParams, "Path") as string;
       const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
       return buildZohoProjectsInvokePayload(method, path, options);
+    }
+
+    // =========================================================================
+    // Fireflies
+    // =========================================================================
+    case "fireflies": {
+      const query = findParam(extractedParams, "Query") as string;
+      const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
+      if (methodName === "mutate") {
+        return buildFirefliesMutatePayload(query, options);
+      }
+      return buildFirefliesQueryPayload(query, options);
     }
 
     // =========================================================================

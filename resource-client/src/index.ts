@@ -31,6 +31,7 @@ export { GraphQLResourceClient } from "./clients/api-graphql";
 export { GongResourceClient } from "./clients/gong";
 export { ClerkResourceClient } from "./clients/clerk";
 export { StripeResourceClient } from "./clients/stripe";
+export { FirefliesResourceClient } from "./clients/fireflies";
 export { DynamicsResourceClient } from "./clients/dynamics";
 export { LinearResourceClient } from "./clients/linear";
 export { RingCentralResourceClient } from "./clients/ringcentral";
@@ -61,6 +62,7 @@ export type {
   GongInvokeResponse,
   ClerkInvokeResponse,
   StripeRawInvokeResponse,
+  FirefliesRawInvokeResponse,
   DynamicsInvokeResponse,
   LinearInvokeResponse,
   RingCentralInvokeResponse,
