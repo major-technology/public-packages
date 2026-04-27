@@ -15,6 +15,7 @@ export { CosmosDBResourceClient } from "./clients/cosmosdb";
 export { SnowflakeResourceClient } from "./clients/snowflake";
 export { CustomApiResourceClient } from "./clients/api-custom";
 export { HubSpotResourceClient } from "./clients/hubspot";
+export { LinkedInResourceClient } from "./clients/linkedin";
 export { GoogleCalendarResourceClient } from "./clients/googlecalendar";
 export { SalesforceResourceClient } from "./clients/salesforce";
 export { GoogleSheetsResourceClient } from "./clients/googlesheets";
