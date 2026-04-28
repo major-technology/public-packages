@@ -167,6 +167,9 @@ export { buildZohoDeskInvokePayload } from "./zohodesk";
 // Zoho Projects
 export { buildZohoProjectsInvokePayload } from "./zohoprojects";
 
+// Meta Marketing
+export { buildMetaMarketingInvokePayload } from "./metamarketing";
+
 // SQS
 export { buildSqsInvokePayload } from "./sqs";
 

@@ -32,6 +32,7 @@ export * from "./api-attio";
 export * from "./api-tiktokads";
 export * from "./api-zohodesk";
 export * from "./api-zohoprojects";
+export * from "./api-metamarketing";
 export * from "./sqs";
 export * from "./request";
 export * from "./response";
@@ -69,6 +70,7 @@ import type { ApiAttioPayload } from "./api-attio";
 import type { ApiTikTokAdsPayload } from "./api-tiktokads";
 import type { ApiZohoDeskPayload } from "./api-zohodesk";
 import type { ApiZohoProjectsPayload } from "./api-zohoprojects";
+import type { ApiMetaMarketingPayload } from "./api-metamarketing";
 import type { ApiSqsPayload } from "./sqs";
 
 /**
@@ -108,4 +110,5 @@ export type ResourceInvokePayload =
   | ApiTikTokAdsPayload
   | ApiZohoDeskPayload
   | ApiZohoProjectsPayload
+  | ApiMetaMarketingPayload
   | ApiSqsPayload;
