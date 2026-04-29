@@ -11,11 +11,12 @@ import type { DbNeo4jResult } from "./neo4j";
 import type { AuthResult } from "./auth";
 import type { ApiGoogleAnalyticsResult } from "./google-analytics";
 import type { ApiSqsResult } from "./sqs";
+import type { ApiTikTokAdsResult } from "./api-tiktokads";
 
 /**
  * Union of all possible resource invocation result types
  */
-export type ResourceInvokeSuccess = ApiResult | DbResult | StorageS3Result | DbDynamoDBResult | DbCosmosDBResult | DbSnowflakeResult | ApiLambdaResult | DbBigQueryResult | ApiOutreachResult | DbNeo4jResult | AuthResult | ApiGoogleAnalyticsResult | ApiSqsResult;
+export type ResourceInvokeSuccess = ApiResult | DbResult | StorageS3Result | DbDynamoDBResult | DbCosmosDBResult | DbSnowflakeResult | ApiLambdaResult | DbBigQueryResult | ApiOutreachResult | DbNeo4jResult | AuthResult | ApiGoogleAnalyticsResult | ApiSqsResult | ApiTikTokAdsResult;
 
 /**
  * Base successful invocation response - generic over result type
@@ -176,6 +177,11 @@ export type ZohoProjectsInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFa
 export type SqsInvokeResponse = BaseInvokeSuccess<ApiSqsResult> | InvokeFailure;
 
 /**
+ * Response from TikTok Ads resource invocation
+ */
+export type TikTokAdsInvokeResponse = BaseInvokeSuccess<ApiTikTokAdsResult> | InvokeFailure;
+
+/**
  * Response from Stripe API resource invocation (raw format, for invokeRaw usage)
  */
 export type StripeRawInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;
@@ -189,4 +195,3 @@ export type FirefliesRawInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFa
  * Response from Attio API resource invocation (raw format, for invokeRaw usage)
  */
 export type AttioRawInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;
-

@@ -38,6 +38,7 @@ import { buildClerkInvokePayload } from "./clerk";
 import { buildStripeInvokePayload } from "./stripe";
 import { buildFirefliesQueryPayload, buildFirefliesMutatePayload } from "./fireflies";
 import { buildAttioInvokePayload } from "./attio";
+import { buildTikTokAdsInvokePayload } from "./tiktokads";
 import { buildGoogleCalendarInvokePayload } from "./googlecalendar";
 import {
   buildSalesforceInvokePayload,
@@ -702,6 +703,16 @@ export function buildPayloadFromExtractedParams(
       const path = findParam(extractedParams, "Path") as string;
       const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
       return buildAttioInvokePayload(method, path, options);
+    }
+
+    // =========================================================================
+    // TikTok Ads
+    // =========================================================================
+    case "tiktokads": {
+      const method = findParam(extractedParams, "Method") as "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+      const path = findParam(extractedParams, "Path") as string;
+      const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
+      return buildTikTokAdsInvokePayload(method, path, options);
     }
 
     // =========================================================================

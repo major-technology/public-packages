@@ -34,6 +34,7 @@ export { ClerkResourceClient } from "./clients/clerk";
 export { StripeResourceClient } from "./clients/stripe";
 export { FirefliesResourceClient } from "./clients/fireflies";
 export { AttioResourceClient } from "./clients/attio";
+export { TikTokAdsResourceClient } from "./clients/tiktokads";
 export { DynamicsResourceClient } from "./clients/dynamics";
 export { LinearResourceClient } from "./clients/linear";
 export { RingCentralResourceClient } from "./clients/ringcentral";
@@ -66,6 +67,7 @@ export type {
   StripeRawInvokeResponse,
   FirefliesRawInvokeResponse,
   AttioRawInvokeResponse,
+  TikTokAdsInvokeResponse,
   DynamicsInvokeResponse,
   LinearInvokeResponse,
   RingCentralInvokeResponse,
