@@ -50,6 +50,15 @@ export {
 // HubSpot
 export { buildHubSpotInvokePayload } from "./hubspot";
 
+// LinkedIn
+export {
+  buildLinkedInInvokePayload,
+  buildLinkedInListAdAccountsPayload,
+  buildLinkedInListCampaignsPayload,
+  buildLinkedInListCreativesPayload,
+  buildLinkedInGetAdAnalyticsPayload,
+} from "./linkedin";
+
 // Gong
 export { buildGongInvokePayload } from "./gong";
 
