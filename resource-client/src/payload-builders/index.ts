@@ -73,6 +73,15 @@ export { buildFirefliesQueryPayload, buildFirefliesMutatePayload } from "./firef
 // Attio
 export { buildAttioInvokePayload } from "./attio";
 
+// TikTok Ads
+export {
+  buildTikTokAdsInvokePayload,
+  buildTikTokAdsListAdvertisersPayload,
+  buildTikTokAdsListCampaignsPayload,
+  buildTikTokAdsGetCampaignPayload,
+  buildTikTokAdsRunReportPayload,
+} from "./tiktokads";
+
 // Google Calendar
 export { buildGoogleCalendarInvokePayload } from "./googlecalendar";
 
