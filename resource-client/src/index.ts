@@ -41,6 +41,7 @@ export { RingCentralResourceClient } from "./clients/ringcentral";
 export { ZohoDeskResourceClient } from "./clients/zohodesk";
 export { ZohoProjectsResourceClient } from "./clients/zohoprojects";
 export { SqsResourceClient } from "./clients/sqs";
+export { MetaMarketingResourceClient } from "./clients/metamarketing";
 
 // Export payload builders (for use in testing UIs, etc.)
 export * from "./payload-builders";
@@ -68,6 +69,7 @@ export type {
   FirefliesRawInvokeResponse,
   AttioRawInvokeResponse,
   TikTokAdsInvokeResponse,
+  MetaMarketingRawInvokeResponse,
   DynamicsInvokeResponse,
   LinearInvokeResponse,
   RingCentralInvokeResponse,

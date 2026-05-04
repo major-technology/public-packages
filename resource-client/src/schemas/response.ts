@@ -195,3 +195,8 @@ export type FirefliesRawInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFa
  * Response from Attio API resource invocation (raw format, for invokeRaw usage)
  */
 export type AttioRawInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;
+
+/**
+ * Response from Meta Marketing API resource invocation (raw format, for invokeRaw usage)
+ */
+export type MetaMarketingRawInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;

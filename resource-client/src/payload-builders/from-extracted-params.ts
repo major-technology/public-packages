@@ -90,6 +90,7 @@ import {
 } from "./ringcentral";
 import { buildZohoDeskInvokePayload } from "./zohodesk";
 import { buildZohoProjectsInvokePayload } from "./zohoprojects";
+import { buildMetaMarketingInvokePayload } from "./metamarketing";
 import { buildSqsInvokePayload } from "./sqs";
 
 /**
@@ -745,6 +746,16 @@ export function buildPayloadFromExtractedParams(
         return buildFirefliesMutatePayload(query, options);
       }
       return buildFirefliesQueryPayload(query, options);
+    }
+
+    // =========================================================================
+    // Meta Marketing
+    // =========================================================================
+    case "metamarketing": {
+      const method = findParam(extractedParams, "Method") as "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+      const path = findParam(extractedParams, "Path") as string;
+      const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
+      return buildMetaMarketingInvokePayload(method, path, options);
     }
 
     // =========================================================================
