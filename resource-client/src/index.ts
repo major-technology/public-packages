@@ -45,6 +45,7 @@ export { ZohoDeskResourceClient } from "./clients/zohodesk";
 export { ZohoProjectsResourceClient } from "./clients/zohoprojects";
 export { SqsResourceClient } from "./clients/sqs";
 export { MetaMarketingResourceClient } from "./clients/metamarketing";
+export { SharePointResourceClient } from "./clients/sharepoint";
 
 // Export payload builders (for use in testing UIs, etc.)
 export * from "./payload-builders";
