@@ -47,6 +47,7 @@ export { SqsResourceClient } from "./clients/sqs";
 export { MetaMarketingResourceClient } from "./clients/metamarketing";
 export { SharePointResourceClient } from "./clients/sharepoint";
 export { GoogleSearchConsoleResourceClient } from "./clients/google-search-console";
+export { NotionResourceClient } from "./clients/notion";
 
 // Export payload builders (for use in testing UIs, etc.)
 export * from "./payload-builders";
@@ -76,6 +77,7 @@ export type {
   TikTokAdsInvokeResponse,
   MetaMarketingRawInvokeResponse,
   GoogleSearchConsoleInvokeResponse,
+  NotionInvokeResponse,
   DynamicsInvokeResponse,
   LinearInvokeResponse,
   RingCentralInvokeResponse,
