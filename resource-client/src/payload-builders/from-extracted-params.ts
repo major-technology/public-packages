@@ -40,6 +40,8 @@ import { buildFirefliesQueryPayload, buildFirefliesMutatePayload } from "./firef
 import { buildAttioInvokePayload } from "./attio";
 import { buildTikTokAdsInvokePayload } from "./tiktokads";
 import { buildGoogleCalendarInvokePayload } from "./googlecalendar";
+import { buildGmailInvokePayload } from "./gmail";
+import { buildGoogleDriveInvokePayload } from "./googledrive";
 import {
   buildSalesforceInvokePayload,
   buildSalesforceQueryPayload,
@@ -401,6 +403,26 @@ export function buildPayloadFromExtractedParams(
       const path = findParam(extractedParams, "Path") as string;
       const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
       return buildGoogleCalendarInvokePayload(method, path, options);
+    }
+
+    // =========================================================================
+    // Gmail
+    // =========================================================================
+    case "gmail": {
+      const method = findParam(extractedParams, "Method") as "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+      const path = findParam(extractedParams, "Path") as string;
+      const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
+      return buildGmailInvokePayload(method, path, options);
+    }
+
+    // =========================================================================
+    // Google Drive
+    // =========================================================================
+    case "googledrive": {
+      const method = findParam(extractedParams, "Method") as "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+      const path = findParam(extractedParams, "Path") as string;
+      const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
+      return buildGoogleDriveInvokePayload(method, path, options);
     }
 
     // =========================================================================
