@@ -46,6 +46,7 @@ export { ZohoProjectsResourceClient } from "./clients/zohoprojects";
 export { SqsResourceClient } from "./clients/sqs";
 export { MetaMarketingResourceClient } from "./clients/metamarketing";
 export { SharePointResourceClient } from "./clients/sharepoint";
+export { GoogleSearchConsoleResourceClient } from "./clients/google-search-console";
 
 // Export payload builders (for use in testing UIs, etc.)
 export * from "./payload-builders";
@@ -74,6 +75,7 @@ export type {
   AttioRawInvokeResponse,
   TikTokAdsInvokeResponse,
   MetaMarketingRawInvokeResponse,
+  GoogleSearchConsoleInvokeResponse,
   DynamicsInvokeResponse,
   LinearInvokeResponse,
   RingCentralInvokeResponse,

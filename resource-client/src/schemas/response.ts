@@ -12,11 +12,12 @@ import type { AuthResult } from "./auth";
 import type { ApiGoogleAnalyticsResult } from "./google-analytics";
 import type { ApiSqsResult } from "./sqs";
 import type { ApiTikTokAdsResult } from "./api-tiktokads";
+import type { ApiGoogleSearchConsoleResult } from "./google-search-console";
 
 /**
  * Union of all possible resource invocation result types
  */
-export type ResourceInvokeSuccess = ApiResult | DbResult | StorageS3Result | DbDynamoDBResult | DbCosmosDBResult | DbSnowflakeResult | ApiLambdaResult | DbBigQueryResult | ApiOutreachResult | DbNeo4jResult | AuthResult | ApiGoogleAnalyticsResult | ApiSqsResult | ApiTikTokAdsResult;
+export type ResourceInvokeSuccess = ApiResult | DbResult | StorageS3Result | DbDynamoDBResult | DbCosmosDBResult | DbSnowflakeResult | ApiLambdaResult | DbBigQueryResult | ApiOutreachResult | DbNeo4jResult | AuthResult | ApiGoogleAnalyticsResult | ApiSqsResult | ApiTikTokAdsResult | ApiGoogleSearchConsoleResult;
 
 /**
  * Base successful invocation response - generic over result type
@@ -212,3 +213,8 @@ export type SharePointRawInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeF
 export type MysqlInvokeResponse<T = Record<string, unknown>> =
   | BaseInvokeSuccess<DbResult<T>>
   | InvokeFailure;
+
+/**
+ * Response from Google Search Console resource invocation
+ */
+export type GoogleSearchConsoleInvokeResponse = BaseInvokeSuccess<ApiGoogleSearchConsoleResult> | InvokeFailure;

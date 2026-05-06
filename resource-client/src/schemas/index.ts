@@ -37,6 +37,7 @@ export * from "./api-zohodesk";
 export * from "./api-zohoprojects";
 export * from "./api-metamarketing";
 export * from "./api-sharepoint";
+export * from "./google-search-console";
 export * from "./sqs";
 export * from "./request";
 export * from "./response";
@@ -79,6 +80,7 @@ import type { ApiZohoDeskPayload } from "./api-zohodesk";
 import type { ApiZohoProjectsPayload } from "./api-zohoprojects";
 import type { ApiMetaMarketingPayload } from "./api-metamarketing";
 import type { ApiSharePointPayload } from "./api-sharepoint";
+import type { ApiGoogleSearchConsolePayload } from "./google-search-console";
 import type { ApiSqsPayload } from "./sqs";
 
 /**
@@ -121,6 +123,7 @@ export type ResourceInvokePayload =
   | ApiZohoProjectsPayload
   | ApiMetaMarketingPayload
   | ApiSharePointPayload
+  | ApiGoogleSearchConsolePayload
   | ApiSqsPayload
   | ApiGmailPayload
   | ApiGoogleDrivePayload;

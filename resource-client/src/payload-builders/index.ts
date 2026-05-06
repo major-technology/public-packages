@@ -182,6 +182,17 @@ export { buildMetaMarketingInvokePayload } from "./metamarketing";
 // SharePoint
 export { buildSharePointInvokePayload } from "./sharepoint";
 
+// Google Search Console
+export {
+  buildGoogleSearchConsoleQueryAnalyticsPayload,
+  buildGoogleSearchConsoleListSitesPayload,
+  buildGoogleSearchConsoleGetSitePayload,
+  buildGoogleSearchConsoleListSitemapsPayload,
+  buildGoogleSearchConsoleGetSitemapPayload,
+  buildGoogleSearchConsoleInspectUrlPayload,
+  buildGoogleSearchConsoleInvokePayload,
+} from "./google-search-console";
+
 // SQS
 export { buildSqsInvokePayload } from "./sqs";
 
