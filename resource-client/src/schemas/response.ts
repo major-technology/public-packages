@@ -205,3 +205,8 @@ export type AttioRawInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailur
  * Response from Meta Marketing API resource invocation (raw format, for invokeRaw usage)
  */
 export type MetaMarketingRawInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;
+
+/**
+ * Response from SharePoint API resource invocation (raw format, for invokeRaw usage)
+ */
+export type SharePointRawInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;

@@ -94,6 +94,7 @@ import {
 import { buildZohoDeskInvokePayload } from "./zohodesk";
 import { buildZohoProjectsInvokePayload } from "./zohoprojects";
 import { buildMetaMarketingInvokePayload } from "./metamarketing";
+import { buildSharePointInvokePayload } from "./sharepoint";
 import { buildSqsInvokePayload } from "./sqs";
 
 /**
@@ -789,6 +790,16 @@ export function buildPayloadFromExtractedParams(
       const path = findParam(extractedParams, "Path") as string;
       const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
       return buildMetaMarketingInvokePayload(method, path, options);
+    }
+
+    // =========================================================================
+    // SharePoint (Microsoft Graph)
+    // =========================================================================
+    case "sharepoint": {
+      const method = findParam(extractedParams, "Method") as "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+      const path = findParam(extractedParams, "Path") as string;
+      const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
+      return buildSharePointInvokePayload(method, path, options);
     }
 
     // =========================================================================
