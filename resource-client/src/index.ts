@@ -37,6 +37,7 @@ export { StripeResourceClient } from "./clients/stripe";
 export { FirefliesResourceClient } from "./clients/fireflies";
 export { AttioResourceClient } from "./clients/attio";
 export { TikTokAdsResourceClient } from "./clients/tiktokads";
+export { LinkedInAdsResourceClient } from "./clients/linkedinads";
 export { DynamicsResourceClient } from "./clients/dynamics";
 export { LinearResourceClient } from "./clients/linear";
 export { RingCentralResourceClient } from "./clients/ringcentral";
@@ -72,6 +73,7 @@ export type {
   AttioRawInvokeResponse,
   TikTokAdsInvokeResponse,
   MetaMarketingRawInvokeResponse,
+  LinkedInAdsInvokeResponse,
   DynamicsInvokeResponse,
   LinearInvokeResponse,
   RingCentralInvokeResponse,

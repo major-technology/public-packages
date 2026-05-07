@@ -32,6 +32,7 @@ export * from "./api-stripe";
 export * from "./api-fireflies";
 export * from "./api-attio";
 export * from "./api-tiktokads";
+export * from "./api-linkedinads";
 export * from "./api-zohodesk";
 export * from "./api-zohoprojects";
 export * from "./api-metamarketing";
@@ -72,6 +73,7 @@ import type { ApiStripePayload } from "./api-stripe";
 import type { ApiFirefliesPayload } from "./api-fireflies";
 import type { ApiAttioPayload } from "./api-attio";
 import type { ApiTikTokAdsPayload } from "./api-tiktokads";
+import type { ApiLinkedInAdsPayload } from "./api-linkedinads";
 import type { ApiZohoDeskPayload } from "./api-zohodesk";
 import type { ApiZohoProjectsPayload } from "./api-zohoprojects";
 import type { ApiMetaMarketingPayload } from "./api-metamarketing";
@@ -112,6 +114,7 @@ export type ResourceInvokePayload =
   | ApiFirefliesPayload
   | ApiAttioPayload
   | ApiTikTokAdsPayload
+  | ApiLinkedInAdsPayload
   | ApiZohoDeskPayload
   | ApiZohoProjectsPayload
   | ApiMetaMarketingPayload

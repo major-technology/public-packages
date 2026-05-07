@@ -82,6 +82,9 @@ export {
   buildTikTokAdsRunReportPayload,
 } from "./tiktokads";
 
+// LinkedIn Ads
+export { buildLinkedInAdsInvokePayload } from "./linkedinads";
+
 // Google Calendar
 export { buildGoogleCalendarInvokePayload } from "./googlecalendar";
 

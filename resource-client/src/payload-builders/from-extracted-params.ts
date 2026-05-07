@@ -33,6 +33,7 @@ import {
 } from "./googlesheets";
 import { buildHubSpotInvokePayload } from "./hubspot";
 import { buildLinkedInInvokePayload } from "./linkedin";
+import { buildLinkedInAdsInvokePayload } from "./linkedinads";
 import { buildGongInvokePayload } from "./gong";
 import { buildClerkInvokePayload } from "./clerk";
 import { buildStripeInvokePayload } from "./stripe";
@@ -363,6 +364,16 @@ export function buildPayloadFromExtractedParams(
       const path = findParam(extractedParams, "Path") as string;
       const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
       return buildLinkedInInvokePayload(method, path, options);
+    }
+
+    // =========================================================================
+    // LinkedIn Ads
+    // =========================================================================
+    case "linkedinads": {
+      const method = findParam(extractedParams, "Method") as "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+      const path = findParam(extractedParams, "Path") as string;
+      const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
+      return buildLinkedInAdsInvokePayload(method, path, options);
     }
 
     // =========================================================================
