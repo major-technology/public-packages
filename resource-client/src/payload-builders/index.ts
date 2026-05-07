@@ -19,6 +19,9 @@ export {
 // MSSQL
 export { buildMssqlInvokePayload } from "./mssql";
 
+// MySQL
+export { buildMysqlInvokePayload } from "./mysql";
+
 // Snowflake
 export {
   buildSnowflakeInvokePayload,

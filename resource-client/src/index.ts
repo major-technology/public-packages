@@ -10,6 +10,7 @@ export { ResourceInvokeError } from "./errors";
 // Export individual clients
 export { PostgresResourceClient } from "./clients/postgres";
 export { MssqlResourceClient } from "./clients/mssql";
+export { MysqlResourceClient } from "./clients/mysql";
 export { DynamoDBResourceClient } from "./clients/dynamodb";
 export { CosmosDBResourceClient } from "./clients/cosmosdb";
 export { SnowflakeResourceClient } from "./clients/snowflake";
@@ -81,5 +82,6 @@ export type {
   ZohoDeskInvokeResponse,
   ZohoProjectsInvokeResponse,
   SqsInvokeResponse,
+  MysqlInvokeResponse,
   BaseInvokeSuccess,
 } from "./schemas/response";
