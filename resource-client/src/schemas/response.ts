@@ -172,11 +172,6 @@ export type ZohoDeskInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailur
 export type ZohoProjectsInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;
 
 /**
- * Response from LinkedIn Ads API resource invocation
- */
-export type LinkedInAdsInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;
-
-/**
  * Response from SQS resource invocation
  */
 export type SqsInvokeResponse = BaseInvokeSuccess<ApiSqsResult> | InvokeFailure;
