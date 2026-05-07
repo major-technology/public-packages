@@ -10,13 +10,14 @@ import type { ApiOutreachResult } from "./api-outreach";
 import type { DbNeo4jResult } from "./neo4j";
 import type { AuthResult } from "./auth";
 import type { ApiGoogleAnalyticsResult } from "./google-analytics";
+import type { ApiGoogleSearchConsoleResult } from "./google-search-console";
 import type { ApiSqsResult } from "./sqs";
 import type { ApiTikTokAdsResult } from "./api-tiktokads";
 
 /**
  * Union of all possible resource invocation result types
  */
-export type ResourceInvokeSuccess = ApiResult | DbResult | StorageS3Result | DbDynamoDBResult | DbCosmosDBResult | DbSnowflakeResult | ApiLambdaResult | DbBigQueryResult | ApiOutreachResult | DbNeo4jResult | AuthResult | ApiGoogleAnalyticsResult | ApiSqsResult | ApiTikTokAdsResult;
+export type ResourceInvokeSuccess = ApiResult | DbResult | StorageS3Result | DbDynamoDBResult | DbCosmosDBResult | DbSnowflakeResult | ApiLambdaResult | DbBigQueryResult | ApiOutreachResult | DbNeo4jResult | AuthResult | ApiGoogleAnalyticsResult | ApiGoogleSearchConsoleResult | ApiSqsResult | ApiTikTokAdsResult;
 
 /**
  * Base successful invocation response - generic over result type
@@ -135,6 +136,11 @@ export type AuthInvokeResponse = BaseInvokeSuccess<AuthResult> | InvokeFailure;
  * Response from Google Analytics resource invocation
  */
 export type GoogleAnalyticsInvokeResponse = BaseInvokeSuccess<ApiGoogleAnalyticsResult> | InvokeFailure;
+
+/**
+ * Response from Google Search Console resource invocation
+ */
+export type GoogleSearchConsoleInvokeResponse = BaseInvokeSuccess<ApiGoogleSearchConsoleResult> | InvokeFailure;
 
 /**
  * Response from GraphQL API resource invocation

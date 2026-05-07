@@ -151,6 +151,17 @@ export {
   buildGoogleAnalyticsInvokePayload,
 } from "./google-analytics";
 
+// Google Search Console
+export {
+  buildGoogleSearchConsoleQueryAnalyticsPayload,
+  buildGoogleSearchConsoleListSitesPayload,
+  buildGoogleSearchConsoleGetSitePayload,
+  buildGoogleSearchConsoleListSitemapsPayload,
+  buildGoogleSearchConsoleGetSitemapPayload,
+  buildGoogleSearchConsoleInspectUrlPayload,
+  buildGoogleSearchConsoleInvokePayload,
+} from "./google-search-console";
+
 // Dynamics
 export {
   buildDynamicsInvokePayload,

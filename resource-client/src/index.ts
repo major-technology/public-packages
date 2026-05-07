@@ -19,6 +19,7 @@ export { LinkedInResourceClient } from "./clients/linkedin";
 export { GoogleCalendarResourceClient } from "./clients/googlecalendar";
 export { GmailResourceClient } from "./clients/gmail";
 export { GoogleDriveResourceClient } from "./clients/googledrive";
+export { GoogleSearchConsoleResourceClient } from "./clients/google-search-console";
 export { SalesforceResourceClient } from "./clients/salesforce";
 export { GoogleSheetsResourceClient } from "./clients/googlesheets";
 export { S3ResourceClient } from "./clients/s3";
@@ -65,6 +66,7 @@ export type {
   QuickBooksInvokeResponse,
   AuthInvokeResponse,
   GoogleAnalyticsInvokeResponse,
+  GoogleSearchConsoleInvokeResponse,
   GraphQLInvokeResponse,
   GongInvokeResponse,
   ClerkInvokeResponse,

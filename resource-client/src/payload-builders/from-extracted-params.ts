@@ -74,6 +74,15 @@ import {
   buildGoogleAnalyticsListPropertiesPayload,
   buildGoogleAnalyticsInvokePayload,
 } from "./google-analytics";
+import {
+  buildGoogleSearchConsoleGetSitePayload,
+  buildGoogleSearchConsoleGetSitemapPayload,
+  buildGoogleSearchConsoleInspectUrlPayload,
+  buildGoogleSearchConsoleInvokePayload,
+  buildGoogleSearchConsoleListSitemapsPayload,
+  buildGoogleSearchConsoleListSitesPayload,
+  buildGoogleSearchConsoleQueryAnalyticsPayload,
+} from "./google-search-console";
 import { buildGraphQLInvokePayload } from "./graphql";
 import {
   buildDynamicsInvokePayload,
@@ -630,6 +639,42 @@ export function buildPayloadFromExtractedParams(
       const payload = findParam(extractedParams, "Payload") as Record<string, unknown>;
       return buildGoogleAnalyticsInvokePayload(payload as never);
     }
+
+    // =========================================================================
+    // Google Search Console
+    // =========================================================================
+    case "googlesearchconsole": {
+      if (methodName === "queryAnalytics") {
+        const startDate = findParam(extractedParams, "StartDate") as string;
+        const endDate = findParam(extractedParams, "EndDate") as string;
+        const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
+        return buildGoogleSearchConsoleQueryAnalyticsPayload(startDate, endDate, options as never);
+      }
+      if (methodName === "listSites") {
+        return buildGoogleSearchConsoleListSitesPayload();
+      }
+      if (methodName === "getSite") {
+        const siteUrl = findParam(extractedParams, "SiteUrl") as string;
+        return buildGoogleSearchConsoleGetSitePayload(siteUrl);
+      }
+      if (methodName === "listSitemaps") {
+        const siteUrl = findParam(extractedParams, "SiteUrl") as string;
+        return buildGoogleSearchConsoleListSitemapsPayload(siteUrl);
+      }
+      if (methodName === "getSitemap") {
+        const siteUrl = findParam(extractedParams, "SiteUrl") as string;
+        const feedpath = findParam(extractedParams, "Feedpath") as string;
+        return buildGoogleSearchConsoleGetSitemapPayload(siteUrl, feedpath);
+      }
+      if (methodName === "inspectUrl") {
+        const siteUrl = findParam(extractedParams, "SiteUrl") as string;
+        const inspectionUrl = findParam(extractedParams, "InspectionUrl") as string;
+        return buildGoogleSearchConsoleInspectUrlPayload(siteUrl, inspectionUrl);
+      }
+      const payload = findParam(extractedParams, "Payload") as Record<string, unknown>;
+      return buildGoogleSearchConsoleInvokePayload(payload as never);
+    }
+
     // =========================================================================
     // GraphQL
     // =========================================================================

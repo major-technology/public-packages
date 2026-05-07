@@ -304,7 +304,7 @@ catch (e) { if (e instanceof ResourceInvokeError) { e.message, e.httpStatus, e.r
 - `npx major-client remove <name>` - Remove resource
 - `npx major-client regenerate` - Regenerate all clients
 
-**Types:** `postgresql | dynamodb | cosmosdb | snowflake | custom | hubspot | googlesheets | s3`
+**Types:** `postgresql | dynamodb | cosmosdb | snowflake | custom | hubspot | googleanalytics | googlesearchconsole | googlesheets | s3`
 
 **Generated Files:**
 
