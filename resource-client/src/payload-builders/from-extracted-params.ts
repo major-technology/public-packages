@@ -106,6 +106,8 @@ import {
 } from "./google-search-console";
 import { buildNotionInvokePayload } from "./notion";
 import { buildSqsInvokePayload } from "./sqs";
+import { buildBlobInvokePayload } from "./blob";
+import type { BlobCommand } from "../schemas";
 
 /**
  * Extracted parameter from query extraction
@@ -820,6 +822,103 @@ export function buildPayloadFromExtractedParams(
       const path = findParam(extractedParams, "Path") as string;
       const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
       return buildNotionInvokePayload(method, path, options);
+    }
+
+    // =========================================================================
+    // Managed Blob Storage
+    // =========================================================================
+    case "blob": {
+      const optionsParam = (findParam(extractedParams, "Options") as Record<string, unknown> | undefined) ?? {};
+      const timeoutMs = optionsParam.timeoutMs as number | undefined;
+
+      // Generic invoke escape hatch: customer code calls blob.invoke(command, key, params, key, options)
+      if (methodName === "invoke") {
+        const command = findParam(extractedParams, "Command") as BlobCommand;
+        const key = (findParam(extractedParams, "Key") as string | undefined) ?? "";
+        const params = (findParam(extractedParams, "Params") as Record<string, unknown> | undefined) ?? {};
+
+        return buildBlobInvokePayload(command, key, params, { timeoutMs });
+      }
+
+      // Typed methods: methodName encodes the command, the param positions
+      // depend on the signature. Each branch reassembles the payload that
+      // the corresponding BlobResourceClient method would send.
+      const key = (findParam(extractedParams, "Key") as string | undefined) ?? "";
+      const params: Record<string, unknown> = {};
+
+      if (methodName === "get") {
+        return buildBlobInvokePayload("Get", key, params, { timeoutMs });
+      }
+
+      if (methodName === "put") {
+        const body = findParam(extractedParams, "Body") as string | undefined;
+
+        if (body !== undefined) {
+          params.body = body;
+        }
+
+        if (optionsParam.contentType) {
+          params.contentType = optionsParam.contentType;
+        }
+
+        if (optionsParam.cacheControl) {
+          params.cacheControl = optionsParam.cacheControl;
+        }
+
+        if (optionsParam.contentDisposition) {
+          params.contentDisposition = optionsParam.contentDisposition;
+        }
+
+        return buildBlobInvokePayload("Put", key, params, { timeoutMs });
+      }
+
+      if (methodName === "list") {
+        const prefix = (findParam(extractedParams, "Prefix") as string | undefined) ?? "";
+
+        if (optionsParam.delimiter) {
+          params.delimiter = optionsParam.delimiter;
+        }
+
+        if (optionsParam.maxKeys !== undefined) {
+          params.maxKeys = optionsParam.maxKeys;
+        }
+
+        if (optionsParam.continuationToken) {
+          params.continuationToken = optionsParam.continuationToken;
+        }
+
+        return buildBlobInvokePayload("List", prefix, params, { timeoutMs });
+      }
+
+      if (methodName === "del") {
+        return buildBlobInvokePayload("Del", key, params, { timeoutMs });
+      }
+
+      if (methodName === "getUploadUrl") {
+        if (optionsParam.contentType) {
+          params.contentType = optionsParam.contentType;
+        }
+
+        if (optionsParam.expiresInSeconds !== undefined) {
+          params.expiresInSeconds = optionsParam.expiresInSeconds;
+        }
+
+        return buildBlobInvokePayload("GetUploadUrl", key, params, { timeoutMs });
+      }
+
+      if (methodName === "getDownloadUrl") {
+        if (optionsParam.expiresInSeconds !== undefined) {
+          params.expiresInSeconds = optionsParam.expiresInSeconds;
+        }
+
+        return buildBlobInvokePayload("GetDownloadUrl", key, params, { timeoutMs });
+      }
+
+      if (methodName === "getMetadata") {
+        return buildBlobInvokePayload("GetMetadata", key, params, { timeoutMs });
+      }
+
+      throw new Error(`Unknown blob method: ${methodName}`);
     }
 
     // =========================================================================

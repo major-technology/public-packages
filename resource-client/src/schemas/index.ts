@@ -42,6 +42,7 @@ export * from "./api-notion";
 export * from "./sqs";
 export * from "./request";
 export * from "./response";
+export * from "./blob";
 
 // Import for discriminated union
 import type { ApiCustomPayload } from "./api-custom";
@@ -84,6 +85,7 @@ import type { ApiSharePointPayload } from "./api-sharepoint";
 import type { ApiGoogleSearchConsolePayload } from "./google-search-console";
 import type { ApiNotionPayload } from "./api-notion";
 import type { ApiSqsPayload } from "./sqs";
+import type { StorageBlobPayload } from "./blob";
 
 /**
  * Discriminated union of all resource payload types
@@ -129,4 +131,5 @@ export type ResourceInvokePayload =
   | ApiNotionPayload
   | ApiSqsPayload
   | ApiGmailPayload
-  | ApiGoogleDrivePayload;
+  | ApiGoogleDrivePayload
+  | StorageBlobPayload;
