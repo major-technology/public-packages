@@ -193,6 +193,9 @@ export {
   buildGoogleSearchConsoleInvokePayload,
 } from "./google-search-console";
 
+// Notion
+export { buildNotionInvokePayload } from "./notion";
+
 // SQS
 export { buildSqsInvokePayload } from "./sqs";
 

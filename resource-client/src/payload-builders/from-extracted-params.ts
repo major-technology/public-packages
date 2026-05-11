@@ -104,6 +104,7 @@ import {
   buildGoogleSearchConsoleInspectUrlPayload,
   buildGoogleSearchConsoleInvokePayload,
 } from "./google-search-console";
+import { buildNotionInvokePayload } from "./notion";
 import { buildSqsInvokePayload } from "./sqs";
 
 /**
@@ -809,6 +810,16 @@ export function buildPayloadFromExtractedParams(
       const path = findParam(extractedParams, "Path") as string;
       const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
       return buildSharePointInvokePayload(method, path, options);
+    }
+
+    // =========================================================================
+    // Notion
+    // =========================================================================
+    case "notion": {
+      const method = findParam(extractedParams, "Method") as "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+      const path = findParam(extractedParams, "Path") as string;
+      const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
+      return buildNotionInvokePayload(method, path, options);
     }
 
     // =========================================================================

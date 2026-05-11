@@ -218,3 +218,8 @@ export type MysqlInvokeResponse<T = Record<string, unknown>> =
  * Response from Google Search Console resource invocation
  */
 export type GoogleSearchConsoleInvokeResponse = BaseInvokeSuccess<ApiGoogleSearchConsoleResult> | InvokeFailure;
+
+/**
+ * Response from Notion API resource invocation
+ */
+export type NotionInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;
