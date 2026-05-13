@@ -22,6 +22,12 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs",
       "default": "./dist/index.js"
+    },
+    "./next": {
+      "types": "./dist/next/index.d.ts",
+      "import": "./dist/next/index.js",
+      "require": "./dist/next/index.cjs",
+      "default": "./dist/next/index.js"
     }
   },
   "main": "./dist/index.cjs",
@@ -54,9 +60,19 @@
   },
   "devDependencies": {
     "esbuild": "^0.24.0",
+    "next": "^14.0.0",
+    "react": "^18.0.0",
     "typescript": "^5.9.3"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.935.0"
+  },
+  "peerDependencies": {
+    "next": ">=14.0.0"
+  },
+  "peerDependenciesMeta": {
+    "next": {
+      "optional": true
+    }
   }
 }
