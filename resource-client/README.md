@@ -287,6 +287,69 @@ const u = await c.invoke(
 // u.ok && 'presignedUrl' in u.result ? u.result.presignedUrl : u.error
 ```
 
+## createProxyFetch (Next.js)
+
+Subpath: `@major-tech/resource-client/next`. Returns a `fetch`-compatible function that routes every request through the Major HTTP proxy. Drop into any SDK that accepts a custom `fetch` (Stripe, OpenAI, etc.) to inherit Major's auth, secrets, and routing. The helper auto-forwards `x-major-user-jwt` from the incoming Next request via `next/headers`.
+
+**Install:**
+
+```bash
+pnpm add @major-tech/resource-client
+```
+
+`next` is declared as an optional peer dependency (`>=14.0.0`). It's only required when you import from the `/next` subpath; the main entry stays 0-dep.
+
+**Config:**
+
+| Field           | Type           | Required | Notes                                                                                         |
+| --------------- | -------------- | -------- | --------------------------------------------------------------------------------------------- |
+| `baseUrl`       | `string`       | yes      | e.g. `"https://go-api.prod.major.build"`                                                      |
+| `resourceId`    | `string`       | yes      | UUID of the resource to proxy through                                                         |
+| `majorJwtToken` | `string`       | yes      | App-level JWT; sent as `x-major-jwt`                                                          |
+| `fetch`         | `typeof fetch` | no       | Override runtime fetch (defaults to `globalThis.fetch`)                                       |
+| `timeoutMs`     | `number`       | no       | Default `X-Major-Timeout-Ms` (server-clamped to 60_000); only set if caller didn't supply one |
+
+`x-major-user-jwt` is auto-forwarded on every call by reading `headers().get("x-major-user-jwt")` from the incoming Next request — no config needed. Outside a request scope (e.g. background jobs) the lookup is skipped.
+
+**Notes:**
+
+- The proxy injects upstream auth, so callers must NOT set `Authorization`.
+- Reserved request headers (`Authorization`, `Cookie`, `Host`, `Forwarded`, `X-Forwarded-*`, `X-Real-Ip`) and the `X-Major-*` / `X-Pd-*` namespaces are silently stripped by the proxy.
+- Body and `X-Major-Max-Response-Bytes` are clamped to 50 MB by the proxy.
+
+**Example - Stripe SDK:**
+
+```typescript
+import Stripe from "stripe";
+import { createProxyFetch } from "@major-tech/resource-client/next";
+
+const proxyFetch = createProxyFetch({
+  baseUrl: process.env.MAJOR_API_BASE_URL!,
+  resourceId: process.env.STRIPE_RESOURCE_ID!,
+  majorJwtToken: process.env.MAJOR_JWT_TOKEN!,
+});
+
+const stripe = new Stripe("sk_unused_proxy_injects_real_key", {
+  httpClient: Stripe.createFetchHttpClient(proxyFetch),
+});
+
+const customers = await stripe.customers.list({ limit: 10 });
+```
+
+**Example - plain fetch:**
+
+```typescript
+import { createProxyFetch } from "@major-tech/resource-client/next";
+
+const proxyFetch = createProxyFetch({ baseUrl, resourceId, majorJwtToken });
+
+const res = await proxyFetch("https://api.example.com/v1/foo", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ x: 1 }),
+});
+```
+
 ## Error Handling
 
 ```typescript
