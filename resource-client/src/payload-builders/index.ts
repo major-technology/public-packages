@@ -196,6 +196,9 @@ export {
 // Notion
 export { buildNotionInvokePayload } from "./notion";
 
+// Payload CMS
+export { buildPayloadCMSQueryPayload, buildPayloadCMSMutatePayload } from "./payloadcms";
+
 // SQS
 export { buildSqsInvokePayload } from "./sqs";
 

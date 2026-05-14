@@ -38,6 +38,7 @@ import { buildGongInvokePayload } from "./gong";
 import { buildClerkInvokePayload } from "./clerk";
 import { buildStripeInvokePayload } from "./stripe";
 import { buildFirefliesQueryPayload, buildFirefliesMutatePayload } from "./fireflies";
+import { buildPayloadCMSQueryPayload, buildPayloadCMSMutatePayload } from "./payloadcms";
 import { buildAttioInvokePayload } from "./attio";
 import { buildTikTokAdsInvokePayload } from "./tiktokads";
 import { buildGoogleCalendarInvokePayload } from "./googlecalendar";
@@ -778,6 +779,18 @@ export function buildPayloadFromExtractedParams(
       const path = findParam(extractedParams, "Path") as string;
       const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
       return buildZohoProjectsInvokePayload(method, path, options);
+    }
+
+    // =========================================================================
+    // Payload CMS
+    // =========================================================================
+    case "payloadcms": {
+      const query = findParam(extractedParams, "Query") as string;
+      const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
+      if (methodName === "mutate") {
+        return buildPayloadCMSMutatePayload(query, options);
+      }
+      return buildPayloadCMSQueryPayload(query, options);
     }
 
     // =========================================================================
