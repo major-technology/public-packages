@@ -215,6 +215,13 @@ export type MysqlInvokeResponse<T = Record<string, unknown>> =
   | InvokeFailure;
 
 /**
+ * Response from ClickHouse database resource invocation
+ */
+export type ClickhouseInvokeResponse<T = Record<string, unknown>> =
+  | BaseInvokeSuccess<DbResult<T>>
+  | InvokeFailure;
+
+/**
  * Response from Google Search Console resource invocation
  */
 export type GoogleSearchConsoleInvokeResponse = BaseInvokeSuccess<ApiGoogleSearchConsoleResult> | InvokeFailure;
