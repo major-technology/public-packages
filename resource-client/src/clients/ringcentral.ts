@@ -24,7 +24,7 @@ import { buildRingCentralInvokePayload } from "../payload-builders/ringcentral";
  * const sms = await client.sendSms("+15551234567", "+15559876543", "Hello!", "send-sms");
  *
  * // Generic API call
- * const result = await client.invoke("GET", "/v1.0/account/~/extension", "list-ext");
+ * const result = await client.invoke("GET", "/restapi/v1.0/account/~/extension", "list-ext");
  * ```
  */
 export class RingCentralResourceClient extends BaseResourceClient {
@@ -32,7 +32,7 @@ export class RingCentralResourceClient extends BaseResourceClient {
    * Invoke a RingCentral API request
    *
    * @param method - HTTP method (GET, POST, PUT, PATCH, DELETE)
-   * @param path - RingCentral API path (e.g., "/v1.0/account/~/call-log")
+   * @param path - RingCentral API path (e.g., "/restapi/v1.0/account/~/call-log")
    * @param invocationKey - Unique key for this invocation (for tracking)
    * @param options - Optional query params, body, and timeout
    * @returns The API response with status and body
@@ -77,7 +77,7 @@ export class RingCentralResourceClient extends BaseResourceClient {
     if (options?.perPage !== undefined) query.perPage = String(options.perPage);
     if (options?.page !== undefined) query.page = String(options.page);
 
-    return this.invoke("GET", "/v1.0/account/~/call-log", invocationKey, {
+    return this.invoke("GET", "/restapi/v1.0/account/~/call-log", invocationKey, {
       query: Object.keys(query).length > 0 ? query : undefined,
     });
   }
@@ -93,7 +93,7 @@ export class RingCentralResourceClient extends BaseResourceClient {
     callRecordId: string,
     invocationKey: string
   ): Promise<RingCentralInvokeResponse> {
-    return this.invoke("GET", `/v1.0/account/~/call-log/${callRecordId}`, invocationKey);
+    return this.invoke("GET", `/restapi/v1.0/account/~/call-log/${callRecordId}`, invocationKey);
   }
 
   /**
@@ -111,7 +111,7 @@ export class RingCentralResourceClient extends BaseResourceClient {
     text: string,
     invocationKey: string
   ): Promise<RingCentralInvokeResponse> {
-    return this.invoke("POST", "/v1.0/account/~/extension/~/sms", invocationKey, {
+    return this.invoke("POST", "/restapi/v1.0/account/~/extension/~/sms", invocationKey, {
       body: {
         type: "json",
         value: {
@@ -147,7 +147,7 @@ export class RingCentralResourceClient extends BaseResourceClient {
     if (options?.perPage !== undefined) query.perPage = String(options.perPage);
     if (options?.page !== undefined) query.page = String(options.page);
 
-    return this.invoke("GET", "/v1.0/account/~/extension/~/message-store", invocationKey, {
+    return this.invoke("GET", "/restapi/v1.0/account/~/extension/~/message-store", invocationKey, {
       query: Object.keys(query).length > 0 ? query : undefined,
     });
   }
@@ -174,7 +174,7 @@ export class RingCentralResourceClient extends BaseResourceClient {
     if (options?.perPage !== undefined) query.perPage = String(options.perPage);
     if (options?.page !== undefined) query.page = String(options.page);
 
-    return this.invoke("GET", "/v1.0/account/~/extension", invocationKey, {
+    return this.invoke("GET", "/restapi/v1.0/account/~/extension", invocationKey, {
       query: Object.keys(query).length > 0 ? query : undefined,
     });
   }
@@ -190,6 +190,6 @@ export class RingCentralResourceClient extends BaseResourceClient {
     extensionId: string,
     invocationKey: string
   ): Promise<RingCentralInvokeResponse> {
-    return this.invoke("GET", `/v1.0/account/~/extension/${extensionId}`, invocationKey);
+    return this.invoke("GET", `/restapi/v1.0/account/~/extension/${extensionId}`, invocationKey);
   }
 }

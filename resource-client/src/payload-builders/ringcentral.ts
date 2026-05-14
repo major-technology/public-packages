@@ -48,7 +48,7 @@ export function buildRingCentralListCallLogPayload(
   if (options?.perPage !== undefined) query.perPage = String(options.perPage);
   if (options?.page !== undefined) query.page = String(options.page);
 
-  return buildRingCentralInvokePayload("GET", "/v1.0/account/~/call-log", {
+  return buildRingCentralInvokePayload("GET", "/restapi/v1.0/account/~/call-log", {
     query: Object.keys(query).length > 0 ? query : undefined,
   });
 }
@@ -60,7 +60,7 @@ export function buildRingCentralListCallLogPayload(
 export function buildRingCentralGetCallRecordPayload(
   callRecordId: string
 ): ApiRingCentralPayload {
-  return buildRingCentralInvokePayload("GET", `/v1.0/account/~/call-log/${callRecordId}`);
+  return buildRingCentralInvokePayload("GET", `/restapi/v1.0/account/~/call-log/${callRecordId}`);
 }
 
 /**
@@ -74,7 +74,7 @@ export function buildRingCentralSendSmsPayload(
   to: string,
   text: string
 ): ApiRingCentralPayload {
-  return buildRingCentralInvokePayload("POST", "/v1.0/account/~/extension/~/sms", {
+  return buildRingCentralInvokePayload("POST", "/restapi/v1.0/account/~/extension/~/sms", {
     body: {
       type: "json",
       value: {
@@ -106,7 +106,7 @@ export function buildRingCentralListMessagesPayload(
   if (options?.perPage !== undefined) query.perPage = String(options.perPage);
   if (options?.page !== undefined) query.page = String(options.page);
 
-  return buildRingCentralInvokePayload("GET", "/v1.0/account/~/extension/~/message-store", {
+  return buildRingCentralInvokePayload("GET", "/restapi/v1.0/account/~/extension/~/message-store", {
     query: Object.keys(query).length > 0 ? query : undefined,
   });
 }
@@ -129,7 +129,7 @@ export function buildRingCentralListExtensionsPayload(
   if (options?.perPage !== undefined) query.perPage = String(options.perPage);
   if (options?.page !== undefined) query.page = String(options.page);
 
-  return buildRingCentralInvokePayload("GET", "/v1.0/account/~/extension", {
+  return buildRingCentralInvokePayload("GET", "/restapi/v1.0/account/~/extension", {
     query: Object.keys(query).length > 0 ? query : undefined,
   });
 }
@@ -141,5 +141,5 @@ export function buildRingCentralListExtensionsPayload(
 export function buildRingCentralGetExtensionPayload(
   extensionId: string
 ): ApiRingCentralPayload {
-  return buildRingCentralInvokePayload("GET", `/v1.0/account/~/extension/${extensionId}`);
+  return buildRingCentralInvokePayload("GET", `/restapi/v1.0/account/~/extension/${extensionId}`);
 }

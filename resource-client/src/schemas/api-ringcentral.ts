@@ -9,7 +9,7 @@ export interface ApiRingCentralPayload {
   subtype: "ringcentral";
   /** HTTP method to use */
   method: HttpMethod;
-  /** RingCentral API path (e.g., "/v1.0/account/~/call-log") */
+  /** RingCentral API path (e.g., "/restapi/v1.0/account/~/call-log") */
   path: string;
   /** Optional query parameters */
   query?: QueryParams;
