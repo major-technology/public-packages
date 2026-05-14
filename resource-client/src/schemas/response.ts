@@ -223,3 +223,8 @@ export type GoogleSearchConsoleInvokeResponse = BaseInvokeSuccess<ApiGoogleSearc
  * Response from Notion API resource invocation
  */
 export type NotionInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;
+
+/**
+ * Response from Payload CMS API resource invocation
+ */
+export type PayloadCMSInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;

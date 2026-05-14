@@ -48,6 +48,7 @@ export { MetaMarketingResourceClient } from "./clients/metamarketing";
 export { SharePointResourceClient } from "./clients/sharepoint";
 export { GoogleSearchConsoleResourceClient } from "./clients/google-search-console";
 export { NotionResourceClient } from "./clients/notion";
+export { PayloadCMSResourceClient } from "./clients/payloadcms";
 
 // Export payload builders (for use in testing UIs, etc.)
 export * from "./payload-builders";
@@ -78,6 +79,7 @@ export type {
   MetaMarketingRawInvokeResponse,
   GoogleSearchConsoleInvokeResponse,
   NotionInvokeResponse,
+  PayloadCMSInvokeResponse,
   DynamicsInvokeResponse,
   LinearInvokeResponse,
   RingCentralInvokeResponse,

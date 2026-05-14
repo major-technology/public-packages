@@ -39,6 +39,7 @@ export * from "./api-metamarketing";
 export * from "./api-sharepoint";
 export * from "./google-search-console";
 export * from "./api-notion";
+export * from "./api-payloadcms";
 export * from "./sqs";
 export * from "./request";
 export * from "./response";
@@ -83,6 +84,7 @@ import type { ApiMetaMarketingPayload } from "./api-metamarketing";
 import type { ApiSharePointPayload } from "./api-sharepoint";
 import type { ApiGoogleSearchConsolePayload } from "./google-search-console";
 import type { ApiNotionPayload } from "./api-notion";
+import type { ApiPayloadCMSPayload } from "./api-payloadcms";
 import type { ApiSqsPayload } from "./sqs";
 
 /**
@@ -127,6 +129,7 @@ export type ResourceInvokePayload =
   | ApiSharePointPayload
   | ApiGoogleSearchConsolePayload
   | ApiNotionPayload
+  | ApiPayloadCMSPayload
   | ApiSqsPayload
   | ApiGmailPayload
   | ApiGoogleDrivePayload;
