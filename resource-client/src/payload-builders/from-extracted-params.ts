@@ -13,6 +13,7 @@ import {
 } from "./cosmosdb";
 import { buildMssqlInvokePayload } from "./mssql";
 import { buildMysqlInvokePayload } from "./mysql";
+import { buildClickhouseInvokePayload } from "./clickhouse";
 import {
   buildSnowflakeInvokePayload,
   buildSnowflakeExecutePayload,
@@ -261,6 +262,16 @@ export function buildPayloadFromExtractedParams(
       const params = findParam(extractedParams, "Params") as unknown[] | undefined;
       const timeoutMs = findParam(extractedParams, "Timeout") as number | undefined;
       return buildMysqlInvokePayload(sql, params as (string | number | boolean | null)[], timeoutMs);
+    }
+
+    // =========================================================================
+    // ClickHouse
+    // =========================================================================
+    case "clickhouse": {
+      const sql = findParam(extractedParams, "SQL") as string;
+      const params = findParam(extractedParams, "Params") as unknown[] | undefined;
+      const timeoutMs = findParam(extractedParams, "Timeout") as number | undefined;
+      return buildClickhouseInvokePayload(sql, params as (string | number | boolean | null)[], timeoutMs);
     }
 
     // =========================================================================

@@ -48,6 +48,7 @@ export { MetaMarketingResourceClient } from "./clients/metamarketing";
 export { SharePointResourceClient } from "./clients/sharepoint";
 export { GoogleSearchConsoleResourceClient } from "./clients/google-search-console";
 export { NotionResourceClient } from "./clients/notion";
+export { ClickhouseResourceClient } from "./clients/clickhouse";
 
 // Export payload builders (for use in testing UIs, etc.)
 export * from "./payload-builders";
@@ -85,5 +86,6 @@ export type {
   ZohoProjectsInvokeResponse,
   SqsInvokeResponse,
   MysqlInvokeResponse,
+  ClickhouseInvokeResponse,
   BaseInvokeSuccess,
 } from "./schemas/response";
