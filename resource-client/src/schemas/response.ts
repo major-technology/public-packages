@@ -13,11 +13,28 @@ import type { ApiGoogleAnalyticsResult } from "./google-analytics";
 import type { ApiSqsResult } from "./sqs";
 import type { ApiTikTokAdsResult } from "./api-tiktokads";
 import type { ApiGoogleSearchConsoleResult } from "./google-search-console";
+import type { StorageBlobResult } from "./blob";
 
 /**
  * Union of all possible resource invocation result types
  */
-export type ResourceInvokeSuccess = ApiResult | DbResult | StorageS3Result | DbDynamoDBResult | DbCosmosDBResult | DbSnowflakeResult | ApiLambdaResult | DbBigQueryResult | ApiOutreachResult | DbNeo4jResult | AuthResult | ApiGoogleAnalyticsResult | ApiSqsResult | ApiTikTokAdsResult | ApiGoogleSearchConsoleResult;
+export type ResourceInvokeSuccess =
+    | ApiResult
+    | DbResult
+    | StorageS3Result
+    | DbDynamoDBResult
+    | DbCosmosDBResult
+    | DbSnowflakeResult
+    | ApiLambdaResult
+    | DbBigQueryResult
+    | ApiOutreachResult
+    | DbNeo4jResult
+    | AuthResult
+    | ApiGoogleAnalyticsResult
+    | ApiSqsResult
+    | ApiTikTokAdsResult
+    | ApiGoogleSearchConsoleResult
+    | StorageBlobResult;
 
 /**
  * Base successful invocation response - generic over result type
@@ -223,3 +240,8 @@ export type GoogleSearchConsoleInvokeResponse = BaseInvokeSuccess<ApiGoogleSearc
  * Response from Notion API resource invocation
  */
 export type NotionInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;
+
+/**
+ * Response from managed blob resource invocation
+ */
+export type StorageBlobInvokeResponse = BaseInvokeSuccess<StorageBlobResult> | InvokeFailure;

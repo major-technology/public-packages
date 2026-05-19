@@ -48,6 +48,7 @@ export { MetaMarketingResourceClient } from "./clients/metamarketing";
 export { SharePointResourceClient } from "./clients/sharepoint";
 export { GoogleSearchConsoleResourceClient } from "./clients/google-search-console";
 export { NotionResourceClient } from "./clients/notion";
+export { BlobResourceClient } from "./clients/blob";
 
 // Export payload builders (for use in testing UIs, etc.)
 export * from "./payload-builders";
@@ -86,4 +87,5 @@ export type {
   SqsInvokeResponse,
   MysqlInvokeResponse,
   BaseInvokeSuccess,
+  StorageBlobInvokeResponse
 } from "./schemas/response";
