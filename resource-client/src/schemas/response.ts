@@ -63,6 +63,12 @@ export interface InvokeFailure {
   error: {
     message: string;
     httpStatus?: number;
+    /** Connector backend error string, when provided. */
+    error_string?: string;
+    /** Connector backend internal error code, when provided. */
+    internal_code?: number | string;
+    /** Connector backend status code, when provided. */
+    status_code?: number;
   };
 }
 
