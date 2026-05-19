@@ -9,6 +9,7 @@ import type {
   LinkedInListCreativesOptions,
   QueryParams,
 } from "../schemas";
+import { normalizeQueryParams } from "./normalize-query";
 
 /**
  * Build a LinkedIn Marketing API invoke payload.
@@ -27,7 +28,7 @@ export function buildLinkedInInvokePayload(
     subtype: "linkedin",
     method,
     path,
-    query: options?.query,
+    query: normalizeQueryParams(options?.query),
     body: options?.body,
     timeoutMs: options?.timeoutMs ?? 30000,
   };
@@ -58,13 +59,16 @@ export function buildLinkedInListCampaignsPayload(
 ): ApiLinkedInPayload {
   const query: QueryParams = {
     q: "search",
-    "search.account.values": linkedInSponsoredAccountURN(adAccountId),
     ...(options?.pageSize ? { pageSize: String(options.pageSize) } : {}),
     ...(options?.pageToken ? { pageToken: options.pageToken } : {}),
     ...(options?.status?.length ? { "search.status.values": options.status } : {}),
   };
 
-  return buildLinkedInInvokePayload("GET", "/adCampaigns", { query });
+  return buildLinkedInInvokePayload(
+    "GET",
+    `/adAccounts/${linkedInAdAccountPathID(adAccountId)}/adCampaigns`,
+    { query }
+  );
 }
 
 /**
@@ -76,7 +80,6 @@ export function buildLinkedInListCreativesPayload(
 ): ApiLinkedInPayload {
   const query: QueryParams = {
     q: "criteria",
-    account: linkedInSponsoredAccountURN(adAccountId),
     ...(options?.pageSize ? { pageSize: String(options.pageSize) } : {}),
     ...(options?.pageToken ? { pageToken: options.pageToken } : {}),
     ...(options?.campaignIds?.length
@@ -84,7 +87,11 @@ export function buildLinkedInListCreativesPayload(
       : {}),
   };
 
-  return buildLinkedInInvokePayload("GET", "/adCreatives", { query });
+  return buildLinkedInInvokePayload(
+    "GET",
+    `/adAccounts/${linkedInAdAccountPathID(adAccountId)}/creatives`,
+    { query }
+  );
 }
 
 /**
@@ -109,6 +116,12 @@ export function buildLinkedInGetAdAnalyticsPayload(
 
 function linkedInSponsoredAccountURN(id: string): string {
   return id.startsWith("urn:li:sponsoredAccount:") ? id : `urn:li:sponsoredAccount:${id}`;
+}
+
+function linkedInAdAccountPathID(id: string): string {
+  return id.startsWith("urn:li:sponsoredAccount:")
+    ? id.slice("urn:li:sponsoredAccount:".length)
+    : id;
 }
 
 function linkedInCampaignURN(id: string): string {

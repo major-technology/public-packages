@@ -81,7 +81,7 @@ export abstract class BaseResourceClient {
       });
 
       const data = await response.json();
-      return data as InvokeResponse;
+      return normalizeInvokeResponse(data);
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       throw new ResourceInvokeError(`Failed to invoke resource: ${message}`);
@@ -89,3 +89,20 @@ export abstract class BaseResourceClient {
   }
 }
 
+function normalizeInvokeResponse(data: unknown): InvokeResponse {
+  const response = data as InvokeResponse;
+
+  if (
+    response &&
+    typeof response === "object" &&
+    "ok" in response &&
+    response.ok === false &&
+    response.error &&
+    !response.error.message &&
+    typeof response.error.error_string === "string"
+  ) {
+    response.error.message = response.error.error_string;
+  }
+
+  return response;
+}
