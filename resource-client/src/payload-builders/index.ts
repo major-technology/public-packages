@@ -159,17 +159,6 @@ export {
   buildDynamicsGetRecordPayload,
 } from "./dynamics";
 
-// RingCentral
-export {
-  buildRingCentralInvokePayload,
-  buildRingCentralListCallLogPayload,
-  buildRingCentralGetCallRecordPayload,
-  buildRingCentralSendSmsPayload,
-  buildRingCentralListMessagesPayload,
-  buildRingCentralListExtensionsPayload,
-  buildRingCentralGetExtensionPayload,
-} from "./ringcentral";
-
 // Zoho Desk
 export { buildZohoDeskInvokePayload } from "./zohodesk";
 
