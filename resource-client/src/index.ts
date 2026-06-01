@@ -40,7 +40,6 @@ export { AttioResourceClient } from "./clients/attio";
 export { TikTokAdsResourceClient } from "./clients/tiktokads";
 export { DynamicsResourceClient } from "./clients/dynamics";
 export { LinearResourceClient } from "./clients/linear";
-export { RingCentralResourceClient } from "./clients/ringcentral";
 export { ZohoDeskResourceClient } from "./clients/zohodesk";
 export { ZohoProjectsResourceClient } from "./clients/zohoprojects";
 export { SqsResourceClient } from "./clients/sqs";
@@ -81,7 +80,6 @@ export type {
   NotionInvokeResponse,
   DynamicsInvokeResponse,
   LinearInvokeResponse,
-  RingCentralInvokeResponse,
   ZohoDeskInvokeResponse,
   ZohoProjectsInvokeResponse,
   SqsInvokeResponse,
