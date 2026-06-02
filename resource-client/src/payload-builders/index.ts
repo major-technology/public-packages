@@ -159,6 +159,9 @@ export {
   buildDynamicsGetRecordPayload,
 } from "./dynamics";
 
+// GitHub
+export { buildGitHubGetGitTokenPayload } from "./github";
+
 // Zoho Desk
 export { buildZohoDeskInvokePayload } from "./zohodesk";
 
