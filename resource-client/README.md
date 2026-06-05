@@ -362,7 +362,8 @@ catch (e) { if (e instanceof ResourceInvokeError) { e.message, e.httpStatus, e.r
 
 **Commands:**
 
-- `npx major-client add <resourceId> <name> <type> <desc> <appId>` - Add resource, generate singleton
+- `npx major-client add <resourceId> <name> <type> <desc> <appId>` - Add resource, generate singleton (app mode)
+- `npx major-client add <resourceId> <name> <type> <desc> --mode skill` - Add resource for a skill script (see [Skill mode](#skill-mode))
 - `npx major-client list` - List all resources
 - `npx major-client remove <name>` - Remove resource
 - `npx major-client regenerate` - Regenerate all clients
@@ -391,5 +392,34 @@ const r = await ordersDbClient.invoke(
   "list-orders"
 );
 ```
+
+### Skill mode
+
+Use `--mode skill` to generate clients for scripts that run inside a Major
+deployment (an agent or orchestrator session) — e.g. scripts created by a skill.
+The generated client embeds **only the `resourceId`**: there is no `application_id`
+or `tool_id`. Identity is resolved entirely from the deployment-identity JWT, and
+the client posts to `/internal/skills/v1/resource/:resourceId/invoke`.
+
+**Add command (no `application_id`):**
+
+```bash
+npx major-client add "res_123" "orders-db" "postgresql" "Orders DB" --mode skill
+```
+
+**Env Vars:** `MAJOR_API_BASE_URL` (the go-api base URL; defaults to the prod URL) and
+`MAJOR_JWT_TOKEN` (the deployment-identity JWT). Both are injected into the Major
+agent/session runtime, so generated skill clients work with no extra wiring.
+
+**Usage is identical to app mode:**
+
+```typescript
+import { ordersDbClient } from "./clients";
+const r = await ordersDbClient.invoke("SELECT * FROM orders", [], "list-orders");
+```
+
+Access is authorized server-side against the deployment identity: for orchestrator
+sessions the user needs `resource:build` on the resource; for agent sessions the
+resource must additionally be scoped to the agent (in `agent_resources`).
 
 MIT License

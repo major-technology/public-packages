@@ -10,6 +10,9 @@ export interface BaseClientConfig {
   majorJwtToken?: string;
   applicationId?: string;  // For app mode
   toolId?: string;         // For tool mode — mutually exclusive with applicationId
+  // When neither applicationId nor toolId is set, the client runs in "skill"
+  // mode: identity is resolved entirely from the deployment-identity JWT and the
+  // invoke is routed to /internal/skills/v1/resource/:resourceId/invoke.
   resourceId: string;
   fetch?: typeof fetch;
   /**
@@ -31,10 +34,6 @@ export abstract class BaseResourceClient {
   };
 
   constructor(config: BaseClientConfig) {
-    if (!config.applicationId && !config.toolId) {
-      throw new Error("BaseResourceClient requires either applicationId or toolId");
-    }
-
     this.config = {
       baseUrl: config.baseUrl.replace(/\/$/, ""),
       majorJwtToken: config.majorJwtToken,
@@ -50,10 +49,18 @@ export abstract class BaseResourceClient {
     payload: ResourceInvokePayload,
     invocationKey: string,
   ): Promise<InvokeResponse> {
-    const entityType = this.config.toolId ? "tools" : "apps";
-    const entityId = this.config.toolId || this.config.applicationId;
-    const url = `${this.config.baseUrl}/internal/${entityType}/v1/${entityId}/resource/${this.config.resourceId}/invoke`;
-    
+    // Path precedence: toolId → tool mode, applicationId → app mode, neither →
+    // skill mode (identity comes purely from the deployment-identity JWT).
+    let url: string;
+
+    if (this.config.toolId) {
+      url = `${this.config.baseUrl}/internal/tools/v1/${this.config.toolId}/resource/${this.config.resourceId}/invoke`;
+    } else if (this.config.applicationId) {
+      url = `${this.config.baseUrl}/internal/apps/v1/${this.config.applicationId}/resource/${this.config.resourceId}/invoke`;
+    } else {
+      url = `${this.config.baseUrl}/internal/skills/v1/resource/${this.config.resourceId}/invoke`;
+    }
+
     const body: InvokeRequest = {
       payload,
       invocationKey,
