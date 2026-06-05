@@ -407,8 +407,9 @@ the client posts to `/internal/skills/v1/resource/:resourceId/invoke`.
 npx major-client add "res_123" "orders-db" "postgresql" "Orders DB" --mode skill
 ```
 
-**Env Vars:** `RESOURCE_API_URL` (defaults to the prod go-api URL) and
-`MAJOR_JWT_TOKEN` (the deployment-identity JWT, available in the session environment).
+**Env Vars:** `MAJOR_API_BASE_URL` (the go-api base URL; defaults to the prod URL) and
+`MAJOR_JWT_TOKEN` (the deployment-identity JWT). Both are injected into the Major
+agent/session runtime, so generated skill clients work with no extra wiring.
 
 **Usage is identical to app mode:**
 
