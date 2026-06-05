@@ -1,6 +1,6 @@
 {
   "name": "@major-tech/agents-client",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "TypeScript client for triggering and interacting with Major agents from a deployed Major app",
   "type": "module",
   "sideEffects": false,
