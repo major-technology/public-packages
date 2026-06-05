@@ -4,6 +4,10 @@ export * from "./schemas";
 // Export base client and config
 export { BaseResourceClient, type BaseClientConfig } from "./base";
 
+// Export the HTTP proxy fetch helper (Node-safe, no `next` dependency).
+// Next app code should import `createProxyFetch` from "@major-tech/resource-client/next".
+export { createProxyFetch, type CreateProxyFetchConfig } from "./proxy-fetch";
+
 // Export errors
 export { ResourceInvokeError } from "./errors";
 
