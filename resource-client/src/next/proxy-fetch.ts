@@ -51,21 +51,23 @@ export interface CreateProxyFetchConfig {
  * ```
  */
 export function createProxyFetch(config: CreateProxyFetchConfig): typeof fetch {
-  if (!config.baseUrl) {
-    throw new Error("createProxyFetch: baseUrl is required");
-  }
-  if (!config.resourceId) {
-    throw new Error("createProxyFetch: resourceId is required");
-  }
-  if (!config.majorJwtToken) {
-    throw new Error("createProxyFetch: majorJwtToken is required");
-  }
-
-  const base = config.baseUrl.replace(/\/$/, "");
-  const proxyUrl = `${base}/v1/proxy/${config.resourceId}`;
   const runtimeFetch = config.fetch ?? globalThis.fetch;
 
   return async function proxyFetch(input, init) {
+    // Validate at request time, not factory-call time, so instantiating at
+    // module scope (where build-time env vars may be absent) doesn't throw.
+    if (!config.baseUrl) {
+      throw new Error("createProxyFetch: baseUrl is required");
+    }
+    if (!config.resourceId) {
+      throw new Error("createProxyFetch: resourceId is required");
+    }
+    if (!config.majorJwtToken) {
+      throw new Error("createProxyFetch: majorJwtToken is required");
+    }
+
+    const proxyUrl = `${config.baseUrl.replace(/\/$/, "")}/v1/proxy/${config.resourceId}`;
+
     const isRequest =
       typeof Request !== "undefined" && input instanceof Request;
 

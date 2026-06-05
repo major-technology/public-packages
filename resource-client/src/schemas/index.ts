@@ -21,6 +21,7 @@ export * from "./api-slack";
 export * from "./api-quickbooks";
 export * from "./api-gong";
 export * from "./api-dynamics";
+export * from "./api-github";
 export * from "./lambda";
 export * from "./bigquery";
 export * from "./neo4j";
@@ -68,6 +69,7 @@ import type { DbNeo4jPayload } from "./neo4j";
 import type { ApiQuickBooksPayload } from "./api-quickbooks";
 import type { ApiGongPayload } from "./api-gong";
 import type { ApiDynamicsPayload } from "./api-dynamics";
+import type { ApiGitHubPayload } from "./api-github";
 import type { AuthPayload } from "./auth";
 import type { ApiGoogleAnalyticsPayload } from "./google-analytics";
 import type { ApiLinearPayload } from "./api-linear";
@@ -114,6 +116,7 @@ export type ResourceInvokePayload =
   | ApiGoogleAnalyticsPayload
   | ApiGongPayload
   | ApiDynamicsPayload
+  | ApiGitHubPayload
   | ApiLinearPayload
   | ApiClerkPayload
   | ApiStripePayload

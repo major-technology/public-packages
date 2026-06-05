@@ -48,6 +48,7 @@ export { SharePointResourceClient } from "./clients/sharepoint";
 export { GoogleSearchConsoleResourceClient } from "./clients/google-search-console";
 export { NotionResourceClient } from "./clients/notion";
 export { BlobResourceClient } from "./clients/blob";
+export { GitHubResourceClient } from "./clients/github";
 
 // Export payload builders (for use in testing UIs, etc.)
 export * from "./payload-builders";
@@ -85,5 +86,6 @@ export type {
   SqsInvokeResponse,
   MysqlInvokeResponse,
   BaseInvokeSuccess,
-  StorageBlobInvokeResponse
+  StorageBlobInvokeResponse,
+  GitHubInvokeResponse
 } from "./schemas/response";

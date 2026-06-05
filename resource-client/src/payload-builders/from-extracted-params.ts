@@ -82,6 +82,7 @@ import {
   buildDynamicsGetRecordPayload,
 } from "./dynamics";
 import { buildLinearGraphQLPayload } from "./linear";
+import { buildGitHubGetGitTokenPayload } from "./github";
 import { buildZohoDeskInvokePayload } from "./zohodesk";
 import { buildZohoProjectsInvokePayload } from "./zohoprojects";
 import { buildMetaMarketingInvokePayload } from "./metamarketing";
@@ -685,6 +686,17 @@ export function buildPayloadFromExtractedParams(
         body?: { type: "json"; value: unknown };
         timeoutMs?: number;
       } | undefined);
+    }
+
+    // =========================================================================
+    // GitHub
+    // =========================================================================
+    case "github": {
+      const options = findParam(extractedParams, "Options") as {
+        repositories?: string[];
+        permissions?: Record<string, string>;
+      } | undefined;
+      return buildGitHubGetGitTokenPayload(options);
     }
 
     // =========================================================================

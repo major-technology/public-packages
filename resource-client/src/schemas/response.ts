@@ -14,6 +14,7 @@ import type { ApiSqsResult } from "./sqs";
 import type { ApiTikTokAdsResult } from "./api-tiktokads";
 import type { ApiGoogleSearchConsoleResult } from "./google-search-console";
 import type { StorageBlobResult } from "./blob";
+import type { ApiGitHubTokenResult } from "./api-github";
 
 /**
  * Union of all possible resource invocation result types
@@ -34,7 +35,8 @@ export type ResourceInvokeSuccess =
     | ApiSqsResult
     | ApiTikTokAdsResult
     | ApiGoogleSearchConsoleResult
-    | StorageBlobResult;
+    | StorageBlobResult
+    | ApiGitHubTokenResult;
 
 /**
  * Base successful invocation response - generic over result type
@@ -247,3 +249,8 @@ export type NotionInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;
  * Response from managed blob resource invocation
  */
 export type StorageBlobInvokeResponse = BaseInvokeSuccess<StorageBlobResult> | InvokeFailure;
+
+/**
+ * Response from GitHub getGitToken resource invocation
+ */
+export type GitHubInvokeResponse = BaseInvokeSuccess<ApiGitHubTokenResult> | InvokeFailure;
