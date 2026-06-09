@@ -504,7 +504,7 @@ function main() {
     case 'add': {
       if (mode === 'tool' || mode === 'skill') {
         const [, resourceId, name, type, description] = args;
-        if (!resourceId || !name || !type || !description) {
+        if (!resourceId || !name || !type || description === undefined) {
           console.error('❌ Missing arguments');
           console.log(`Usage: add <resource_id> <name> <type> <description> --mode ${mode}`);
           process.exit(1);
@@ -512,7 +512,7 @@ function main() {
         addResource(resourceId, name, type, description, null, framework, mode);
       } else {
         const [, resourceId, name, type, description, applicationId] = args;
-        if (!resourceId || !name || !type || !description || !applicationId) {
+        if (!resourceId || !name || !type || description === undefined || !applicationId) {
           console.error('❌ Missing arguments');
           console.log('Usage: add <resource_id> <name> <type> <description> <application_id> [--framework <nextjs|vite>]');
           process.exit(1);
