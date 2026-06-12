@@ -85,3 +85,41 @@ export interface AgentMessage {
   content: unknown;
   timestamp: string;
 }
+
+/**
+ * A tool call a run is paused on, awaiting approval, as returned by
+ * `listPendingApprovals`. The agent blocks until the app submits a decision via
+ * `respondToApproval`.
+ */
+export interface PendingApproval {
+  /** Id to pass back to `respondToApproval`. */
+  approvalId: string;
+  /** The tool the agent wants to call (e.g. a connector or app-endpoint tool). */
+  toolName: string;
+  /** The arguments of the gated call, so the app can show what's about to run. */
+  toolArgs: unknown;
+  /** Optional human-readable summary of the request. */
+  description?: string;
+  /** ISO-8601 time the approval auto-denies if left unanswered. */
+  expiresAt?: string;
+}
+
+/** Input for `AgentsClient.respondToApproval`. */
+export interface ApprovalDecision {
+  /** `true` to allow the tool call, `false` to deny it. */
+  approved: boolean;
+  /** Optional note passed back to the agent (especially useful on a denial). */
+  feedback?: string;
+  /**
+   * When `true`, persist the decision agent-wide so this tool stops prompting on
+   * future runs. No-op for tools that aren't permission-governed. Defaults to
+   * `false`.
+   */
+  remember?: boolean;
+}
+
+/** Response from `AgentsClient.respondToApproval`. */
+export interface SubmitApprovalDecisionResponse {
+  /** The decision was recorded and the run unblocked. */
+  status: "recorded";
+}

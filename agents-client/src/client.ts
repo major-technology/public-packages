@@ -6,6 +6,9 @@ import type {
   StopRunResponse,
   AgentRun,
   AgentMessage,
+  PendingApproval,
+  ApprovalDecision,
+  SubmitApprovalDecisionResponse,
 } from "./types";
 import {
   AgentsClientError,
@@ -154,6 +157,54 @@ export class AgentsClient {
     );
 
     return result.messages;
+  }
+
+  /**
+   * List the tool calls a run this app started is currently paused on, awaiting
+   * approval. Each run blocks until you answer with {@link respondToApproval}.
+   * Poll this (e.g. from a cron) to surface an approval button while a run is
+   * live; returns an empty array when nothing is pending.
+   */
+  async listPendingApprovals(runId: string): Promise<PendingApproval[]> {
+    if (!runId) {
+      throw new AgentsValidationError("AgentsClient.listPendingApprovals: runId is required.");
+    }
+
+    const result = await this.request<{ approvals: PendingApproval[] }>(
+      "GET",
+      `/agents/runs/${encodeURIComponent(runId)}/approvals`,
+      undefined,
+    );
+
+    return result.approvals;
+  }
+
+  /**
+   * Approve or deny a pending tool call, unblocking the paused run. Throws
+   * {@link AgentNotFoundError} if the approval is no longer pending (already
+   * answered, or it expired and was auto-denied).
+   */
+  async respondToApproval(
+    runId: string,
+    approvalId: string,
+    decision: ApprovalDecision,
+  ): Promise<SubmitApprovalDecisionResponse> {
+    if (!runId) {
+      throw new AgentsValidationError("AgentsClient.respondToApproval: runId is required.");
+    }
+    if (!approvalId) {
+      throw new AgentsValidationError("AgentsClient.respondToApproval: approvalId is required.");
+    }
+
+    return this.request<SubmitApprovalDecisionResponse>(
+      "POST",
+      `/agents/runs/${encodeURIComponent(runId)}/approvals/${encodeURIComponent(approvalId)}/decision`,
+      {
+        approved: decision.approved,
+        feedback: decision.feedback,
+        remember: decision.remember ?? false,
+      },
+    );
   }
 
   private async request<T>(
