@@ -7,6 +7,9 @@ export type {
   StopRunResponse,
   AgentRun,
   AgentMessage,
+  PendingApproval,
+  ApprovalDecision,
+  SubmitApprovalDecisionResponse,
 } from "./types";
 export {
   AgentsClientError,
