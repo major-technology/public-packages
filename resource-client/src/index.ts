@@ -53,6 +53,7 @@ export { GoogleSearchConsoleResourceClient } from "./clients/google-search-conso
 export { NotionResourceClient } from "./clients/notion";
 export { BlobResourceClient } from "./clients/blob";
 export { GitHubResourceClient } from "./clients/github";
+export { MCPResourceClient } from "./clients/mcp";
 
 // Export payload builders (for use in testing UIs, etc.)
 export * from "./payload-builders";

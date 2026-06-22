@@ -2,6 +2,7 @@ import type {
   ResourceInvokePayload,
   InvokeResponse,
   InvokeRequest,
+  MCPToolCallResponse,
 } from "./schemas";
 import { ResourceInvokeError } from "./errors";
 
@@ -92,6 +93,52 @@ export abstract class BaseResourceClient {
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       throw new ResourceInvokeError(`Failed to invoke resource: ${message}`);
+    }
+  }
+
+  /**
+   * POST a single MCP tool call to the connector's app-runtime MCP endpoint and
+   * return the raw response envelope. MCP tool calls are app-mode only — the
+   * endpoint lives under the application-scoped resource group, so tool and
+   * skill identities can't reach it.
+   */
+  protected async callMcpToolRaw(
+    tool: string,
+    args: Record<string, unknown>,
+  ): Promise<MCPToolCallResponse> {
+    if (!this.config.applicationId) {
+      throw new ResourceInvokeError(
+        "MCP tool calls require app mode (applicationId must be set)",
+      );
+    }
+
+    const url = `${this.config.baseUrl}/internal/apps/v1/${this.config.applicationId}/resource/${this.config.resourceId}/mcp/call`;
+
+    let headers: Record<string, string> = {
+      "Content-Type": "application/json",
+    };
+
+    if (this.config.majorJwtToken) {
+      headers["x-major-jwt"] = this.config.majorJwtToken;
+    }
+
+    if (this.config.getHeaders) {
+      const extraHeaders = await this.config.getHeaders();
+      headers = { ...headers, ...extraHeaders };
+    }
+
+    try {
+      const response = await this.config.fetch(url, {
+        method: "POST",
+        headers,
+        credentials: "include",
+        body: JSON.stringify({ tool, args }),
+      });
+
+      return (await response.json()) as MCPToolCallResponse;
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      throw new ResourceInvokeError(`Failed to call MCP tool: ${message}`);
     }
   }
 }

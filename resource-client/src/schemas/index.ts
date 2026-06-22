@@ -43,6 +43,7 @@ export * from "./sqs";
 export * from "./request";
 export * from "./response";
 export * from "./blob";
+export * from "./mcp";
 
 // Import for discriminated union
 import type { ApiCustomPayload } from "./api-custom";
