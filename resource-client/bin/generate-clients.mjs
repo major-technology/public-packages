@@ -275,6 +275,7 @@ function getClientClass(type) {
     'notion': 'NotionResourceClient',
     'blob': 'BlobResourceClient',
     'github': 'GitHubResourceClient',
+    'mcp_custom': 'MCPResourceClient',
   };
   return typeMap[type] || 'PostgresResourceClient';
 }
@@ -339,7 +340,7 @@ function generateIndexFile(resources) {
 }
 
 function addResource(resourceId, name, type, description, applicationId, framework, mode) {
-  const validTypes = ['postgresql', 'mssql', 'mysql', 'dynamodb', 'cosmosdb', 'snowflake', 'bigquery', 'neo4j', 'hubspot', 'linkedin', 'tiktokads', 'googlecalendar', 'gmail', 'googledrive', 'googlesheets', 'outreach', 'custom', 'graphql', 'lambda', 'salesforce', 's3', 'slack', 'majorauth', 'googleanalytics', 'quickbooks', 'gong', 'clerk', 'stripe', 'fireflies', 'attio', 'dynamics', 'linear', 'zohodesk', 'zohoprojects', 'sqs', 'metamarketing', 'sharepoint', 'googlesearchconsole', 'notion', 'blob', 'github'];
+  const validTypes = ['postgresql', 'mssql', 'mysql', 'dynamodb', 'cosmosdb', 'snowflake', 'bigquery', 'neo4j', 'hubspot', 'linkedin', 'tiktokads', 'googlecalendar', 'gmail', 'googledrive', 'googlesheets', 'outreach', 'custom', 'graphql', 'lambda', 'salesforce', 's3', 'slack', 'majorauth', 'googleanalytics', 'quickbooks', 'gong', 'clerk', 'stripe', 'fireflies', 'attio', 'dynamics', 'linear', 'zohodesk', 'zohoprojects', 'sqs', 'metamarketing', 'sharepoint', 'googlesearchconsole', 'notion', 'blob', 'github', 'mcp_custom'];
   if (!validTypes.includes(type)) {
     console.error(`❌ Invalid type: ${type}`);
     console.error(`   Valid types: ${validTypes.join(', ')}`);
@@ -496,7 +497,7 @@ function main() {
     console.log('  app   — requires <application_id>, reads MAJOR_API_BASE_URL');
     console.log('  tool  — embeds toolId from tool.json at generation time, reads RESOURCE_API_URL');
     console.log('  skill — embeds only resourceId; identity comes from the deployment-identity JWT, reads MAJOR_API_BASE_URL + MAJOR_JWT_TOKEN');
-    console.log('\nTypes: postgresql | mssql | mysql | dynamodb | cosmosdb | snowflake | bigquery | neo4j | hubspot | linkedin | tiktokads | googlecalendar | gmail | googledrive | googlesheets | outreach | custom | graphql | lambda | salesforce | s3 | slack | majorauth | googleanalytics | quickbooks | gong | clerk | stripe | fireflies | attio | dynamics | linear | zohodesk | zohoprojects | sqs | metamarketing | sharepoint | googlesearchconsole | notion | blob | github');
+    console.log('\nTypes: postgresql | mssql | mysql | dynamodb | cosmosdb | snowflake | bigquery | neo4j | hubspot | linkedin | tiktokads | googlecalendar | gmail | googledrive | googlesheets | outreach | custom | graphql | lambda | salesforce | s3 | slack | majorauth | googleanalytics | quickbooks | gong | clerk | stripe | fireflies | attio | dynamics | linear | zohodesk | zohoprojects | sqs | metamarketing | sharepoint | googlesearchconsole | notion | blob | github | mcp_custom');
     return;
   }
 
