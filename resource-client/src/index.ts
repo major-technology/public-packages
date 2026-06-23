@@ -53,7 +53,11 @@ export { GoogleSearchConsoleResourceClient } from "./clients/google-search-conso
 export { NotionResourceClient } from "./clients/notion";
 export { BlobResourceClient } from "./clients/blob";
 export { GitHubResourceClient } from "./clients/github";
-export { MCPResourceClient } from "./clients/mcp";
+
+// MCP-subtype connectors (custom remote MCP, Linear, …) share one generic
+// runtime client instead of a per-subtype class — tool name + args are defined
+// by the upstream server, so there's no typed surface to generate.
+export { createMcpClient, type CreateMcpClientConfig, type McpClient } from "./mcp-client";
 
 // Export payload builders (for use in testing UIs, etc.)
 export * from "./payload-builders";
