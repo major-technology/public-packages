@@ -12,11 +12,11 @@ export interface MCPToolContent {
   [key: string]: unknown;
 }
 
-export interface MCPToolResult<T = unknown> {
+export interface MCPToolResult {
   /** Unstructured content blocks (text, etc.). */
   content: MCPToolContent[];
-  /** Structured result, when the tool returns one. Pass a type param to type it. */
-  structuredContent?: T;
+  /** Structured result, when the tool returns one. */
+  structuredContent?: unknown;
   /** True when the tool itself reported an error (inspect `content` for detail). */
   isError?: boolean;
 }
