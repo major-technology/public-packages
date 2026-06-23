@@ -28,6 +28,7 @@ export class MCPResourceClient extends BaseResourceClient {
     if (data.error) {
       throw new ResourceInvokeError(
         data.error.error_string || "MCP tool call failed",
+        data.error.status_code,
       );
     }
 
