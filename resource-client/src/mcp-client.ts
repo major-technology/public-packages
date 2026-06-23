@@ -33,18 +33,19 @@ export interface CreateMcpClientConfig {
 /** A client for calling tools on an MCP-subtype connector at runtime. */
 export interface McpClient {
   /**
-   * Call a single tool on the connector's MCP server and return its structured
-   * result, typed as T.
+   * Call a single tool on the connector's MCP server.
    *
-   * @typeParam T - Shape of the tool's structured result.
+   * @typeParam T - Shape of the tool's structured result, if any.
    * @param tool - The upstream MCP tool name (e.g. `"search-tickets"`).
    * @param args - Tool arguments, forwarded verbatim to the MCP server.
-   * @returns The tool's structured result, typed as T. `undefined` if the tool
-   *          returned only unstructured (text) content.
-   * @throws ResourceInvokeError on transport failure, a server error response, or
-   *         a tool-level error.
+   * @returns The MCP tool result. Inspect `.isError` for tool-level failures;
+   *          read `.structuredContent` (typed as T) or `.content` for the payload.
+   * @throws ResourceInvokeError on transport failure or a server error response.
    */
-  callTool<T = unknown>(tool: string, args?: Record<string, unknown>): Promise<T>;
+  callTool<T = unknown>(
+    tool: string,
+    args?: Record<string, unknown>,
+  ): Promise<MCPToolResult<T>>;
 }
 
 /**
@@ -68,7 +69,7 @@ export function createMcpClient(config: CreateMcpClientConfig): McpClient {
     async callTool<T = unknown>(
       tool: string,
       args: Record<string, unknown> = {},
-    ): Promise<T> {
+    ): Promise<MCPToolResult<T>> {
       // Validate at call time, not factory-call time, so instantiating at module
       // scope (where build-time env vars may be absent) doesn't throw.
       if (!config.baseUrl) {
@@ -127,27 +128,7 @@ export function createMcpClient(config: CreateMcpClientConfig): McpClient {
         throw new ResourceInvokeError("MCP tool call returned no result");
       }
 
-      // Tool-level failure: the call succeeded but the tool reported an error.
-      // Surface it as a throw, using the text content as the message.
-      if (data.result.isError) {
-        throw new ResourceInvokeError(
-          firstTextContent(data.result) || "MCP tool reported an error",
-        );
-      }
-
-      // The tool's structured result. Undefined for tools that return only
-      // unstructured (text) content.
-      return data.result.structuredContent as T;
+      return data.result as MCPToolResult<T>;
     },
   };
-}
-
-/** Returns the first non-empty text block from an MCP result, if any. */
-function firstTextContent(result: MCPToolResult): string | undefined {
-  for (const block of result.content ?? []) {
-    if (block?.type === "text" && typeof block.text === "string" && block.text) {
-      return block.text;
-    }
-  }
-  return undefined;
 }
