@@ -5,7 +5,8 @@ import { ResourceInvokeError } from "../errors";
 /**
  * Client for calling tools on an MCP-subtype connector (e.g. a custom remote MCP
  * server) at runtime. The connector is reached through the Major app proxy using
- * its shared credential; upstream auth is injected server-side.
+ * its resolved shared or per-user credential; upstream auth is injected
+ * server-side.
  */
 export class MCPResourceClient extends BaseResourceClient {
   /**
