@@ -45,7 +45,7 @@ export interface McpClient {
   callTool<T = unknown>(
     tool: string,
     args?: Record<string, unknown>,
-  ): Promise<MCPToolResult & { structuredContent?: T }>;
+  ): Promise<MCPToolResult<T>>;
 }
 
 /**
@@ -69,7 +69,7 @@ export function createMcpClient(config: CreateMcpClientConfig): McpClient {
     async callTool<T = unknown>(
       tool: string,
       args: Record<string, unknown> = {},
-    ): Promise<MCPToolResult & { structuredContent?: T }> {
+    ): Promise<MCPToolResult<T>> {
       // Validate at call time, not factory-call time, so instantiating at module
       // scope (where build-time env vars may be absent) doesn't throw.
       if (!config.baseUrl) {
@@ -128,7 +128,7 @@ export function createMcpClient(config: CreateMcpClientConfig): McpClient {
         throw new ResourceInvokeError("MCP tool call returned no result");
       }
 
-      return data.result as MCPToolResult & { structuredContent?: T };
+      return data.result as MCPToolResult<T>;
     },
   };
 }
