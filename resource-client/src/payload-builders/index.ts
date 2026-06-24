@@ -53,6 +53,12 @@ export {
 // HubSpot
 export { buildHubSpotInvokePayload } from "./hubspot";
 
+// Plaid
+export {
+  buildPlaidGetTransactionsPayload,
+  buildPlaidGetAccountsPayload,
+} from "./plaid";
+
 // LinkedIn
 export {
   buildLinkedInInvokePayload,

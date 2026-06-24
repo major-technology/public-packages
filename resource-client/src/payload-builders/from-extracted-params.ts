@@ -33,6 +33,7 @@ import {
   buildGoogleSheetsBatchUpdatePayload,
 } from "./googlesheets";
 import { buildHubSpotInvokePayload } from "./hubspot";
+import { buildPlaidGetTransactionsPayload, buildPlaidGetAccountsPayload } from "./plaid";
 import { buildLinkedInInvokePayload } from "./linkedin";
 import { buildGongInvokePayload } from "./gong";
 import { buildClerkInvokePayload } from "./clerk";
@@ -369,6 +370,17 @@ export function buildPayloadFromExtractedParams(
       const path = findParam(extractedParams, "Path") as string;
       const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
       return buildHubSpotInvokePayload(method, path, options);
+    }
+    case "plaid": {
+      if (methodName === "getTransactions") {
+        const startDate = findParam(extractedParams, "StartDate") as string;
+        const endDate = findParam(extractedParams, "EndDate") as string;
+        const options = findParam(extractedParams, "Options") as
+          | { accountIds?: string[]; count?: number; offset?: number }
+          | undefined;
+        return buildPlaidGetTransactionsPayload(startDate, endDate, options);
+      }
+      return buildPlaidGetAccountsPayload();
     }
 
     // =========================================================================
