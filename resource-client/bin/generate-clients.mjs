@@ -25,6 +25,11 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 
+// Canonical subtype → client-class map. The single source of truth for valid types and the
+// typed-vs-proxy decision lives in the package (src/client-registry.ts); we read the built,
+// dependency-free copy so codegen doesn't pull the full client bundle.
+import { CLIENT_REGISTRY } from '../dist/client-registry.js';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -232,52 +237,14 @@ function toCamelCase(str) {
     .replace(/^[^a-z]+/, ''); // Remove leading non-letters
 }
 
+// Every subtype with a typed client — derived from the canonical registry, not hand-listed.
+const VALID_TYPES = Object.keys(CLIENT_REGISTRY);
+
+// Resolve a subtype to its typed client class name, or null when the subtype has no typed
+// client (the bindings generator emits a createProxyFetch handle for those). The `add` path
+// validates the type against VALID_TYPES first, so it never sees null here.
 function getClientClass(type) {
-  const typeMap = {
-    'postgresql': 'PostgresResourceClient',
-    'mssql': 'MssqlResourceClient',
-    'mysql': 'MysqlResourceClient',
-    'dynamodb': 'DynamoDBResourceClient',
-    'cosmosdb': 'CosmosDBResourceClient',
-    'snowflake': 'SnowflakeResourceClient',
-    'bigquery': 'BigQueryResourceClient',
-    'neo4j': 'Neo4jResourceClient',
-    'custom': 'CustomApiResourceClient',
-    'hubspot': 'HubSpotResourceClient',
-    'plaid': 'PlaidResourceClient',
-    'linkedin': 'LinkedInResourceClient',
-    'googlecalendar': 'GoogleCalendarResourceClient',
-    'gmail': 'GmailResourceClient',
-    'googledrive': 'GoogleDriveResourceClient',
-    'googlesheets': 'GoogleSheetsResourceClient',
-    'lambda': 'LambdaResourceClient',
-    'outreach': 'OutreachResourceClient',
-    'salesforce': 'SalesforceResourceClient',
-    's3': 'S3ResourceClient',
-    'slack': 'SlackResourceClient',
-    'majorauth': 'MajorAuthResourceClient',
-    'googleanalytics': 'GoogleAnalyticsResourceClient',
-    'graphql': 'GraphQLResourceClient',
-    'quickbooks': 'QuickBooksResourceClient',
-    'gong': 'GongResourceClient',
-    'clerk': 'ClerkResourceClient',
-    'stripe': 'StripeResourceClient',
-    'fireflies': 'FirefliesResourceClient',
-    'attio': 'AttioResourceClient',
-    'tiktokads': 'TikTokAdsResourceClient',
-    'dynamics': 'DynamicsResourceClient',
-    'linear': 'LinearResourceClient',
-    'zohodesk': 'ZohoDeskResourceClient',
-    'zohoprojects': 'ZohoProjectsResourceClient',
-    'sqs': 'SqsResourceClient',
-    'metamarketing': 'MetaMarketingResourceClient',
-    'sharepoint': 'SharePointResourceClient',
-    'googlesearchconsole': 'GoogleSearchConsoleResourceClient',
-    'notion': 'NotionResourceClient',
-    'blob': 'BlobResourceClient',
-    'github': 'GitHubResourceClient',
-  };
-  return typeMap[type] || 'PostgresResourceClient';
+  return CLIENT_REGISTRY[type] ?? null;
 }
 
 function readToolId() {
@@ -340,10 +307,9 @@ function generateIndexFile(resources) {
 }
 
 function addResource(resourceId, name, type, description, applicationId, framework, mode) {
-  const validTypes = ['postgresql', 'mssql', 'mysql', 'dynamodb', 'cosmosdb', 'snowflake', 'bigquery', 'neo4j', 'hubspot', 'plaid', 'linkedin', 'tiktokads', 'googlecalendar', 'gmail', 'googledrive', 'googlesheets', 'outreach', 'custom', 'graphql', 'lambda', 'salesforce', 's3', 'slack', 'majorauth', 'googleanalytics', 'quickbooks', 'gong', 'clerk', 'stripe', 'fireflies', 'attio', 'dynamics', 'linear', 'zohodesk', 'zohoprojects', 'sqs', 'metamarketing', 'sharepoint', 'googlesearchconsole', 'notion', 'blob', 'github'];
-  if (!validTypes.includes(type)) {
+  if (!VALID_TYPES.includes(type)) {
     console.error(`❌ Invalid type: ${type}`);
-    console.error(`   Valid types: ${validTypes.join(', ')}`);
+    console.error(`   Valid types: ${VALID_TYPES.join(', ')}`);
     console.error(`   Your resource-client version might be out of date. Try running 'pnpm update @major-tech/resource-client'`)
     process.exit(1);
   }
@@ -456,6 +422,157 @@ function regenerateClients(resources, framework, mode) {
   }
 }
 
+// ---------------------------------------------------------------------------
+// bindings.json-driven generation (slots model). Reads `bindings.json` at the
+// project root and emits one slot-addressed client per resource slot — typed
+// (`new XClient({ resourceId: getResourceId("SLOT") })`) or, for a resource with
+// no typed client, a `createProxyFetch` handle. NO ids are baked; the client
+// resolves its id at runtime from the registered bindings. Also emits a typed
+// re-export of the readers (so `getResourceId("typo")` is a compile error) and a
+// `_register` module that loads bindings.json before any slot is resolved.
+// ---------------------------------------------------------------------------
+
+function loadBindings() {
+  const p = path.join(projectRoot, 'bindings.json');
+
+  if (!fs.existsSync(p)) {
+    console.error('❌ bindings.json not found in project root.');
+    process.exit(1);
+  }
+
+  return JSON.parse(fs.readFileSync(p, 'utf-8'));
+}
+
+const slotClientName = (slot) => toCamelCase(slot.toLowerCase()) + 'Client';
+const slotFileBase = (slot) => toCamelCase(slot.toLowerCase()) || 'resource';
+
+function envReads(framework) {
+  const isNextJs = framework === 'nextjs';
+  const root = isNextJs ? 'process.env' : 'import.meta.env';
+
+  return { base: `${root}.MAJOR_API_BASE_URL`, jwt: `${root}.MAJOR_JWT_TOKEN`, isNextJs };
+}
+
+function typedSlotClientTemplate(slot, type, clientClass, framework) {
+  const { base, jwt, isNextJs } = envReads(framework);
+  const headerImport = isNextJs ? `\nimport { headers } from 'next/headers';` : '';
+  const getHeaders = isNextJs
+    ? `
+  getHeaders: async () => {
+    const h = await headers();
+    return { 'x-major-user-jwt': h.get('x-major-user-jwt') || '' };
+  },`
+    : '';
+
+  return `import './_register';
+import { ${clientClass}, getResourceId, getApplicationId } from '@major-tech/resource-client';${headerImport}
+
+/**
+ * Resource slot: ${slot} (type: ${type})
+ * DO NOT EDIT - Auto-generated by @major-tech/resource-client
+ */
+const BASE_URL = ${base} || 'https://go-api.prod.major.build';
+const MAJOR_JWT_TOKEN = ${jwt};
+
+export const ${slotClientName(slot)} = new ${clientClass}({
+  baseUrl: BASE_URL,
+  majorJwtToken: MAJOR_JWT_TOKEN,
+  applicationId: getApplicationId(),
+  resourceId: getResourceId('${slot}'),
+  fetch: (...args) => fetch(...args),${getHeaders}
+});
+`;
+}
+
+function proxySlotClientTemplate(slot, framework) {
+  const { base, jwt } = envReads(framework);
+
+  return `import './_register';
+import { getResourceId } from '@major-tech/resource-client';
+import { createProxyFetch } from '@major-tech/resource-client/next';
+
+/**
+ * HTTP-proxy resource slot: ${slot}
+ * DO NOT EDIT - Auto-generated by @major-tech/resource-client
+ */
+const BASE_URL = ${base} || 'https://go-api.prod.major.build';
+const MAJOR_JWT_TOKEN = ${jwt};
+
+export const ${slotClientName(slot)} = createProxyFetch({
+  baseUrl: BASE_URL,
+  resourceId: getResourceId('${slot}'),
+  majorJwtToken: MAJOR_JWT_TOKEN,
+});
+`;
+}
+
+function registerTemplate(relBindingsPath) {
+  return `// DO NOT EDIT - Auto-generated by @major-tech/resource-client
+import bindings from '${relBindingsPath}';
+import { registerBindings } from '@major-tech/resource-client';
+
+registerBindings(bindings as Parameters<typeof registerBindings>[0]);
+`;
+}
+
+function bindingsIndexTemplate(resourceSlots, agentSlots, clientExports) {
+  const union = (slots) => (slots.length ? slots.map((s) => `'${s}'`).join(' | ') : 'never');
+
+  return `// DO NOT EDIT - Auto-generated by @major-tech/resource-client
+import './_register';
+import { getResourceId as _getResourceId, getAgentId as _getAgentId } from '@major-tech/resource-client';
+
+export type ResourceSlot = ${union(resourceSlots)};
+export type AgentSlot = ${union(agentSlots)};
+
+/** Resolve a resource slot to its bound id (compile-checked against this app's slots). */
+export const getResourceId = (slot: ResourceSlot): string => _getResourceId(slot);
+/** Resolve an agent slot to its bound id (compile-checked against this app's slots). */
+export const getAgentId = (slot: AgentSlot): string => _getAgentId(slot);
+export { getApplicationId } from '@major-tech/resource-client';
+
+${clientExports.join('\n')}
+`;
+}
+
+function generateFromBindings(framework) {
+  const bindings = loadBindings();
+  const resources = bindings?.slots?.resources ?? {};
+  const agents = bindings?.slots?.agents ?? {};
+  const clientsDir = getClientsDir();
+
+  if (!fs.existsSync(clientsDir)) {
+    fs.mkdirSync(clientsDir, { recursive: true });
+  }
+
+  fs.readdirSync(clientsDir).forEach((f) => fs.unlinkSync(path.join(clientsDir, f)));
+
+  const relBindings =
+    './' + path.relative(clientsDir, path.join(projectRoot, 'bindings.json')).split(path.sep).join('/');
+  fs.writeFileSync(path.join(clientsDir, '_register.ts'), registerTemplate(relBindings), 'utf-8');
+
+  const exports = [];
+
+  for (const [slot, entry] of Object.entries(resources)) {
+    const type = entry.type || '';
+    const clientClass = getClientClass(type);
+    const code = clientClass
+      ? typedSlotClientTemplate(slot, type, clientClass, framework)
+      : proxySlotClientTemplate(slot, framework);
+
+    fs.writeFileSync(path.join(clientsDir, slotFileBase(slot) + '.ts'), code, 'utf-8');
+    exports.push(`export { ${slotClientName(slot)} } from './${slotFileBase(slot)}';`);
+  }
+
+  fs.writeFileSync(
+    path.join(clientsDir, 'index.ts'),
+    bindingsIndexTemplate(Object.keys(resources), Object.keys(agents), exports),
+    'utf-8',
+  );
+
+  console.log(`✅ Generated ${Object.keys(resources).length} resource client(s) + typed readers in ${clientsDir}`);
+}
+
 /**
  * Main execution
  */
@@ -497,7 +614,7 @@ function main() {
     console.log('  app   — requires <application_id>, reads MAJOR_API_BASE_URL');
     console.log('  tool  — embeds toolId from tool.json at generation time, reads RESOURCE_API_URL');
     console.log('  skill — embeds only resourceId; identity comes from the deployment-identity JWT, reads MAJOR_API_BASE_URL + MAJOR_JWT_TOKEN');
-    console.log('\nTypes: postgresql | mssql | mysql | dynamodb | cosmosdb | snowflake | bigquery | neo4j | hubspot | plaid | linkedin | tiktokads | googlecalendar | gmail | googledrive | googlesheets | outreach | custom | graphql | lambda | salesforce | s3 | slack | majorauth | googleanalytics | quickbooks | gong | clerk | stripe | fireflies | attio | dynamics | linear | zohodesk | zohoprojects | sqs | metamarketing | sharepoint | googlesearchconsole | notion | blob | github');
+    console.log(`\nTypes: ${VALID_TYPES.join(' | ')}`);
     return;
   }
 
@@ -535,6 +652,12 @@ function main() {
 
     case 'list': {
       listResources();
+      break;
+    }
+
+    case 'generate': {
+      // Slots model: regenerate all clients + typed readers from the project's bindings.json.
+      generateFromBindings(framework);
       break;
     }
 
