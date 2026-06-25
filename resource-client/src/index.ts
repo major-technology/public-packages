@@ -4,6 +4,25 @@ export * from "./schemas";
 // Export base client and config
 export { BaseResourceClient, type BaseClientConfig } from "./base";
 
+// Canonical subtype → client-class map + the supported-subtype union. Single source of
+// truth shared by the runtime API and the code generator (bin/generate-clients.mjs).
+export { CLIENT_REGISTRY, type ResourceSubtype } from "./client-registry";
+
+// Slot → id resolution: the readers app code calls (getResourceId/getAgentId/getApplicationId),
+// the registration the generated app entry uses, and the generate/strip helpers the platform
+// uses to materialize / templatize bindings.json.
+export {
+  registerBindings,
+  getResourceId,
+  getAgentId,
+  getApplicationId,
+  generateBindings,
+  stripBindingsIds,
+  type BindingsManifest,
+  type BindingsContract,
+  type BindingEntry,
+} from "./bindings";
+
 // Export the HTTP proxy fetch helper (Node-safe, no `next` dependency).
 // Next app code should import `createProxyFetch` from "@major-tech/resource-client/next".
 export { createProxyFetch, type CreateProxyFetchConfig } from "./proxy-fetch";

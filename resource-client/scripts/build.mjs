@@ -7,6 +7,9 @@ import { build } from "esbuild";
 const entries = [
   { in: "src/index.ts", outBase: "dist/index" },
   { in: "src/next/index.ts", outBase: "dist/next/index" },
+  // Standalone, dependency-free build so the code generator (bin/) can import the
+  // registry without pulling the full client bundle (zod, every client) at codegen time.
+  { in: "src/client-registry.ts", outBase: "dist/client-registry" },
 ];
 
 for (const { in: entry, outBase } of entries) {
