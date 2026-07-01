@@ -19,6 +19,7 @@ export class ErrorReporter {
     this.config = {
       endpoint: config.endpoint,
       jwtToken: config.jwtToken,
+      applicationId: config.applicationId ?? "",
       maxErrorsPerMinute: config.maxErrorsPerMinute ?? DEFAULT_MAX_ERRORS_PER_MINUTE,
       batchIntervalMs: config.batchIntervalMs ?? DEFAULT_BATCH_INTERVAL_MS,
       maxBatchSize: config.maxBatchSize ?? DEFAULT_MAX_BATCH_SIZE,
@@ -29,7 +30,16 @@ export class ErrorReporter {
       return;
     }
 
-    this.applicationId = this.extractApplicationId(this.config.jwtToken);
+    this.applicationId = this.resolveApplicationId(config);
+
+    if (!this.applicationId) {
+      // Never fail silently: without an applicationId every flush no-ops, which
+      // is exactly how the post-cutover breakage went unnoticed. Warn once.
+      console.warn(
+        "[major-error-reporter] Could not resolve an applicationId (checked config.applicationId, " +
+          "APPLICATION_ID / MAJOR_APPLICATION_ID env vars, and the JWT payload). Errors will NOT be sent.",
+      );
+    }
 
     this.flushTimer = setInterval(() => {
       this.flush();
@@ -145,8 +155,35 @@ export class ErrorReporter {
   }
 
   /**
+   * Resolve the applicationId in priority order:
+   *   1. explicit config.applicationId (preferred — caller passes it directly)
+   *   2. APPLICATION_ID / MAJOR_APPLICATION_ID env vars (server runtimes)
+   *   3. legacy: decode it from a KMS-signed JWT (pre-2026-05-14 deployments)
+   *
+   * Client bundles can't read non-public env vars, so the browser path relies on
+   * config.applicationId (ErrorReporterProvider defaults it from
+   * NEXT_PUBLIC_MAJOR_APPLICATION_ID).
+   */
+  private resolveApplicationId(config: ErrorReporterConfig): string | null {
+    if (config.applicationId) {
+      return config.applicationId;
+    }
+
+    if (typeof process !== "undefined" && process.env) {
+      const fromEnv = process.env.APPLICATION_ID || process.env.MAJOR_APPLICATION_ID;
+      if (fromEnv) {
+        return fromEnv;
+      }
+    }
+
+    return this.extractApplicationId(config.jwtToken);
+  }
+
+  /**
    * Decode the JWT payload (without verification) to extract applicationId.
-   * The JWT is signed by KMS — we don't verify it here, just read the payload.
+   * Legacy fallback: only pre-2026-05-14 deployments still carry a KMS-signed JWT
+   * with an applicationId claim in MAJOR_JWT_TOKEN. Newer opaque deployment-identity
+   * tokens have no claims, so this returns null for them (env var is used instead).
    */
   private extractApplicationId(jwt: string): string | null {
     try {
