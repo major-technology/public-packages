@@ -32,15 +32,6 @@ export class ErrorReporter {
 
     this.applicationId = this.resolveApplicationId(config);
 
-    if (!this.applicationId) {
-      // Never fail silently: without an applicationId every flush no-ops, which
-      // is exactly how the post-cutover breakage went unnoticed. Warn once.
-      console.warn(
-        "[major-error-reporter] Could not resolve an applicationId (checked config.applicationId, " +
-          "APPLICATION_ID / MAJOR_APPLICATION_ID env vars, and the JWT payload). Errors will NOT be sent.",
-      );
-    }
-
     this.flushTimer = setInterval(() => {
       this.flush();
     }, this.config.batchIntervalMs);
