@@ -3,6 +3,15 @@ export interface ErrorReporterConfig {
   endpoint: string;
   /** JWT token for authentication (MAJOR_JWT_TOKEN) */
   jwtToken: string;
+  /**
+   * The application id errors are reported under. Prefer passing this explicitly.
+   * When omitted, it is resolved from APPLICATION_ID / MAJOR_APPLICATION_ID env
+   * vars (server), then as a last resort decoded from a legacy KMS-signed JWT.
+   *
+   * Post-2026-05-14 MAJOR_JWT_TOKEN is an opaque deployment-identity token with
+   * no applicationId claim, so the env var is the source of truth.
+   */
+  applicationId?: string;
   /** Max errors to accept per minute before dropping. Default: 10 */
   maxErrorsPerMinute?: number;
   /** How often to flush buffered errors (ms). Default: 5000 */

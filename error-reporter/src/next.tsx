@@ -20,12 +20,20 @@ import {
 interface ErrorReporterProviderProps {
   endpoint: string;
   jwtToken: string;
+  /**
+   * The application id errors are reported under. Optional — defaults to the
+   * NEXT_PUBLIC_MAJOR_APPLICATION_ID build-time env var. The browser can't read
+   * server-only env vars, so this (or that public var) is how the client learns
+   * its applicationId now that MAJOR_JWT_TOKEN is opaque.
+   */
+  applicationId?: string;
   children: ReactNode;
 }
 
 export function ErrorReporterProvider({
   endpoint,
   jwtToken,
+  applicationId,
   children,
 }: ErrorReporterProviderProps) {
   const reporterRef = useRef<ErrorReporter | null>(null);
@@ -35,7 +43,11 @@ export function ErrorReporterProvider({
       return;
     }
 
-    const reporter = new ErrorReporter({ endpoint, jwtToken });
+    const reporter = new ErrorReporter({
+      endpoint,
+      jwtToken,
+      applicationId: applicationId ?? process.env.NEXT_PUBLIC_MAJOR_APPLICATION_ID,
+    });
     reporterRef.current = reporter;
     setClientReporter(reporter);
     installClientHandlers(reporter);
@@ -46,7 +58,7 @@ export function ErrorReporterProvider({
       reporterRef.current = null;
       setClientReporter(null);
     };
-  }, [endpoint, jwtToken]);
+  }, [endpoint, jwtToken, applicationId]);
 
   return <>{children}</>;
 }
