@@ -13,13 +13,12 @@ export class ErrorReporter {
   private minuteCounter = 0;
   private minuteResetTimer: ReturnType<typeof setInterval> | null = null;
   private flushTimer: ReturnType<typeof setInterval> | null = null;
-  private applicationId: string | null = null;
 
   constructor(config: ErrorReporterConfig) {
     this.config = {
       endpoint: config.endpoint,
       jwtToken: config.jwtToken,
-      applicationId: config.applicationId ?? "",
+      applicationId: this.resolveApplicationId(config) ?? "",
       maxErrorsPerMinute: config.maxErrorsPerMinute ?? DEFAULT_MAX_ERRORS_PER_MINUTE,
       batchIntervalMs: config.batchIntervalMs ?? DEFAULT_BATCH_INTERVAL_MS,
       maxBatchSize: config.maxBatchSize ?? DEFAULT_MAX_BATCH_SIZE,
@@ -29,8 +28,6 @@ export class ErrorReporter {
     if (!this.config.enabled || !this.config.endpoint || !this.config.jwtToken) {
       return;
     }
-
-    this.applicationId = this.resolveApplicationId(config);
 
     this.flushTimer = setInterval(() => {
       this.flush();
@@ -85,12 +82,12 @@ export class ErrorReporter {
   }
 
   flush(): void {
-    if (this.buffer.length === 0 || !this.applicationId) {
+    if (this.buffer.length === 0 || !this.config.applicationId) {
       return;
     }
 
     const errors = this.buffer.splice(0);
-    const url = `${this.config.endpoint}/internal/apps/v1/${this.applicationId}/errors`;
+    const url = `${this.config.endpoint}/internal/apps/v1/${this.config.applicationId}/errors`;
 
     try {
       fetch(url, {
@@ -110,12 +107,12 @@ export class ErrorReporter {
   }
 
   async flushAsync(): Promise<void> {
-    if (this.buffer.length === 0 || !this.applicationId) {
+    if (this.buffer.length === 0 || !this.config.applicationId) {
       return;
     }
 
     const errors = this.buffer.splice(0);
-    const url = `${this.config.endpoint}/internal/apps/v1/${this.applicationId}/errors`;
+    const url = `${this.config.endpoint}/internal/apps/v1/${this.config.applicationId}/errors`;
 
     try {
       await fetch(url, {
