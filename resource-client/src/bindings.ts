@@ -10,7 +10,7 @@
  * bundled + registered at import time).
  *
  * `getApplicationId()` is deliberately NOT in `bindings.json` — it's the app's own identity,
- * injected as an env var alongside the app JWT (`MAJOR_APPLICATION_ID`).
+ * injected as an env var alongside the app JWT (`APPLICATION_ID`).
  */
 
 // Narrow ambient declaration so this stays node-types-free + browser-safe (`process` may
@@ -73,18 +73,16 @@ export function getAgentId(slot: string): string {
   return entry.id;
 }
 
-/** The app's own application id. Read from env (`MAJOR_APPLICATION_ID` server-side,
- * `NEXT_PUBLIC_MAJOR_APPLICATION_ID` in the browser), never from `bindings.json`. */
+/** The app's own application id, read from `APPLICATION_ID` — injected everywhere the app runs
+ * (the build job, the app runtime pods, and the AI-coder pods), never from `bindings.json`. Because
+ * it's present at build time too, a client instantiated at module load (e.g. a route's singleton)
+ * doesn't throw during `next build` static collection. */
 export function getApplicationId(): string {
-  // Server-side path. For client-side use, an app reads `process.env.NEXT_PUBLIC_MAJOR_APPLICATION_ID`
-  // directly so the bundler inlines it — going through this helper in the browser is a later refinement.
   const env = typeof process !== "undefined" && process ? process.env : undefined;
-  const id = env?.MAJOR_APPLICATION_ID ?? env?.NEXT_PUBLIC_MAJOR_APPLICATION_ID;
+  const id = env?.APPLICATION_ID;
 
   if (!id) {
-    throw new Error(
-      "getApplicationId(): MAJOR_APPLICATION_ID is not set (use NEXT_PUBLIC_MAJOR_APPLICATION_ID for client code).",
-    );
+    throw new Error("getApplicationId(): APPLICATION_ID is not set.");
   }
 
   return id;
