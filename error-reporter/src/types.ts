@@ -12,6 +12,12 @@ export interface ErrorReporterConfig {
    * no applicationId claim, so the env var is the source of truth.
    */
   applicationId?: string;
+  /**
+   * Optional privileged transport used when direct browser delivery is not
+   * configured. The Next.js provider supplies a server action here so runtime
+   * credentials never need to reach a statically rendered client.
+   */
+  sendErrors?: (errors: ErrorEvent[]) => Promise<void>;
   /** Max errors to accept per minute before dropping. Default: 10 */
   maxErrorsPerMinute?: number;
   /** How often to flush buffered errors (ms). Default: 5000 */

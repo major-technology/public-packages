@@ -6,8 +6,11 @@ const DEFAULT_BATCH_INTERVAL_MS = 5000;
 const DEFAULT_MAX_BATCH_SIZE = 10;
 const DEDUP_WINDOW_MS = 60_000;
 
+type ResolvedConfig = Required<Omit<ErrorReporterConfig, "sendErrors">> &
+  Pick<ErrorReporterConfig, "sendErrors">;
+
 export class ErrorReporter {
-  private config: Required<ErrorReporterConfig>;
+  private config: ResolvedConfig;
   private buffer: ErrorEvent[] = [];
   private dedupMap = new Map<string, number>();
   private minuteCounter = 0;
@@ -19,13 +22,14 @@ export class ErrorReporter {
       endpoint: config.endpoint,
       jwtToken: config.jwtToken,
       applicationId: this.resolveApplicationId(config) ?? "",
+      sendErrors: config.sendErrors,
       maxErrorsPerMinute: config.maxErrorsPerMinute ?? DEFAULT_MAX_ERRORS_PER_MINUTE,
       batchIntervalMs: config.batchIntervalMs ?? DEFAULT_BATCH_INTERVAL_MS,
       maxBatchSize: config.maxBatchSize ?? DEFAULT_MAX_BATCH_SIZE,
       enabled: config.enabled ?? true,
     };
 
-    if (!this.config.enabled || !this.config.endpoint || !this.config.jwtToken) {
+    if (!this.config.enabled || !this.hasTransport()) {
       return;
     }
 
@@ -39,7 +43,7 @@ export class ErrorReporter {
   }
 
   captureError(error: Error | string, context?: Record<string, unknown>): void {
-    if (!this.config.enabled || !this.config.endpoint || !this.config.jwtToken) {
+    if (!this.config.enabled || !this.hasTransport()) {
       return;
     }
 
@@ -82,11 +86,19 @@ export class ErrorReporter {
   }
 
   flush(): void {
-    if (this.buffer.length === 0 || !this.config.applicationId) {
+    if (this.buffer.length === 0 || !this.hasTransport()) {
       return;
     }
 
     const errors = this.buffer.splice(0);
+
+    if (!this.canSendDirectly()) {
+      void this.config.sendErrors?.(errors).catch(() => {
+        // Silently ignore — error reporter must never itself cause errors
+      });
+      return;
+    }
+
     const url = `${this.config.endpoint}/internal/apps/v1/${this.config.applicationId}/errors`;
 
     try {
@@ -107,11 +119,21 @@ export class ErrorReporter {
   }
 
   async flushAsync(): Promise<void> {
-    if (this.buffer.length === 0 || !this.config.applicationId) {
+    if (this.buffer.length === 0 || !this.hasTransport()) {
       return;
     }
 
     const errors = this.buffer.splice(0);
+
+    if (!this.canSendDirectly()) {
+      try {
+        await this.config.sendErrors?.(errors);
+      } catch {
+        // Silently ignore — error reporter must never itself cause errors
+      }
+      return;
+    }
+
     const url = `${this.config.endpoint}/internal/apps/v1/${this.config.applicationId}/errors`;
 
     try {
@@ -140,6 +162,14 @@ export class ErrorReporter {
     }
 
     this.flush();
+  }
+
+  private hasTransport(): boolean {
+    return this.canSendDirectly() || Boolean(this.config.sendErrors);
+  }
+
+  private canSendDirectly(): boolean {
+    return Boolean(this.config.endpoint && this.config.jwtToken && this.config.applicationId);
   }
 
   /**
