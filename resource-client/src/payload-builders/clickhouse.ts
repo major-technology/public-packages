@@ -1,4 +1,4 @@
-import type { DbClickhousePayload, DbClickhouseParamPrimitive } from "../schemas";
+import type { DbClickhousePayload, DbClickhouseParam } from "../schemas";
 
 /**
  * Build a ClickHouse invoke payload
@@ -8,7 +8,7 @@ import type { DbClickhousePayload, DbClickhouseParamPrimitive } from "../schemas
  */
 export function buildClickhouseInvokePayload(
   sql: string,
-  params?: DbClickhouseParamPrimitive[],
+  params?: DbClickhouseParam[],
   timeoutMs?: number
 ): DbClickhousePayload {
   return {

@@ -11,7 +11,7 @@
  *   npx @major-tech/resource-client list
  *
  * Modes: app (default) | tool | skill
- * Types: postgresql | mssql | mysql | dynamodb | cosmosdb | snowflake | bigquery | neo4j | hubspot | plaid | linkedin | tiktokads | googlecalendar | gmail | googledrive | googlesheets | outreach | custom | graphql | lambda | salesforce | s3 | slack | majorauth | googleanalytics | quickbooks | gong | clerk | stripe | fireflies | attio | dynamics | linear | zohodesk | zohoprojects | sqs | metamarketing | sharepoint | googlesearchconsole | notion | blob | github
+ * Types: postgresql | clickhouse | mssql | mysql | dynamodb | cosmosdb | snowflake | bigquery | neo4j | hubspot | plaid | linkedin | tiktokads | googlecalendar | gmail | googledrive | googlesheets | outreach | custom | graphql | lambda | salesforce | s3 | slack | majorauth | googleanalytics | quickbooks | gong | clerk | stripe | fireflies | attio | dynamics | linear | zohodesk | zohoprojects | sqs | metamarketing | sharepoint | googlesearchconsole | notion | blob | github
  *
  * Examples:
  *   npx @major-tech/resource-client add "abc-123" "orders-db" "postgresql" "Orders database" "app-123"

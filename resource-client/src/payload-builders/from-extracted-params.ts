@@ -1,4 +1,4 @@
-import type { ResourceInvokePayload, CosmosValue } from "../schemas";
+import type { ResourceInvokePayload, CosmosValue, DbClickhouseParam } from "../schemas";
 import { buildPostgresInvokePayload } from "./postgres";
 import { buildDynamoDBInvokePayload } from "./dynamodb";
 import {
@@ -264,9 +264,9 @@ export function buildPayloadFromExtractedParams(
     // =========================================================================
     case "clickhouse": {
       const sql = findParam(extractedParams, "SQL") as string;
-      const params = findParam(extractedParams, "Params") as unknown[] | undefined;
+      const params = findParam(extractedParams, "Params") as DbClickhouseParam[] | undefined;
       const timeoutMs = findParam(extractedParams, "Timeout") as number | undefined;
-      return buildClickhouseInvokePayload(sql, params as (string | number | boolean | null)[], timeoutMs);
+      return buildClickhouseInvokePayload(sql, params, timeoutMs);
     }
 
     // =========================================================================

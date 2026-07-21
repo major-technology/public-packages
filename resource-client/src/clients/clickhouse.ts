@@ -1,5 +1,5 @@
 import type {
-  DbClickhouseParamPrimitive,
+  DbClickhouseParam,
   DatabaseInvokeResponse,
 } from "../schemas";
 import { BaseResourceClient } from "../base";
@@ -16,7 +16,7 @@ export class ClickhouseResourceClient extends BaseResourceClient {
    */
   async invoke<T = Record<string, unknown>>(
     sql: string,
-    params: DbClickhouseParamPrimitive[] | undefined,
+    params: DbClickhouseParam[] | undefined,
     invocationKey: string,
     timeoutMs?: number
   ): Promise<DatabaseInvokeResponse<T>> {
