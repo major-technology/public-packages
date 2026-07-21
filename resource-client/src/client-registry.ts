@@ -16,6 +16,7 @@ export const CLIENT_REGISTRY = {
   postgresql: "PostgresResourceClient",
   mssql: "MssqlResourceClient",
   mysql: "MysqlResourceClient",
+  clickhouse: "ClickhouseResourceClient",
   dynamodb: "DynamoDBResourceClient",
   cosmosdb: "CosmosDBResourceClient",
   snowflake: "SnowflakeResourceClient",

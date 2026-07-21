@@ -3,6 +3,7 @@ export * from "./common";
 export * from "./postgres";
 export * from "./mssql";
 export * from "./mysql";
+export * from "./clickhouse";
 export * from "./dynamodb";
 export * from "./cosmosdb";
 export * from "./snowflake";
@@ -62,6 +63,7 @@ import type { ApiSlackPayload } from "./api-slack";
 import type { DbPostgresPayload } from "./postgres";
 import type { DbMssqlPayload } from "./mssql";
 import type { DbMysqlPayload } from "./mysql";
+import type { DbClickhousePayload } from "./clickhouse";
 import type { DbDynamoDBPayload } from "./dynamodb";
 import type { DbCosmosDBPayload } from "./cosmosdb";
 import type { DbSnowflakePayload } from "./snowflake";
@@ -136,4 +138,5 @@ export type ResourceInvokePayload =
   | ApiSqsPayload
   | ApiGmailPayload
   | ApiGoogleDrivePayload
-  | StorageBlobPayload;
+  | StorageBlobPayload
+  | DbClickhousePayload;

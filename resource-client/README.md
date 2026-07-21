@@ -1,6 +1,6 @@
 # @major-tech/resource-client
 
-TS client: PostgreSQL/DynamoDB/CosmosDB/Snowflake/CustomAPI/HubSpot/S3. Type-safe, 0-dep, universal (Node/browser/edge), ESM+CJS.
+TS client: PostgreSQL/ClickHouse/DynamoDB/CosmosDB/Snowflake/CustomAPI/HubSpot/S3. Type-safe, 0-dep, universal (Node/browser/edge), ESM+CJS.
 
 ## Install
 
@@ -55,6 +55,25 @@ const r = await c.invoke(
   "fetch-user"
 );
 // r.ok ? r.result.rows : r.error.message
+```
+
+## ClickhouseResourceClient
+
+**Constructor:** `new ClickhouseResourceClient(config: BaseClientConfig)`
+
+**Method:** `invoke(sql: string, params: DbClickhouseParam[] | undefined, invocationKey: string, timeoutMs?: number): Promise<DatabaseInvokeResponse>`
+
+Parameters use positional `?` placeholders and may contain nested arrays or tuples.
+
+```typescript
+import { ClickhouseResourceClient } from "@major-tech/resource-client";
+
+const client = new ClickhouseResourceClient({ baseUrl, applicationId, resourceId });
+const result = await client.invoke(
+  "SELECT * FROM events WHERE organization_id = ? LIMIT 100",
+  [organizationId],
+  "fetch-events",
+);
 ```
 
 ## DynamoDBResourceClient
