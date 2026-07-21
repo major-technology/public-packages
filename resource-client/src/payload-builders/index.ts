@@ -22,6 +22,9 @@ export { buildMssqlInvokePayload } from "./mssql";
 // MySQL
 export { buildMysqlInvokePayload } from "./mysql";
 
+// ClickHouse
+export { buildClickhouseInvokePayload } from "./clickhouse";
+
 // Snowflake
 export {
   buildSnowflakeInvokePayload,

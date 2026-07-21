@@ -34,6 +34,7 @@ export { ResourceInvokeError } from "./errors";
 export { PostgresResourceClient } from "./clients/postgres";
 export { MssqlResourceClient } from "./clients/mssql";
 export { MysqlResourceClient } from "./clients/mysql";
+export { ClickhouseResourceClient } from "./clients/clickhouse";
 export { DynamoDBResourceClient } from "./clients/dynamodb";
 export { CosmosDBResourceClient } from "./clients/cosmosdb";
 export { SnowflakeResourceClient } from "./clients/snowflake";
