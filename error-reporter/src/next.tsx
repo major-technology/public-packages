@@ -3,7 +3,6 @@
 import {
   Component,
   useEffect,
-  useRef,
   type ErrorInfo,
   type ReactNode,
 } from "react";
@@ -14,6 +13,55 @@ import {
   setClientReporter,
   uninstallClientHandlers,
 } from "./client";
+import { clientFingerprint } from "./fingerprint";
+import { submitClientErrors } from "./next-server.js";
+import type { ErrorEvent } from "./types";
+
+const DEDUP_WINDOW_MS = 60_000;
+const standaloneDedupMap = new Map<string, number>();
+
+function reportWithoutProvider(
+  error: Error | string,
+  context?: Record<string, unknown>,
+): void {
+  const message = typeof error === "string" ? error : error.message;
+  const stack = typeof error === "string" ? undefined : error.stack;
+  const fingerprint = clientFingerprint(message, stack);
+  const now = Date.now();
+  const lastSeen = standaloneDedupMap.get(fingerprint);
+
+  if (lastSeen && now - lastSeen < DEDUP_WINDOW_MS) {
+    return;
+  }
+  standaloneDedupMap.set(fingerprint, now);
+
+  const event: ErrorEvent = {
+    message,
+    stack,
+    source: "client",
+    url: typeof window !== "undefined" ? window.location.href : undefined,
+    userAgent:
+      typeof navigator !== "undefined" ? navigator.userAgent : undefined,
+    timestamp: new Date().toISOString(),
+    context,
+  };
+
+  void submitClientErrors([event]).catch(() => {
+    // A global error fallback must never fail because reporting failed.
+  });
+}
+
+function captureError(
+  error: Error | string,
+  context?: Record<string, unknown>,
+): void {
+  const reporter = getClientReporter();
+  if (reporter) {
+    reporter.captureError(error, context);
+    return;
+  }
+  reportWithoutProvider(error, context);
+}
 
 // ── ErrorReporterProvider ──────────────────────────────────────────────
 
@@ -21,10 +69,8 @@ interface ErrorReporterProviderProps {
   endpoint: string;
   jwtToken: string;
   /**
-   * The application id errors are reported under. Optional — defaults to the
-   * NEXT_PUBLIC_MAJOR_APPLICATION_ID build-time env var. The browser can't read
-   * server-only env vars, so this (or that public var) is how the client learns
-   * its applicationId now that MAJOR_JWT_TOKEN is opaque.
+   * Application id for direct browser delivery. The server-action fallback
+   * resolves trusted runtime configuration when this or jwtToken is unavailable.
    */
   applicationId?: string;
   children: ReactNode;
@@ -36,26 +82,20 @@ export function ErrorReporterProvider({
   applicationId,
   children,
 }: ErrorReporterProviderProps) {
-  const reporterRef = useRef<ErrorReporter | null>(null);
-
   useEffect(() => {
-    if (!endpoint || !jwtToken) {
-      return;
-    }
-
     const reporter = new ErrorReporter({
       endpoint,
       jwtToken,
-      applicationId: applicationId ?? process.env.NEXT_PUBLIC_MAJOR_APPLICATION_ID,
+      applicationId:
+        applicationId ?? process.env.NEXT_PUBLIC_MAJOR_APPLICATION_ID,
+      sendErrors: submitClientErrors,
     });
-    reporterRef.current = reporter;
     setClientReporter(reporter);
     installClientHandlers(reporter);
 
     return () => {
       uninstallClientHandlers();
       reporter.destroy();
-      reporterRef.current = null;
       setClientReporter(null);
     };
   }, [endpoint, jwtToken, applicationId]);
@@ -65,19 +105,14 @@ export function ErrorReporterProvider({
 
 // ── useReportError ─────────────────────────────────────────────────────
 
-/**
- * Hook for reporting errors from Next.js error boundaries (error.tsx / global-error.tsx).
- * Reports the error once when the component mounts or the error changes.
- */
+/** Report errors from Next.js error.tsx and global-error.tsx boundaries. */
 export function useReportError(error: Error & { digest?: string }): void {
   useEffect(() => {
-    const reporter = getClientReporter();
-    if (reporter) {
-      reporter.captureError(error, {
-        type: "error-boundary",
-        digest: error.digest,
-      });
-    }
+    const context = {
+      type: "error-boundary",
+      digest: error.digest,
+    };
+    captureError(error, context);
   }, [error]);
 }
 
@@ -94,10 +129,7 @@ interface ErrorBoundaryState {
   error: Error | null;
 }
 
-/**
- * React error boundary that automatically reports caught errors.
- * Use in addition to Next.js error.tsx for finer-grained error boundaries.
- */
+/** React error boundary that automatically reports caught errors. */
 export class ErrorBoundary extends Component<
   ErrorBoundaryProps,
   ErrorBoundaryState
@@ -112,11 +144,11 @@ export class ErrorBoundary extends Component<
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-    const reporter = getClientReporter();
-    reporter?.captureError(error, {
+    const context = {
       type: "react-error-boundary",
       componentStack: errorInfo.componentStack ?? undefined,
-    });
+    };
+    captureError(error, context);
   }
 
   private handleReset = (): void => {
