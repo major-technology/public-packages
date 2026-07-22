@@ -74,6 +74,7 @@ export { GoogleSearchConsoleResourceClient } from "./clients/google-search-conso
 export { NotionResourceClient } from "./clients/notion";
 export { BlobResourceClient } from "./clients/blob";
 export { GitHubResourceClient } from "./clients/github";
+export { ECRResourceClient } from "./clients/ecr";
 
 // MCP-subtype connectors (custom remote MCP, Linear, …) share one generic
 // runtime client instead of a per-subtype class — tool name + args are defined
@@ -118,5 +119,6 @@ export type {
   ClickhouseInvokeResponse,
   BaseInvokeSuccess,
   StorageBlobInvokeResponse,
-  GitHubInvokeResponse
+  GitHubInvokeResponse,
+  ECRInvokeResponse
 } from "./schemas/response";
