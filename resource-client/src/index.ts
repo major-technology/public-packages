@@ -8,11 +8,14 @@ export { BaseResourceClient, type BaseClientConfig } from "./base";
 // truth shared by the runtime API and the code generator (bin/generate-clients.mjs).
 export { CLIENT_REGISTRY, type ResourceSubtype } from "./client-registry";
 
-// Slot → id resolution: the readers app code calls (getResourceId/getAgentId/getApplicationId),
-// the registration the generated app entry uses, and the generate/strip helpers the platform
-// uses to materialize / templatize bindings.json.
+// Slot → id resolution (`getResourceId("DB")`), the env-based app-identity reader
+// (getApplicationId), and the generate/strip helpers the platform uses to materialize / templatize
+// bindings.json. `registerBindings` is called by the app's generated `clients/bindings.ts`; app code
+// should import its readers from `./clients` (which guarantees registration ran) rather than from
+// here, and the readers throw an actionable error if it hasn't.
 export {
   registerBindings,
+  checkIfBindingsRegistered,
   getResourceId,
   getAgentId,
   getApplicationId,
