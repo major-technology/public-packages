@@ -33,6 +33,7 @@ import {
 export class AgentsClient {
   private readonly baseUrl: string;
   private readonly majorJwtToken: string;
+  private readonly agentId: string | undefined;
   private readonly getHeaders: () => Promise<Record<string, string>> | Record<string, string>;
   private readonly fetchImpl: typeof fetch;
 
@@ -53,6 +54,7 @@ export class AgentsClient {
 
     this.baseUrl = baseUrl.replace(/\/$/, "");
     this.majorJwtToken = majorJwtToken;
+    this.agentId = config.agentId;
     this.getHeaders = config.getHeaders ?? (() => ({}));
     this.fetchImpl = config.fetch ?? globalThis.fetch;
   }
@@ -63,19 +65,22 @@ export class AgentsClient {
    * asynchronously. The returned `chatThreadId` is the `runId` for run-ops.
    */
   async run(request: RunAgentRequest): Promise<RunAgentResponse> {
-    if (!request.agentId) {
-      throw new AgentsValidationError("AgentsClient.run: agentId is required.");
+    const agentId = request.agentId ?? this.agentId;
+    if (!agentId) {
+      throw new AgentsValidationError(
+        "AgentsClient.run: agentId is required (pass it in the request or bind it on the client).",
+      );
     }
     if (!request.prompt) {
       throw new AgentsValidationError("AgentsClient.run: prompt is required.");
     }
 
-    const { agentId, ...body } = request;
+    const { prompt, name, description, payload } = request;
 
     return this.request<RunAgentResponse>(
       "POST",
       `/agents/${encodeURIComponent(agentId)}/runs`,
-      body,
+      { prompt, name, description, payload },
       (message) => new AgentRunNotStartedError(`Failed to reach Major API: ${message}`),
     );
   }
@@ -122,8 +127,9 @@ export class AgentsClient {
    */
   async getRunningInstancesOfAgent(agentId?: string): Promise<AgentRun[]> {
     const params = new URLSearchParams({ status: "active" });
-    if (agentId) {
-      params.set("agentId", agentId);
+    const resolved = agentId ?? this.agentId;
+    if (resolved) {
+      params.set("agentId", resolved);
     }
 
     const result = await this.request<{ runs: AgentRun[] }>(
