@@ -21,6 +21,11 @@ export interface AgentsClientConfig {
   getHeaders?: () => Promise<Record<string, string>> | Record<string, string>;
   /** Custom fetch implementation. Defaults to `globalThis.fetch`. */
   fetch?: typeof fetch;
+  /**
+   * Bound agent id for a generated per-agent singleton. Used as the default for
+   * `run` and `getRunningInstancesOfAgent` when those calls omit `agentId`.
+   */
+  agentId?: string;
 }
 
 /**
@@ -28,8 +33,11 @@ export interface AgentsClientConfig {
  * at `POST /agents/:agentId/runs`.
  */
 export interface RunAgentRequest {
-  /** Stable id of the agent to invoke. */
-  agentId: string;
+  /**
+   * Stable id of the agent to invoke. Optional when the client was constructed
+   * with a bound `agentId` (generated singletons).
+   */
+  agentId?: string;
   /** Prompt the agent should act on. */
   prompt: string;
   /** Optional human-readable name for the run. Shown in the Major UI. */

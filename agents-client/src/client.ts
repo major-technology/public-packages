@@ -32,7 +32,8 @@ import {
  */
 export class AgentsClient {
   private readonly baseUrl: string;
-  private readonly majorJwtToken: string;
+  private readonly majorJwtToken: string | undefined;
+  private readonly agentId: string | undefined;
   private readonly getHeaders: () => Promise<Record<string, string>> | Record<string, string>;
   private readonly fetchImpl: typeof fetch;
 
@@ -44,15 +45,12 @@ export class AgentsClient {
       );
     }
 
-    const majorJwtToken = config.majorJwtToken ?? process.env.MAJOR_JWT_TOKEN;
-    if (!majorJwtToken) {
-      throw new AgentsClientError(
-        "AgentsClient: majorJwtToken is required (set MAJOR_JWT_TOKEN or pass majorJwtToken explicitly).",
-      );
-    }
-
+    // JWT is optional at construct time so generated module-scope singletons can
+    // load during `next build` page-data collection (MAJOR_JWT_TOKEN is injected
+    // at runtime, same as @major-tech/resource-client). Required on first request.
     this.baseUrl = baseUrl.replace(/\/$/, "");
-    this.majorJwtToken = majorJwtToken;
+    this.majorJwtToken = config.majorJwtToken ?? process.env.MAJOR_JWT_TOKEN;
+    this.agentId = config.agentId;
     this.getHeaders = config.getHeaders ?? (() => ({}));
     this.fetchImpl = config.fetch ?? globalThis.fetch;
   }
@@ -63,19 +61,22 @@ export class AgentsClient {
    * asynchronously. The returned `chatThreadId` is the `runId` for run-ops.
    */
   async run(request: RunAgentRequest): Promise<RunAgentResponse> {
-    if (!request.agentId) {
-      throw new AgentsValidationError("AgentsClient.run: agentId is required.");
+    const agentId = request.agentId ?? this.agentId;
+    if (!agentId) {
+      throw new AgentsValidationError(
+        "AgentsClient.run: agentId is required (pass it in the request or bind it on the client).",
+      );
     }
     if (!request.prompt) {
       throw new AgentsValidationError("AgentsClient.run: prompt is required.");
     }
 
-    const { agentId, ...body } = request;
+    const { prompt, name, description, payload } = request;
 
     return this.request<RunAgentResponse>(
       "POST",
       `/agents/${encodeURIComponent(agentId)}/runs`,
-      body,
+      { prompt, name, description, payload },
       (message) => new AgentRunNotStartedError(`Failed to reach Major API: ${message}`),
     );
   }
@@ -122,8 +123,9 @@ export class AgentsClient {
    */
   async getRunningInstancesOfAgent(agentId?: string): Promise<AgentRun[]> {
     const params = new URLSearchParams({ status: "active" });
-    if (agentId) {
-      params.set("agentId", agentId);
+    const resolved = agentId ?? this.agentId;
+    if (resolved) {
+      params.set("agentId", resolved);
     }
 
     const result = await this.request<{ runs: AgentRun[] }>(
@@ -214,10 +216,17 @@ export class AgentsClient {
     onTransportError: (message: string) => AgentsClientError = (message) =>
       new AgentsClientError(`Failed to reach Major API: ${message}`),
   ): Promise<T> {
+    const majorJwtToken = this.majorJwtToken ?? process.env.MAJOR_JWT_TOKEN;
+    if (!majorJwtToken) {
+      throw new AgentsClientError(
+        "AgentsClient: majorJwtToken is required (set MAJOR_JWT_TOKEN or pass majorJwtToken explicitly).",
+      );
+    }
+
     const url = `${this.baseUrl}${path}`;
     const headers: Record<string, string> = {
       "Content-Type": "application/json",
-      "x-major-jwt": this.majorJwtToken,
+      "x-major-jwt": majorJwtToken,
     };
     Object.assign(headers, await this.getHeaders());
 
