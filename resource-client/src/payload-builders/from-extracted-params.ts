@@ -21,6 +21,7 @@ import {
   buildSnowflakeCancelPayload,
 } from "./snowflake";
 import { buildS3InvokePayload } from "./s3";
+import { buildECRInvokePayload } from "./ecr";
 import { buildLambdaInvokePayload } from "./lambda";
 import {
   buildGoogleSheetsInvokePayload,
@@ -314,6 +315,16 @@ export function buildPayloadFromExtractedParams(
       const params = findParam(extractedParams, "Params") as Record<string, unknown>;
       const options = findParam(extractedParams, "Options") as { timeoutMs?: number } | undefined;
       return buildS3InvokePayload(command as never, params, options);
+    }
+
+    // =========================================================================
+    // ECR
+    // =========================================================================
+    case "ecr": {
+      const command = findParam(extractedParams, "Command") as string;
+      const params = findParam(extractedParams, "Params") as Record<string, unknown>;
+      const options = findParam(extractedParams, "Options") as { timeoutMs?: number } | undefined;
+      return buildECRInvokePayload(command as never, params, options);
     }
 
     // =========================================================================
