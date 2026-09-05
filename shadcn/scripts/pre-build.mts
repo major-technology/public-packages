@@ -3,7 +3,8 @@
  *
  * 1. Scans registry/default/data-table/ for all source files
  * 2. Reads DATA_TABLE_VERSION from constants.ts
- * 3. Writes a complete registry.json with files list and meta.version
+ * 3. Resolves each npm dependency to the range pinned in package.json
+ * 4. Writes a complete registry.json with files list and meta.version
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -12,6 +13,37 @@ const ROOT = path.resolve(import.meta.dirname, "..");
 const DATA_TABLE_DIR = path.join(ROOT, "registry/default/data-table");
 const OUTPUT_DIR = path.join(ROOT, "registry/output");
 const REGISTRY_PATH = path.join(OUTPUT_DIR, "registry.json");
+const PACKAGE_JSON_PATH = path.join(ROOT, "package.json");
+
+// npm packages the data-table imports directly. Versions are NOT written here — they are
+// resolved from package.json below, so the range customers install is the same one this repo
+// type-checks against. Emitting a bare name makes `shadcn add` install @latest: that is how
+// @tanstack/react-table v9 reached apps built against the v8 API.
+const NPM_DEPENDENCIES = [
+	"@tanstack/react-table",
+	"@tanstack/react-virtual",
+	"@radix-ui/react-dropdown-menu",
+	"lucide-react",
+];
+
+/** Resolve each dependency to "<name>@<range>" using this package's own pinned ranges. */
+function resolveDependencies(names: string[]): string[] {
+	const pkg = JSON.parse(fs.readFileSync(PACKAGE_JSON_PATH, "utf-8"));
+	const declared: Record<string, string> = { ...pkg.dependencies, ...pkg.devDependencies };
+
+	return names.map((name) => {
+		const range = declared[name];
+
+		if (!range) {
+			throw new Error(
+				`Registry dependency "${name}" is not declared in package.json. Add it there so the ` +
+					`published registry pins the same range this repo builds against.`,
+			);
+		}
+
+		return `${name}@${range}`;
+	});
+}
 
 function collectFiles(dir: string): string[] {
 	const results: string[] = [];
@@ -66,12 +98,7 @@ const registry = {
 			title: "Data Table",
 			description:
 				"Full-featured data table with sorting, filtering, pagination, infinite scroll, virtualization, row selection, expandable rows, and data export. Built on TanStack Table v8.",
-			dependencies: [
-				"@tanstack/react-table",
-				"@tanstack/react-virtual",
-				"@radix-ui/react-dropdown-menu",
-				"lucide-react",
-			],
+			dependencies: resolveDependencies(NPM_DEPENDENCIES),
 			registryDependencies: ["button", "input", "checkbox", "select"],
 			meta: { version },
 			files: allFiles,
