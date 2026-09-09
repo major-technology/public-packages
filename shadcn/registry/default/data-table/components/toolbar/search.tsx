@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { cn } from "@/registry/default/lib/utils";
 import { Input } from "@/registry/default/ui/input";
@@ -26,10 +26,15 @@ export function DataTableSearch({
 	const externalFilter = (table.getState().globalFilter as string) ?? "";
 	const [value, setValue] = useState<string>(externalFilter);
 
-	// Sync local value when globalFilter changes externally (e.g. cleared by filters reset)
-	useEffect(() => {
+	// Sync the local value when globalFilter changes externally (e.g. cleared by a filters
+	// reset). Adjusting state during render is React's documented alternative to syncing it in
+	// an effect: it re-renders before committing, instead of painting a stale value first.
+	const [prevExternalFilter, setPrevExternalFilter] = useState(externalFilter);
+
+	if (externalFilter !== prevExternalFilter) {
+		setPrevExternalFilter(externalFilter);
 		setValue(externalFilter);
-	}, [externalFilter]);
+	}
 
 	const [debouncedSetFilter] = useDebouncedCallback(
 		(newValue: string) => {

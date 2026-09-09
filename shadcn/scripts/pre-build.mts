@@ -20,6 +20,10 @@ const PACKAGE_JSON_PATH = path.join(ROOT, "package.json");
 // type-checks against. Emitting a bare name makes `shadcn add` install @latest: that is how
 // @tanstack/react-table v9 reached apps built against the v8 API.
 const NPM_DEPENDENCIES = [
+	// Not imported by data-table itself, but by the `button` registryDependency, whose upstream
+	// registry item declares only ["cn","radix-ui"] — so a consumer without cva gets a broken
+	// install unless we declare it here.
+	"class-variance-authority",
 	"@tanstack/react-table",
 	"@tanstack/react-virtual",
 	"@radix-ui/react-dropdown-menu",
@@ -38,6 +42,16 @@ function resolveDependencies(names: string[]): string[] {
 			throw new Error(
 				`Registry dependency "${name}" is not declared in package.json. Add it there so the ` +
 					`published registry pins the same range this repo builds against.`,
+			);
+		}
+
+		// An open-ended range ships the very bug this function exists to prevent: `shadcn add`
+		// resolves ">=0.400" to the latest release, and worse, writes that loose range over
+		// whatever the consuming app had already pinned.
+		if (!/^[\^~]?\d/.test(range)) {
+			throw new Error(
+				`Registry dependency "${name}" has the open-ended range "${range}" in package.json. ` +
+					`Use a caret or tilde range so \`shadcn add\` installs a bounded version.`,
 			);
 		}
 
