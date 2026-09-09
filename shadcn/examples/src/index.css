@@ -1,5 +1,8 @@
 @import "tailwindcss";
 @source "../../registry";
+/* consumer/ is gitignored, and Tailwind v4 auto-detection skips ignored paths — without
+   this, installed-mode demos are styled only by classes the registry copies happen to share. */
+@source "../consumer";
 
 @custom-variant dark (&:is(.dark *));
 
