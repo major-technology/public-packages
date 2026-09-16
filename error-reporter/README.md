@@ -36,9 +36,8 @@ The root package's server-side reporting and direct HTTP transport are unchanged
 ```sh
 pnpm install --frozen-lockfile
 pnpm typecheck
-pnpm test
+pnpm build
 ```
 
-`pnpm test` builds the package and runs transport regression checks. It does not
-replace a Next.js production integration test of the packed package.
+Validate browser reporting in a Next.js app using the packed package.
 See [PUBLISHING.md](PUBLISHING.md) for the separate release process.
