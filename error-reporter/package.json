@@ -32,7 +32,8 @@
     "clean": "rm -rf dist",
     "build": "pnpm clean && tsc && node scripts/build.mjs",
     "typecheck": "tsc --noEmit",
-    "prepublishOnly": "pnpm run typecheck && pnpm run build"
+    "prepublishOnly": "pnpm run typecheck && pnpm run build",
+    "test": "pnpm build && node --test tests/*.test.mjs"
   },
   "keywords": [
     "major",
