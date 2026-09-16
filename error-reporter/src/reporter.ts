@@ -179,8 +179,8 @@ export class ErrorReporter {
    *   3. legacy: decode it from a KMS-signed JWT (pre-2026-05-14 deployments)
    *
    * Client bundles can't read non-public env vars, so the browser path relies on
-   * config.applicationId (ErrorReporterProvider defaults it from
-   * NEXT_PUBLIC_MAJOR_APPLICATION_ID).
+   * config.applicationId. The Next.js provider instead uses a server action
+   * that resolves the application id on the server.
    */
   private resolveApplicationId(config: ErrorReporterConfig): string | null {
     if (config.applicationId) {

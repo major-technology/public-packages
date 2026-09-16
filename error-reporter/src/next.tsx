@@ -66,28 +66,23 @@ function captureError(
 // ── ErrorReporterProvider ──────────────────────────────────────────────
 
 interface ErrorReporterProviderProps {
-  endpoint: string;
-  jwtToken: string;
-  /**
-   * Application id for direct browser delivery. The server-action fallback
-   * resolves trusted runtime configuration when this or jwtToken is unavailable.
-   */
+  /** @deprecated Remove this prop. The server action reads runtime configuration. */
+  endpoint?: string;
+  /** @deprecated Remove this prop: passing it exposes the token through RSC. */
+  jwtToken?: string;
+  /** @deprecated Remove this prop. The server action resolves the app identity. */
   applicationId?: string;
   children: ReactNode;
 }
 
 export function ErrorReporterProvider({
-  endpoint,
-  jwtToken,
-  applicationId,
   children,
 }: ErrorReporterProviderProps) {
   useEffect(() => {
     const reporter = new ErrorReporter({
-      endpoint,
-      jwtToken,
-      applicationId:
-        applicationId ?? process.env.NEXT_PUBLIC_MAJOR_APPLICATION_ID,
+      // Disable direct delivery: credentials belong only in the server action.
+      endpoint: "",
+      jwtToken: "",
       sendErrors: submitClientErrors,
     });
     setClientReporter(reporter);
@@ -98,7 +93,7 @@ export function ErrorReporterProvider({
       reporter.destroy();
       setClientReporter(null);
     };
-  }, [endpoint, jwtToken, applicationId]);
+  }, []);
 
   return <>{children}</>;
 }
