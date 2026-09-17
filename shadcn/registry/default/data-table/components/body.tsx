@@ -135,7 +135,7 @@ export function DataTableBody<TData>({
 				{topPad > 0 && (
 					<tbody>
 						<tr>
-							<td style={{ height: topPad, padding: 0, border: "none" }} />
+							<td aria-hidden="true" style={{ height: topPad, padding: 0, border: "none" }} />
 						</tr>
 					</tbody>
 				)}
@@ -157,7 +157,7 @@ export function DataTableBody<TData>({
 				{bottomPad > 0 && (
 					<tbody>
 						<tr>
-							<td style={{ height: bottomPad, padding: 0, border: "none" }} />
+							<td aria-hidden="true" style={{ height: bottomPad, padding: 0, border: "none" }} />
 						</tr>
 					</tbody>
 				)}

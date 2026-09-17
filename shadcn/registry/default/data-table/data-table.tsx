@@ -174,28 +174,19 @@ export function DataTable<TData>(props: DataTableProps<TData>) {
 		},
 	});
 
-	const isResizingColumn = table.getState().columnSizingInfo.isResizingColumn;
-
-	const tableContextValue = useMemo(
-		() => ({ table }),
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[
-			data,
-			columns,
-			rowCount,
-			sorting,
-			columnFilters,
-			globalFilter,
-			rowSelection,
-			expanded,
-			columnVisibility,
-			internalColumnOrder,
-			internalColumnSizing,
-			pagination,
-			// Track resize interaction state so consumers re-render when resize ends
-			isResizingColumn,
-		],
-	);
+	// TanStack's `table` mutates in place and keeps a stable identity, so memoizing on `table`
+	// alone would never yield a new context value and consumers would never re-render. Its
+	// state object is the real signal: useReactTable rebuilds it whenever any table state
+	// changes (sorting, filters, pagination, column sizing/order/visibility, selection).
+	// The previous version listed each of those by hand in a memo whose body only reads
+	// `table`, which needed a lint suppression to compile.
+	// Intentionally constructed per render rather than memoized. A memo would have to key on
+	// something the body reads, and the body only reads `table` — whose identity never changes
+	// — so consumers would never re-render. The previous version worked around that by listing
+	// every piece of table state as a dependency and suppressing the lint error that caused.
+	// This component re-renders exactly when that state or its props change, so a fresh object
+	// per render carries the same signal without the lie.
+	const tableContextValue = { table };
 
 	const stateContextValue = useMemo(
 		() => ({

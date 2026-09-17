@@ -1,9 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useEffectEvent, useRef, useState } from "react";
 import { RefreshCwIcon } from "lucide-react";
 
-import { useEffectOnce } from "../../hooks/use-effect-once";
 import { useLatestValue } from "../../hooks/use-latest-value";
 import { Button } from "@/registry/default/ui/button";
 import { useDataTableState } from "../../context";
@@ -41,7 +40,10 @@ export function DataTableInfiniteScroll({
 	const hasMoreRef = useLatestValue(hasMore);
 	const onLoadMoreRef = useLatestValue(onLoadMore);
 
-	const triggerLoad = useCallback(async () => {
+	// useEffectEvent, not useCallback: this reads the latest hasMore/onLoadMore and calls
+	// itself recursively, which React Compiler cannot prove memo-safe. An Effect Event is
+	// stable by construction, so the observer effect below no longer depends on it.
+	const triggerLoad = useEffectEvent(async () => {
 		if (
 			loadingRef.current ||
 			!hasMoreRef.current ||
@@ -84,29 +86,55 @@ export function DataTableInfiniteScroll({
 				setIsLoading(false);
 			}
 		}
-	}, [hasMoreRef, onLoadMoreRef]);
+	});
+
+	// An Effect Event may only be called from an Effect, never from an event handler, so Retry
+	// bumps a token and an effect performs the load.
+	const [retryToken, setRetryToken] = useState(0);
 
 	const handleRetry = () => {
 		errorRef.current = false;
 		setHasError(false);
-		void triggerLoad();
+		setRetryToken((token) => token + 1);
 	};
 
-	useEffectOnce(() => {
+	useEffect(() => {
+		if (retryToken === 0) {
+			return;
+		}
+
+		void triggerLoad();
+	}, [retryToken]);
+
+	useEffect(() => {
 		mountedRef.current = true;
 
 		return () => {
 			mountedRef.current = false;
 		};
-	});
+	}, []);
 
-	// Reset local error when context error clears (e.g. after a filter change triggers a fresh primary load)
-	useEffect(() => {
+	// Reset the local error when the context error clears (e.g. a filter change triggered a
+	// fresh primary load). Adjusting state during render is React's documented alternative to
+	// syncing it in an effect, which would cause a second render pass.
+	const [prevError, setPrevError] = useState(error);
+
+	if (error !== prevError) {
+		setPrevError(error);
+
 		if (!error && hasError) {
-			errorRef.current = false;
 			setHasError(false);
 		}
-	}, [error, hasError]);
+	}
+
+	// errorRef gates triggerLoad synchronously, so it has to clear too — in an effect, because
+	// writing a ref during render is unsafe. A ref write is not state, so this does not cause
+	// the extra render pass that setState in an effect would.
+	useEffect(() => {
+		if (!error) {
+			errorRef.current = false;
+		}
+	}, [error]);
 
 	useEffect(() => {
 		const sentinel = sentinelRef.current;
@@ -131,7 +159,7 @@ export function DataTableInfiniteScroll({
 		return () => {
 			observer.disconnect();
 		};
-	}, [triggerLoad, hasMore]);
+	}, [hasMore]);
 
 	if (!hasMore && !isLoading && !hasError) {
 		return null;
