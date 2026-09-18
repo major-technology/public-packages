@@ -42,6 +42,7 @@ export * from "./api-sharepoint";
 export * from "./google-search-console";
 export * from "./api-notion";
 export * from "./sqs";
+export * from "./ecr";
 export * from "./request";
 export * from "./response";
 export * from "./blob";
@@ -90,6 +91,7 @@ import type { ApiSharePointPayload } from "./api-sharepoint";
 import type { ApiGoogleSearchConsolePayload } from "./google-search-console";
 import type { ApiNotionPayload } from "./api-notion";
 import type { ApiSqsPayload } from "./sqs";
+import type { ApiECRPayload } from "./ecr";
 import type { StorageBlobPayload } from "./blob";
 
 /**
@@ -139,4 +141,5 @@ export type ResourceInvokePayload =
   | ApiGmailPayload
   | ApiGoogleDrivePayload
   | StorageBlobPayload
-  | DbClickhousePayload;
+  | DbClickhousePayload
+  | ApiECRPayload;

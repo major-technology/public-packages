@@ -15,6 +15,7 @@ import type { ApiTikTokAdsResult } from "./api-tiktokads";
 import type { ApiGoogleSearchConsoleResult } from "./google-search-console";
 import type { StorageBlobResult } from "./blob";
 import type { ApiGitHubTokenResult } from "./api-github";
+import type { ApiECRResult } from "./ecr";
 
 /**
  * Union of all possible resource invocation result types
@@ -36,7 +37,8 @@ export type ResourceInvokeSuccess =
     | ApiTikTokAdsResult
     | ApiGoogleSearchConsoleResult
     | StorageBlobResult
-    | ApiGitHubTokenResult;
+    | ApiGitHubTokenResult
+    | ApiECRResult;
 
 /**
  * Base successful invocation response - generic over result type
@@ -261,3 +263,8 @@ export type StorageBlobInvokeResponse = BaseInvokeSuccess<StorageBlobResult> | I
  * Response from GitHub getGitToken resource invocation
  */
 export type GitHubInvokeResponse = BaseInvokeSuccess<ApiGitHubTokenResult> | InvokeFailure;
+
+/**
+ * Response from ECR resource invocation
+ */
+export type ECRInvokeResponse = BaseInvokeSuccess<ApiECRResult> | InvokeFailure;
