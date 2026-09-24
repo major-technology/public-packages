@@ -1,0 +1,39 @@
+{
+  "name": "@major-tech/app-client",
+  "version": "0.1.0",
+  "description": "fetch-compatible client for calling another Major app from a deployed Major app",
+  "type": "module",
+  "sideEffects": false,
+  "engines": { "node": ">=18.0.0" },
+  "bin": { "major-app-client": "./bin/generate-clients.mjs" },
+  "files": ["dist", "bin", "README.md"],
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js", "require": "./dist/index.cjs", "default": "./dist/index.js" },
+    "./next": { "types": "./dist/next/index.d.ts", "import": "./dist/next/index.js", "require": "./dist/next/index.cjs", "default": "./dist/next/index.js" }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "clean": "rm -rf dist",
+    "build": "pnpm clean && tsc && node scripts/build.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "prepublishOnly": "pnpm run typecheck && pnpm run test && pnpm run build"
+  },
+  "keywords": ["major", "app", "client"],
+  "author": "Major Technology",
+  "license": "MIT",
+  "repository": { "type": "git", "url": "https://github.com/major-technology/public-packages.git", "directory": "app-client" },
+  "publishConfig": { "access": "public" },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "esbuild": "^0.24.0",
+    "next": "^14.0.0",
+    "react": "^18.0.0",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
+  },
+  "peerDependencies": { "next": ">=14.0.0" },
+  "peerDependenciesMeta": { "next": { "optional": true } }
+}
