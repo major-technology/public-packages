@@ -51,6 +51,18 @@ describe("major-app-client", () => {
     expect(file).not.toContain("server-only");
   });
 
+  it("add refuses to overwrite a client file another generator owns", () => {
+    const dir = project();
+    const db = path.join(dir, "clients", "db.ts");
+    const before = fs.readFileSync(db, "utf-8");
+
+    expect(() => run(dir, "add", APP_ID, "db", "--framework", "nextjs")).toThrow(/already exists/);
+
+    expect(fs.readFileSync(db, "utf-8")).toBe(before);
+    expect(fs.existsSync(path.join(dir, "apps.json"))).toBe(false);
+    expect(fs.existsSync(path.join(dir, "clients", "index.ts"))).toBe(false);
+  });
+
   it("remove deletes the file and the registry entry", () => {
     const dir = project();
     run(dir, "add", APP_ID, "orders", "--framework", "nextjs");

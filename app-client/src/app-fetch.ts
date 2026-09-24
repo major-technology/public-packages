@@ -95,7 +95,8 @@ export function createAppFetch(config: CreateAppFetchConfig): typeof fetch {
 
     const { url } = (await lookup.json()) as { url: string };
     const isRequest = typeof Request !== "undefined" && input instanceof Request;
-    const headers = new Headers(init?.headers ?? (isRequest ? (input as Request).headers : undefined));
+    const headers = new Headers(isRequest ? (input as Request).headers : undefined);
+    new Headers(init?.headers).forEach((value, key) => headers.set(key, value));
     if (userJwt) {
       headers.set("x-major-user-jwt", userJwt);
     }

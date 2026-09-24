@@ -41,6 +41,33 @@ describe("createAppFetch", () => {
     expect(new Headers(targetInit.headers).get("x-major-jwt")).toBeNull();
   });
 
+  it("keeps a Request input's headers when init overrides other fields", async () => {
+    const request = new Request("https://ignored.example/api/hello", {
+      headers: { "content-type": "application/json", "x-trace": "req" },
+    });
+    const targetHeaders = async (init: RequestInit) => {
+      const fetchMock = fakeFetch(Response.json({ url: "https://b.apps.major.build" }));
+      const appFetch = createAppFetch({
+        baseUrl: "https://go-api.test",
+        appId: APP_ID,
+        majorJwtToken: "app-token",
+        fetch: fetchMock as unknown as typeof fetch,
+      });
+
+      await appFetch(request, init);
+
+      return new Headers((fetchMock.mock.calls[1] as [string, RequestInit])[1].headers);
+    };
+
+    const overlaid = await targetHeaders({ method: "POST", headers: { "x-trace": "init" } });
+    expect(overlaid.get("content-type")).toBe("application/json");
+    expect(overlaid.get("x-trace")).toBe("init");
+
+    const kept = await targetHeaders({ method: "POST" });
+    expect(kept.get("content-type")).toBe("application/json");
+    expect(kept.get("x-trace")).toBe("req");
+  });
+
   it("throws with the status and server message when the lookup fails", async () => {
     const fetchMock = fakeFetch(Response.json({ error: "no access" }, { status: 403 }));
     const appFetch = createAppFetch({
