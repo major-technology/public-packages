@@ -42,16 +42,12 @@ export interface RunAgentRequest {
   prompt: string;
   /** Optional human-readable name for the run. Shown in the Major UI. */
   name?: string;
-  /** Optional description for the run. */
-  description?: string;
-  /** Optional structured context forwarded to the agent. */
-  payload?: Record<string, unknown>;
 }
 
 /** Successful response from `AgentsClient.run`. */
 export interface RunAgentResponse {
-  /** Chat thread the run is associated with; also the `runId` for run-ops. */
-  chatThreadId: string;
+  /** Id of the run; pass it to the run-ops methods. */
+  runId: string;
   /** Run lifecycle status. V1 only emits `"started"`. */
   status: "started";
 }
@@ -92,6 +88,16 @@ export interface AgentMessage {
   type: string;
   content: unknown;
   timestamp: string;
+}
+
+/**
+ * A page of a run's thread, as returned by `getAgentContent`. `nextToken`,
+ * when present, is passed back to `getAgentContent` to read the page before
+ * it.
+ */
+export interface AgentContentPage {
+  messages: AgentMessage[];
+  nextToken?: string;
 }
 
 /**

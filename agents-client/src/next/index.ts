@@ -24,6 +24,7 @@ export type {
   StopRunResponse,
   AgentRun,
   AgentMessage,
+  AgentContentPage,
 } from "../types";
 export {
   AgentsClientError,

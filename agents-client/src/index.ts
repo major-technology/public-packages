@@ -7,6 +7,7 @@ export type {
   StopRunResponse,
   AgentRun,
   AgentMessage,
+  AgentContentPage,
   PendingApproval,
   ApprovalDecision,
   SubmitApprovalDecisionResponse,

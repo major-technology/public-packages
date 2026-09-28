@@ -5,7 +5,7 @@ import type {
   SendMessageResponse,
   StopRunResponse,
   AgentRun,
-  AgentMessage,
+  AgentContentPage,
   PendingApproval,
   ApprovalDecision,
   SubmitApprovalDecisionResponse,
@@ -26,9 +26,8 @@ import {
  * vars and (when imported from `@major-tech/agents-client/next`) wires up
  * auto-forwarding of the inbound viewer JWT.
  *
- * A "run" is a Major chat thread; the `chatThreadId` returned by `run()` is the
- * `runId` the run-ops methods (`sendMessage` / `stopAgent` / `getAgentContent`)
- * accept.
+ * The `runId` returned by `run()` is the id the run-ops methods
+ * (`sendMessage` / `stopAgent` / `getAgentContent`) accept.
  */
 export class AgentsClient {
   private readonly baseUrl: string;
@@ -58,7 +57,7 @@ export class AgentsClient {
   /**
    * Start an agent run. Fire-and-forget: returns as soon as the server has
    * created the chat thread and accepted the run; the agent itself runs
-   * asynchronously. The returned `chatThreadId` is the `runId` for run-ops.
+   * asynchronously. The returned `runId` is the id for run-ops.
    */
   async run(request: RunAgentRequest): Promise<RunAgentResponse> {
     const agentId = request.agentId ?? this.agentId;
@@ -71,20 +70,21 @@ export class AgentsClient {
       throw new AgentsValidationError("AgentsClient.run: prompt is required.");
     }
 
-    const { prompt, name, description, payload } = request;
+    const { prompt, name } = request;
 
     return this.request<RunAgentResponse>(
       "POST",
       `/agents/${encodeURIComponent(agentId)}/runs`,
-      { prompt, name, description, payload },
+      { prompt, name },
       (message) => new AgentRunNotStartedError(`Failed to reach Major API: ${message}`),
     );
   }
 
   /**
-   * Send a follow-up message to a run this app started. Throws
-   * {@link AgentRunNotActiveError} if the run has already finished — call
-   * `run()` again to start a new one.
+   * Send a follow-up message to a run this app started. If the run has
+   * already finished, this resumes it: the message starts a new session on
+   * the same run. Throws {@link AgentRunNotStartedError} if the org's safety
+   * rules reject the message.
    */
   async sendMessage(runId: string, message: string): Promise<SendMessageResponse> {
     if (!runId) {
@@ -138,27 +138,33 @@ export class AgentsClient {
   }
 
   /**
-   * Read the most recent messages of a run's thread. `n` caps how many trailing
-   * messages are returned (the server default applies when omitted).
+   * Read a page of a run's thread: the newest `limit` messages, oldest first
+   * within the page (1-100, server default applies when omitted). When the
+   * result's `nextToken` is present, pass it back as `options.nextToken` to
+   * read the page before it.
    */
-  async getAgentContent(runId: string, n?: number): Promise<AgentMessage[]> {
+  async getAgentContent(
+    runId: string,
+    options?: { limit?: number; nextToken?: string },
+  ): Promise<AgentContentPage> {
     if (!runId) {
       throw new AgentsValidationError("AgentsClient.getAgentContent: runId is required.");
     }
 
     const params = new URLSearchParams();
-    if (n !== undefined) {
-      params.set("n", String(n));
+    if (options?.limit !== undefined) {
+      params.set("limit", String(options.limit));
+    }
+    if (options?.nextToken !== undefined) {
+      params.set("nextToken", options.nextToken);
     }
     const query = params.toString();
 
-    const result = await this.request<{ messages: AgentMessage[] }>(
+    return this.request<AgentContentPage>(
       "GET",
       `/agents/runs/${encodeURIComponent(runId)}/messages${query ? `?${query}` : ""}`,
       undefined,
     );
-
-    return result.messages;
   }
 
   /**
