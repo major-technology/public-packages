@@ -189,6 +189,11 @@ export type ClerkInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;
 export type NooksInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;
 
 /**
+ * Response from Customer.io API resource invocation
+ */
+export type CustomerIOInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;
+
+/**
  * Response from Zoho Desk API resource invocation
  */
 export type ZohoDeskInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;

@@ -80,6 +80,9 @@ export { buildClerkInvokePayload } from "./clerk";
 // Nooks
 export { buildNooksInvokePayload } from "./nooks";
 
+// Customer.io
+export { buildCustomerIOInvokePayload } from "./customerio";
+
 // Stripe
 export { buildStripeInvokePayload } from "./stripe";
 

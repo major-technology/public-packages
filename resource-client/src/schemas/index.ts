@@ -32,6 +32,7 @@ export * from "./google-analytics";
 export * from "./api-linear";
 export * from "./api-clerk";
 export * from "./api-nooks";
+export * from "./api-customerio";
 export * from "./api-stripe";
 export * from "./api-fireflies";
 export * from "./api-attio";
@@ -81,6 +82,7 @@ import type { ApiGoogleAnalyticsPayload } from "./google-analytics";
 import type { ApiLinearPayload } from "./api-linear";
 import type { ApiClerkPayload } from "./api-clerk";
 import type { ApiNooksPayload } from "./api-nooks";
+import type { ApiCustomerIOPayload } from "./api-customerio";
 import type { ApiStripePayload } from "./api-stripe";
 import type { ApiFirefliesPayload } from "./api-fireflies";
 import type { ApiAttioPayload } from "./api-attio";
@@ -128,6 +130,7 @@ export type ResourceInvokePayload =
   | ApiLinearPayload
   | ApiClerkPayload
   | ApiNooksPayload
+  | ApiCustomerIOPayload
   | ApiStripePayload
   | ApiFirefliesPayload
   | ApiAttioPayload
