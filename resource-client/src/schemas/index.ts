@@ -31,6 +31,7 @@ export * from "./auth";
 export * from "./google-analytics";
 export * from "./api-linear";
 export * from "./api-clerk";
+export * from "./api-nooks";
 export * from "./api-stripe";
 export * from "./api-fireflies";
 export * from "./api-attio";
@@ -79,6 +80,7 @@ import type { AuthPayload } from "./auth";
 import type { ApiGoogleAnalyticsPayload } from "./google-analytics";
 import type { ApiLinearPayload } from "./api-linear";
 import type { ApiClerkPayload } from "./api-clerk";
+import type { ApiNooksPayload } from "./api-nooks";
 import type { ApiStripePayload } from "./api-stripe";
 import type { ApiFirefliesPayload } from "./api-fireflies";
 import type { ApiAttioPayload } from "./api-attio";
@@ -125,6 +127,7 @@ export type ResourceInvokePayload =
   | ApiGitHubPayload
   | ApiLinearPayload
   | ApiClerkPayload
+  | ApiNooksPayload
   | ApiStripePayload
   | ApiFirefliesPayload
   | ApiAttioPayload

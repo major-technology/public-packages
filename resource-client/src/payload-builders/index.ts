@@ -77,6 +77,9 @@ export { buildGongInvokePayload } from "./gong";
 // Clerk
 export { buildClerkInvokePayload } from "./clerk";
 
+// Nooks
+export { buildNooksInvokePayload } from "./nooks";
+
 // Stripe
 export { buildStripeInvokePayload } from "./stripe";
 

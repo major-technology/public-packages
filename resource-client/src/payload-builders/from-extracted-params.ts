@@ -38,6 +38,7 @@ import { buildPlaidGetTransactionsPayload, buildPlaidGetAccountsPayload } from "
 import { buildLinkedInInvokePayload } from "./linkedin";
 import { buildGongInvokePayload } from "./gong";
 import { buildClerkInvokePayload } from "./clerk";
+import { buildNooksInvokePayload } from "./nooks";
 import { buildStripeInvokePayload } from "./stripe";
 import { buildFirefliesQueryPayload, buildFirefliesMutatePayload } from "./fireflies";
 import { buildAttioInvokePayload } from "./attio";
@@ -422,6 +423,16 @@ export function buildPayloadFromExtractedParams(
       const path = findParam(extractedParams, "Path") as string;
       const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
       return buildClerkInvokePayload(method, path, options);
+    }
+
+    // =========================================================================
+    // Nooks
+    // =========================================================================
+    case "nooks": {
+      const method = findParam(extractedParams, "Method") as "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+      const path = findParam(extractedParams, "Path") as string;
+      const options = findParam(extractedParams, "Options") as Record<string, unknown> | undefined;
+      return buildNooksInvokePayload(method, path, options);
     }
 
     // =========================================================================
