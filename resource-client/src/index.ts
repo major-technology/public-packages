@@ -63,6 +63,7 @@ export { GraphQLResourceClient } from "./clients/api-graphql";
 export { GongResourceClient } from "./clients/gong";
 export { ClerkResourceClient } from "./clients/clerk";
 export { NooksResourceClient } from "./clients/nooks";
+export { CustomerIOResourceClient } from "./clients/customerio";
 export { StripeResourceClient } from "./clients/stripe";
 export { FirefliesResourceClient } from "./clients/fireflies";
 export { AttioResourceClient } from "./clients/attio";
@@ -107,6 +108,7 @@ export type {
   GongInvokeResponse,
   ClerkInvokeResponse,
   NooksInvokeResponse,
+  CustomerIOInvokeResponse,
   StripeRawInvokeResponse,
   FirefliesRawInvokeResponse,
   AttioRawInvokeResponse,
