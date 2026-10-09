@@ -184,6 +184,11 @@ export type LinearInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;
 export type ClerkInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;
 
 /**
+ * Response from Nooks API resource invocation
+ */
+export type NooksInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;
+
+/**
  * Response from Zoho Desk API resource invocation
  */
 export type ZohoDeskInvokeResponse = BaseInvokeSuccess<ApiResult> | InvokeFailure;

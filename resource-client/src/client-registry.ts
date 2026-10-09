@@ -41,6 +41,7 @@ export const CLIENT_REGISTRY = {
   quickbooks: "QuickBooksResourceClient",
   gong: "GongResourceClient",
   clerk: "ClerkResourceClient",
+  nooks: "NooksResourceClient",
   stripe: "StripeResourceClient",
   fireflies: "FirefliesResourceClient",
   attio: "AttioResourceClient",
