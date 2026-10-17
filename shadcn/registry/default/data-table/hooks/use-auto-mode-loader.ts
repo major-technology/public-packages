@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useEffectEvent, useCallback, useRef } from "react";
-import { useEffectOnce } from "./use-effect-once";
 import { useLatestValue } from "./use-latest-value";
 import type { SortingState, ColumnFiltersState, PaginationState, OnChangeFn } from "@tanstack/react-table";
 import { DEFAULT_PAGE_SIZE } from "../constants";
@@ -72,7 +71,10 @@ export function useAutoModeLoader<TData>(
 	const [retryCounter, setRetryCounter] = useState(0);
 	const loadingNextRef = useRef(false);
 
-	const initialDataConsumedRef = useRef(false);
+	// Whether the very first fetch should be skipped because initialData already seeded the
+	// table. Captured as the ref's initial value so the effect below never has to read the
+	// initialData prop — a caller passing a fresh object literal would otherwise re-run it.
+	const skipInitialLoadRef = useRef(initialData !== undefined);
 
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -160,9 +162,8 @@ export function useAutoModeLoader<TData>(
 			return;
 		}
 
-		// Skip the first load when initialData was provided
-		if (initialData && !initialDataConsumedRef.current) {
-			initialDataConsumedRef.current = true;
+		if (skipInitialLoadRef.current) {
+			skipInitialLoadRef.current = false;
 			return;
 		}
 
@@ -172,7 +173,6 @@ export function useAutoModeLoader<TData>(
 		return () => {
 			controller.abort();
 		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isActive, sorting, columnFilters, globalFilter, pagination, retryCounter]);
 
 	// Refs to capture current state for loadNextPage without re-creating the callback
@@ -188,11 +188,11 @@ export function useAutoModeLoader<TData>(
 	const nextPageAbortRef = useRef<AbortController | null>(null);
 
 	// Abort any in-flight loadNextPage request on unmount
-	useEffectOnce(() => {
+	useEffect(() => {
 		return () => {
 			nextPageAbortRef.current?.abort();
 		};
-	});
+	}, []);
 
 	const loadNextPage = useCallback(async (): Promise<boolean> => {
 		const { onLoadRows: loader, onError: errHandler, ...state } = stateRef.current;

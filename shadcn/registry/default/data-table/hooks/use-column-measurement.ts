@@ -22,24 +22,26 @@ export function useColumnMeasurement<TData>(
 	const prevColumnCountRef = useRef(columnCount);
 	const prevResizingRef = useRef(enableColumnResizing);
 
-	// Reset measurement gate when column count changes (e.g. column visibility toggle)
-	if (columnCount !== prevColumnCountRef.current) {
-		prevColumnCountRef.current = columnCount;
-		hasMeasuredRef.current = false;
-	}
-
-	// Reset measurement gate when resizing is toggled off so re-enabling triggers fresh measurement
-	if (prevResizingRef.current && !enableColumnResizing) {
-		hasMeasuredRef.current = false;
-	}
-
-	prevResizingRef.current = enableColumnResizing;
-
 	// Measure actual DOM column widths and pre-populate columnSizing so that
 	// getSize() returns real widths (not TanStack defaults) when resize starts.
 	// This prevents the table from "jumping" when entering resize mode.
 	// Runs once after first render with data, synchronously before paint.
 	useLayoutEffect(() => {
+		// Gate resets live here rather than in the render body: reading and writing a ref while
+		// rendering is unsafe under StrictMode's double render and concurrent rendering, and it
+		// is what React Compiler refuses to compile.
+		if (columnCount !== prevColumnCountRef.current) {
+			prevColumnCountRef.current = columnCount;
+			hasMeasuredRef.current = false;
+		}
+
+		// Re-enabling resizing after it was off should measure fresh.
+		if (prevResizingRef.current && !enableColumnResizing) {
+			hasMeasuredRef.current = false;
+		}
+
+		prevResizingRef.current = enableColumnResizing;
+
 		if (!enableColumnResizing || hasMeasuredRef.current || rowCount === 0) {
 			return;
 		}
@@ -77,8 +79,9 @@ export function useColumnMeasurement<TData>(
 
 		hasMeasuredRef.current = true;
 		table.setColumnSizing(measured);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [enableColumnResizing, rowCount, columnCount]);
+		// headerGroups is a fresh array each render, so this effect runs every render. That is
+		// cheap: everything past the gate above short-circuits once measurement has happened.
+	}, [enableColumnResizing, rowCount, columnCount, headerGroups, table]);
 
 	/**
 	 * Return explicit width styles for a column if its size has been measured

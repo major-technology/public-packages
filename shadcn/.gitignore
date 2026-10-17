@@ -1,3 +1,4 @@
 node_modules/
 registry/output
 examples/dist
+examples/consumer

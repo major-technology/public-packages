@@ -48,6 +48,19 @@ export function DataTableHeader<TData>({
 	const { enableColumnResizing } = useDataTableState();
 	const headerGroups = table.getHeaderGroups();
 
+	// Keyboard resizing: nudge the stored width for a column, clamped to its minimum.
+	const handleResizeBy = (columnId: string, delta: number) => {
+		const column = table.getColumn(columnId);
+
+		if (!column) {
+			return;
+		}
+
+		const next = Math.max(column.columnDef.minSize ?? 0, column.getSize() + delta);
+
+		table.setColumnSizing((prev) => ({ ...prev, [columnId]: next }));
+	};
+
 	return (
 		<TableHeader>
 			{headerGroups.map((headerGroup) => (
@@ -106,6 +119,7 @@ export function DataTableHeader<TData>({
 										isActive={isResizeActive(header.column.id)}
 										onHoverChange={onResizeHoverChange}
 										onResize={resizeHandlerMap[header.column.id]}
+										onResizeBy={handleResizeBy}
 									/>
 								)}
 							</TableHead>
