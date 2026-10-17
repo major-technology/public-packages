@@ -58,6 +58,7 @@ export const CLIENT_REGISTRY = {
   notion: "NotionResourceClient",
   blob: "BlobResourceClient",
   github: "GitHubResourceClient",
+  ecr: "ECRResourceClient",
 } as const;
 
 /** A resource subtype with a typed client in this package. */
