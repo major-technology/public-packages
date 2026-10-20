@@ -328,6 +328,9 @@ function toCamelCase(str) {
 // Every subtype with a typed client — derived from the canonical registry, not hand-listed.
 const VALID_TYPES = Object.keys(CLIENT_REGISTRY);
 
+// Subtypes go-api serves only through the HTTP proxy; they will never have a typed client.
+const PROXY_ONLY_TYPES = ['outlook', 'outlookcalendar', 'teamsgraph'];
+
 // Resolve a subtype to its typed client class name, or null when the subtype has no typed
 // client (the bindings generator emits a createProxyFetch handle for those). The `add` path
 // validates the type against VALID_TYPES first, so it never sees null here.
@@ -395,6 +398,11 @@ function generateIndexFile(resources) {
 }
 
 function addResource(resourceId, name, type, description, applicationId, framework, mode) {
+  if (PROXY_ONLY_TYPES.includes(type)) {
+    console.error(`❌ ${type} is a proxy-only resource with no typed client. Use the HTTP proxy (createProxyFetch) instead.`);
+    process.exit(1);
+  }
+
   if (!VALID_TYPES.includes(type)) {
     console.error(`❌ Invalid type: ${type}`);
     console.error(`   Valid types: ${VALID_TYPES.join(', ')}`);
