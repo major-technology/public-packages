@@ -396,9 +396,10 @@ function generateIndexFile(resources) {
 
 function addResource(resourceId, name, type, description, applicationId, framework, mode) {
   if (!VALID_TYPES.includes(type)) {
-    console.error(`❌ Invalid type: ${type}`);
-    console.error(`   Valid types: ${VALID_TYPES.join(', ')}`);
-    console.error(`   Your resource-client version might be out of date. Try running 'pnpm update @major-tech/resource-client'`)
+    console.error(`❌ No typed client for type: ${type}`);
+    console.error(`   Types with a typed client: ${VALID_TYPES.join(', ')}`);
+    console.error(`   Proxy-only connectors (e.g. outlook, outlookcalendar) have no typed client. Call them with createProxyFetch from '@major-tech/resource-client' instead of generating a client.`);
+    console.error(`   Otherwise your resource-client version might be out of date. Try running 'pnpm update @major-tech/resource-client'`);
     process.exit(1);
   }
 
