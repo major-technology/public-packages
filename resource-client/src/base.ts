@@ -1,6 +1,7 @@
 import type {
   ResourceInvokePayload,
   InvokeResponse,
+  InvokeFailure,
   InvokeRequest,
 } from "./schemas";
 import { ResourceInvokeError } from "./errors";
@@ -97,19 +98,28 @@ export abstract class BaseResourceClient {
 }
 
 function normalizeInvokeResponse(data: unknown): InvokeResponse {
-  const response = data as InvokeResponse;
+  const response = data as { ok?: boolean; error?: InvokeFailure["error"] };
 
-  if (
-    response &&
-    typeof response === "object" &&
-    "ok" in response &&
-    response.ok === false &&
-    response.error &&
-    !response.error.message &&
-    typeof response.error.error_string === "string"
-  ) {
-    response.error.message = response.error.error_string;
+  if (!response || typeof response !== "object" || !response.error) {
+    return data as InvokeResponse;
   }
 
-  return response;
+  // A request rejected before the invoke handler runs (expired or invalid
+  // token, missing permission) comes back as the bare API error envelope,
+  // with no `ok` field.
+  if (!("ok" in response)) {
+    response.ok = false;
+  }
+
+  if (response.ok === false) {
+    if (!response.error.message && typeof response.error.error_string === "string") {
+      response.error.message = response.error.error_string;
+    }
+
+    if (response.error.httpStatus === undefined && typeof response.error.status_code === "number") {
+      response.error.httpStatus = response.error.status_code;
+    }
+  }
+
+  return data as InvokeResponse;
 }
