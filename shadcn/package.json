@@ -37,5 +37,10 @@
     "shadcn": "^3.8.5",
     "tsx": "^4.19.0",
     "typescript": "^5.9.3"
+  },
+  "pnpm": {
+    "overrides": {
+      "proxy-addr": "^2.0.8"
+    }
   }
 }
