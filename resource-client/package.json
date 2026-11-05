@@ -59,8 +59,8 @@
     "access": "public"
   },
   "devDependencies": {
-    "esbuild": "^0.24.0",
-    "next": "^14.0.0",
+    "esbuild": "^0.25.12",
+    "next": "^16.4.5",
     "react": "^18.0.0",
     "typescript": "^5.9.3"
   },
@@ -73,6 +73,11 @@
   "peerDependenciesMeta": {
     "next": {
       "optional": true
+    }
+  },
+  "pnpm": {
+    "overrides": {
+      "source-map-js": "^1.2.2"
     }
   }
 }
