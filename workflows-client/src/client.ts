@@ -40,9 +40,8 @@ export class WorkflowsClient {
 
   /**
    * Start a run. Returns as soon as the run is accepted; the workflow runs
-   * asynchronously. From a deployed app it runs the published version; from a
-   * sandbox preview it runs the workflow's draft while the workflow is open in
-   * a sandbox, and the run's calls back to this app go to that preview.
+   * asynchronously. It runs the workflow's published version; from a sandbox
+   * preview, the run's calls back to this app go to that preview.
    */
   async run(request: RunWorkflowRequest = {}): Promise<RunWorkflowResponse> {
     const workflowId = request.workflowId ?? this.workflowId;

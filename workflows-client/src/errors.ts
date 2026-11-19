@@ -43,8 +43,8 @@ export class WorkflowNotFoundError extends WorkflowsClientError {
 }
 
 /**
- * The run could not be started: the workflow is not published and not open in
- * a sandbox (HTTP 409), or a transport error prevented the request.
+ * The run could not be started: the workflow is not published (HTTP 409), or a
+ * transport error prevented the request.
  */
 export class WorkflowRunNotStartedError extends WorkflowsClientError {
   constructor(message: string, httpStatus?: number, requestId?: string) {
