@@ -4,6 +4,8 @@ import type {
   RunWorkflowResponse,
   GetWorkflowRunRequest,
   GetWorkflowRunResponse,
+
+  RespondToApprovalRequest,
 } from "./types";
 import {
   WorkflowsClientError,
@@ -80,6 +82,23 @@ export class WorkflowsClient {
       undefined,
     );
   }
+
+  /** Answering approvals a workflow delegated to this app (see `AppApprovalRequest`). */
+  readonly approvals = {
+    /**
+     * Record the app user's decision on an approval this app was sent. Major
+     * checks the approval names this app, the run is still waiting, and
+     * `choice` is one of its options; the app decides which of its users may
+     * answer.
+     */
+    respond: async ({ runId, executionId, choice }: RespondToApprovalRequest): Promise<void> => {
+      await this.request<{ success: boolean }>(
+        "POST",
+        `/workflow-approvals/runs/${encodeURIComponent(runId)}/executions/${encodeURIComponent(executionId)}`,
+        { choice },
+      );
+    },
+  };
 
   private async request<T>(method: string, path: string, body: unknown): Promise<T> {
     const headers: Record<string, string> = { "Content-Type": "application/json" };

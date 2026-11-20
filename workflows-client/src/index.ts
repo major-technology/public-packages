@@ -7,6 +7,8 @@ export type {
   GetWorkflowRunResponse,
   WorkflowRun,
   WorkflowRunDocument,
+  AppApprovalRequest,
+  RespondToApprovalRequest,
 } from "./types";
 export {
   WorkflowsClientError,

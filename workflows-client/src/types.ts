@@ -107,3 +107,28 @@ export interface GetWorkflowRunResponse {
   /** The definition text of the version the run executes. */
   definitionText: string;
 }
+
+/**
+ * The request Major POSTs to an app's approval path when a workflow's
+ * human_approval node delegates to the app. A 2xx only acknowledges receipt:
+ * the run waits until the app answers with `approvals.respond`. Delivery
+ * retries resend the same `(runId, executionId)`, so store the request keyed by
+ * that pair.
+ */
+export interface AppApprovalRequest {
+  runId: string;
+  /** One execution of the approval node; loop iterations each get their own. */
+  executionId: string;
+  workflowId: string;
+  message: string;
+  /** The node's `payload`, resolved against the run's state. */
+  payload: Record<string, unknown>;
+  options: { value: string; label?: string; style?: "primary" | "danger" | "neutral" }[];
+}
+
+/** Input for `WorkflowsClient.approvals.respond`. `choice` is one of the request's `options[].value`. */
+export interface RespondToApprovalRequest {
+  runId: string;
+  executionId: string;
+  choice: string;
+}
