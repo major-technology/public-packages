@@ -1,6 +1,6 @@
 {
   "name": "@major-tech/workflows-client",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "TypeScript client for starting Major workflow runs from a deployed Major app",
   "type": "module",
   "sideEffects": false,
