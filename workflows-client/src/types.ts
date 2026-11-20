@@ -9,8 +9,8 @@ export interface WorkflowsClientConfig {
   baseUrl?: string;
   /**
    * The app's platform token. Defaults to `process.env.MAJOR_JWT_TOKEN`. Sent as
-   * `x-major-jwt` on every request; in a sandbox preview it authenticates calls
-   * that did not come through the app's ingress (no user JWT).
+   * `x-major-jwt` when available. Starting a run also requires the inbound
+   * app-user JWT.
    */
   majorJwtToken?: string;
   /**

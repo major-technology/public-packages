@@ -4,8 +4,8 @@
  * Part of @major-tech/workflows-client
  *
  * Usage:
- *   npx @major-tech/workflows-client add <workflow_id> <name> [description] [--framework <nextjs|vite>]
- *   npx @major-tech/workflows-client remove <name> [--framework <nextjs|vite>]
+ *   npx @major-tech/workflows-client add <workflow_id> <name> [description] [--framework <nextjs|hono|vite>]
+ *   npx @major-tech/workflows-client remove <name> [--framework <nextjs|hono|vite>]
  *   npx @major-tech/workflows-client list
  *
  * Each workflow is recorded in `workflows.json` and gets a generated client in
@@ -127,19 +127,18 @@ function deleteMarkedFiles(clientsDir) {
 
 function clientTemplate(workflow, framework) {
   const isNextJs = framework === 'nextjs';
-  const env = isNextJs ? 'process.env' : 'import.meta.env';
-  const headerImport = isNextJs ? `\nimport { headers } from 'next/headers';` : '';
-  const getHeadersConfig = isNextJs
-    ? `
-  getHeaders: async () => {
-    const h = await headers();
-    const userJwt = h.get('x-major-user-jwt');
-    return userJwt ? { 'x-major-user-jwt': userJwt } : {};
-  },`
-    : '';
+  const isHono = framework === 'hono';
+  const env = isNextJs || isHono ? 'process.env' : 'import.meta.env';
+  const entry = isNextJs ? '@major-tech/workflows-client/next' : '@major-tech/workflows-client';
   const serverOnly = isNextJs ? "import 'server-only';\n" : '';
+  const headerImport = isHono ? "\nimport { tryGetContext } from 'hono/context-storage';" : '';
+  const getHeadersConfig = isHono ? `
+  getHeaders: (): Record<string, string> => {
+    const userJwt = tryGetContext()?.req.header('x-major-user-jwt');
+    return userJwt ? { 'x-major-user-jwt': userJwt } : {};
+  },` : '';
 
-  return `${serverOnly}import { WorkflowsClient } from '@major-tech/workflows-client';${headerImport}
+  return `${serverOnly}import { createWorkflowsClient } from '${entry}';${headerImport}
 
 /**
  * ${workflow.description || workflow.name}
@@ -148,7 +147,7 @@ function clientTemplate(workflow, framework) {
  *
  * DO NOT EDIT - ${WORKFLOW_MARKER}
  */
-export const ${clientName(workflow.name)} = new WorkflowsClient({
+export const ${clientName(workflow.name)} = createWorkflowsClient({
   baseUrl: ${env}.MAJOR_API_BASE_URL || 'https://go-api.prod.major.build',
   majorJwtToken: ${env}.MAJOR_JWT_TOKEN,
   workflowId: '${workflow.id}',
@@ -255,7 +254,7 @@ function main() {
       const [workflowId, name, description] = rest;
 
       if (!workflowId || !name) {
-        console.error('Usage: add <workflow_id> <name> [description] [--framework <nextjs|vite>]');
+        console.error('Usage: add <workflow_id> <name> [description] [--framework <nextjs|hono|vite>]');
         process.exit(1);
       }
 
@@ -267,7 +266,7 @@ function main() {
       const [name] = rest;
 
       if (!name) {
-        console.error('Usage: remove <name> [--framework <nextjs|vite>]');
+        console.error('Usage: remove <name> [--framework <nextjs|hono|vite>]');
         process.exit(1);
       }
 
@@ -282,8 +281,8 @@ function main() {
 
     default: {
       console.log('Usage:');
-      console.log('  npx @major-tech/workflows-client add <workflow_id> <name> [description] [--framework <nextjs|vite>]');
-      console.log('  npx @major-tech/workflows-client remove <name> [--framework <nextjs|vite>]');
+      console.log('  npx @major-tech/workflows-client add <workflow_id> <name> [description] [--framework <nextjs|hono|vite>]');
+      console.log('  npx @major-tech/workflows-client remove <name> [--framework <nextjs|hono|vite>]');
       console.log('  npx @major-tech/workflows-client list');
       process.exit(command ? 1 : 0);
     }

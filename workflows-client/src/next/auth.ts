@@ -5,9 +5,7 @@ import { headers } from "next/headers";
  * it as a header bag suitable for `WorkflowsClientConfig.getHeaders`.
  *
  * Returns `{}` when called outside a Next.js request scope (`headers()` throws
- * there) or when the inbound request carried no `x-major-user-jwt` — e.g. a
- * sandbox preview called from the sandbox shell, which authenticates with
- * `x-major-jwt` instead.
+ * there) or when the inbound request carried no `x-major-user-jwt`.
  */
 export async function defaultGetHeaders(): Promise<Record<string, string>> {
   let userJwt: string | null = null;
