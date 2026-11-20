@@ -1,4 +1,10 @@
-import type { WorkflowsClientConfig, RunWorkflowRequest, RunWorkflowResponse } from "./types";
+import type {
+  WorkflowsClientConfig,
+  RunWorkflowRequest,
+  RunWorkflowResponse,
+  GetWorkflowRunRequest,
+  GetWorkflowRunResponse,
+} from "./types";
 import {
   WorkflowsClientError,
   WorkflowsValidationError,
@@ -8,7 +14,7 @@ import {
 } from "./errors";
 
 /**
- * Client for starting Major workflow runs from a deployed app or sandbox preview.
+ * Client for starting Major workflow runs, and reading back the runs it started, from a deployed app or sandbox preview.
  *
  * Prefer the `createWorkflowsClient()` factory — it reads platform-managed env
  * vars and (when imported from `@major-tech/workflows-client/next`) wires up
@@ -54,6 +60,25 @@ export class WorkflowsClient {
     return this.request<RunWorkflowResponse>("POST", `/workflows/${encodeURIComponent(workflowId)}/runs`, {
       input: request.input,
     });
+  }
+
+  /**
+   * Read back a run this app started: its status, and once finished its output
+   * (`document.output`) or error (`run.error`). Any other run is not found.
+   */
+  async getRun(request: GetWorkflowRunRequest): Promise<GetWorkflowRunResponse> {
+    const workflowId = request.workflowId ?? this.workflowId;
+    if (!workflowId) {
+      throw new WorkflowsValidationError(
+        "WorkflowsClient.getRun: workflowId is required (pass it in the request or bind it on the client).",
+      );
+    }
+
+    return this.request<GetWorkflowRunResponse>(
+      "GET",
+      `/workflows/${encodeURIComponent(workflowId)}/runs/${encodeURIComponent(request.runId)}`,
+      undefined,
+    );
   }
 
   private async request<T>(method: string, path: string, body: unknown): Promise<T> {
