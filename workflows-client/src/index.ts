@@ -1,5 +1,13 @@
 export { WorkflowsClient, createWorkflowsClient } from "./client";
-export type { WorkflowsClientConfig, RunWorkflowRequest, RunWorkflowResponse } from "./types";
+export type {
+  WorkflowsClientConfig,
+  RunWorkflowRequest,
+  RunWorkflowResponse,
+  GetWorkflowRunRequest,
+  GetWorkflowRunResponse,
+  WorkflowRun,
+  WorkflowRunDocument,
+} from "./types";
 export {
   WorkflowsClientError,
   WorkflowsValidationError,

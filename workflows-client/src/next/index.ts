@@ -15,7 +15,15 @@ export function createWorkflowsClient(config: WorkflowsClientConfig = {}): Workf
 }
 
 export { WorkflowsClient } from "../client";
-export type { WorkflowsClientConfig, RunWorkflowRequest, RunWorkflowResponse } from "../types";
+export type {
+  WorkflowsClientConfig,
+  RunWorkflowRequest,
+  RunWorkflowResponse,
+  GetWorkflowRunRequest,
+  GetWorkflowRunResponse,
+  WorkflowRun,
+  WorkflowRunDocument,
+} from "../types";
 export {
   WorkflowsClientError,
   WorkflowsValidationError,
