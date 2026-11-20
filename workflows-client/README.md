@@ -12,3 +12,4 @@ const { runId } = await leadEnrichmentWorkflowClient.run({ input: { leadId } });
   app go to that preview.
 - Generate a client per workflow: `npx @major-tech/workflows-client add <workflow_id> <name> --framework nextjs`.
   Deploy grants the app permission to start the workflows its generated clients name.
+- For a Vite app with a Hono backend, run the generator in the backend package with `--framework hono`. The backend must install Hono’s `contextStorage()` middleware to forward the viewer JWT.

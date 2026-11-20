@@ -4,8 +4,8 @@
  * Part of @major-tech/workflows-client
  *
  * Usage:
- *   npx @major-tech/workflows-client add <workflow_id> <name> [description] [--framework <nextjs|hono|vite>]
- *   npx @major-tech/workflows-client remove <name> [--framework <nextjs|hono|vite>]
+ *   npx @major-tech/workflows-client add <workflow_id> <name> [description] --framework <nextjs|hono>
+ *   npx @major-tech/workflows-client remove <name> --framework <nextjs|hono>
  *   npx @major-tech/workflows-client list
  *
  * Each workflow is recorded in `workflows.json` and gets a generated client in
@@ -128,7 +128,6 @@ function deleteMarkedFiles(clientsDir) {
 function clientTemplate(workflow, framework) {
   const isNextJs = framework === 'nextjs';
   const isHono = framework === 'hono';
-  const env = isNextJs || isHono ? 'process.env' : 'import.meta.env';
   const entry = isNextJs ? '@major-tech/workflows-client/next' : '@major-tech/workflows-client';
   const serverOnly = isNextJs ? "import 'server-only';\n" : '';
   const headerImport = isHono ? "\nimport { tryGetContext } from 'hono/context-storage';" : '';
@@ -148,8 +147,8 @@ function clientTemplate(workflow, framework) {
  * DO NOT EDIT - ${WORKFLOW_MARKER}
  */
 export const ${clientName(workflow.name)} = createWorkflowsClient({
-  baseUrl: ${env}.MAJOR_API_BASE_URL || 'https://go-api.prod.major.build',
-  majorJwtToken: ${env}.MAJOR_JWT_TOKEN,
+  baseUrl: process.env.MAJOR_API_BASE_URL || 'https://go-api.prod.major.build',
+  majorJwtToken: process.env.MAJOR_JWT_TOKEN,
   workflowId: '${workflow.id}',
   fetch: (...args) => fetch(...args),${getHeadersConfig}
 });
@@ -249,12 +248,17 @@ function main() {
 
   const [command, ...rest] = args;
 
+  if ((command === 'add' || command === 'remove') && framework !== 'nextjs' && framework !== 'hono') {
+    console.error('Workflow clients run on the server. Pass --framework nextjs or --framework hono. For Vite apps, run this command in the Hono backend with --framework hono.');
+    process.exit(1);
+  }
+
   switch (command) {
     case 'add': {
       const [workflowId, name, description] = rest;
 
       if (!workflowId || !name) {
-        console.error('Usage: add <workflow_id> <name> [description] [--framework <nextjs|hono|vite>]');
+        console.error('Usage: add <workflow_id> <name> [description] --framework <nextjs|hono>');
         process.exit(1);
       }
 
@@ -266,7 +270,7 @@ function main() {
       const [name] = rest;
 
       if (!name) {
-        console.error('Usage: remove <name> [--framework <nextjs|hono|vite>]');
+        console.error('Usage: remove <name> --framework <nextjs|hono>');
         process.exit(1);
       }
 
@@ -281,8 +285,8 @@ function main() {
 
     default: {
       console.log('Usage:');
-      console.log('  npx @major-tech/workflows-client add <workflow_id> <name> [description] [--framework <nextjs|hono|vite>]');
-      console.log('  npx @major-tech/workflows-client remove <name> [--framework <nextjs|hono|vite>]');
+      console.log('  npx @major-tech/workflows-client add <workflow_id> <name> [description] --framework <nextjs|hono>');
+      console.log('  npx @major-tech/workflows-client remove <name> --framework <nextjs|hono>');
       console.log('  npx @major-tech/workflows-client list');
       process.exit(command ? 1 : 0);
     }
